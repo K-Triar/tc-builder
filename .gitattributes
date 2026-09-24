@@ -1,0 +1,6 @@
+# 改行は LF に統一する（Prettier の endOfLine: lf と合わせる）
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.xlsx binary
