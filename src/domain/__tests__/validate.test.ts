@@ -233,6 +233,28 @@ describe('検証（rules §6）', () => {
     expect(issues.every((i) => i.severity === 'error')).toBe(true);
   });
 
+  it('CODE_CHARS：TC に出るコードは英数字だけ（rules §2.0）', () => {
+    const b = line3([{ tag: 'Lo', formation: 'K3-00' }]);
+    b.project.orgs[0]!.code = 'K!';
+    b.project.kinds[0]!.typeCode = 'L_o';
+    const issues = find(validate(b.build()), 'CODE_CHARS');
+    expect(issues.map((i) => i.target)).toEqual([
+      { kind: 'org', orgId: b.project.selfOrgId },
+      { kind: 'kind', kindId: 'kind-Lo' },
+      { kind: 'service', serviceId: 'sv1', kindId: 'kind-Lo' },
+    ]);
+    expect(issues[0]!.message).toContain('英字と数字');
+  });
+
+  it('CODE_CHARS：行先に使う駅コードは英数字だけ、表示専用の駅コードは記号を許す', () => {
+    const b = line3();
+    b.station('D', ['D-1', 'LM-1'], { 1: 'right' });
+    const issues = find(validate(b.build()), 'CODE_CHARS');
+    expect(issues).toHaveLength(1);
+    expect(issues[0]!.target).toEqual({ kind: 'station', stationId: 'st-D-1' });
+    expect(issues[0]!.message).toContain('D-1');
+  });
+
   it('CODE_CHARS：必須のコードが空', () => {
     const b = line3([{ tag: 'Lo', formation: '' }]);
     expect(find(validate(b.build()), 'CODE_CHARS')[0]!.message).toContain('空');

@@ -75,7 +75,10 @@ const FIELD_LABELS: Partial<Record<keyof FormationDef, string>> = {
 };
 
 /** コードに使える文字：空白以外の半角英数記号 */
-const CODE_RE = /^[\x21-\x7e]+$/;
+/** TC に出るコード：半角の英字と数字だけ（rules §2.0） */
+const TC_CODE_RE = /^[A-Za-z0-9]+$/;
+/** 表示専用の駅コード・他団体の編成名：空白と全角文字以外の半角文字 */
+const LOOSE_CODE_RE = /^[\x21-\x7e]+$/;
 
 export function validate(
   project: Project,
@@ -102,12 +105,14 @@ export function validate(
   const selfCode = project.orgs.find((o) => o.id === project.selfOrgId)?.code;
 
   // ---- コードの文字 ----
-  const checkCode = (value: string, what: string, target: IssueTarget) => {
+  const checkCode = (value: string, what: string, target: IssueTarget, loose = false) => {
     if (value === '') add('CODE_CHARS', `${what}が空です。`, target);
-    else if (!CODE_RE.test(value)) {
+    else if (loose ? !LOOSE_CODE_RE.test(value) : !TC_CODE_RE.test(value)) {
       add(
         'CODE_CHARS',
-        `${what}「${value}」に空白や全角文字が含まれています。半角で入力してください。`,
+        loose
+          ? `${what}「${value}」に空白や全角文字が含まれています。半角で入力してください。`
+          : `${what}「${value}」には半角の英字と数字だけを使えます（記号・空白・全角文字は使えません）。`,
         target,
       );
     }
@@ -125,9 +130,12 @@ export function validate(
     if (k.trainNameCode) checkCode(k.trainNameCode, `種別「${k.name}」の列車名コード`, target);
   }
   for (const s of project.stations) {
+    // どののりばも行先に使わない駅コードは表示専用（LM-1 など）なので記号を許す
+    const destCodeIds = new Set(s.platforms.map((pf) => pf.codeId));
     for (const c of s.codes) {
       if (c.code.kind === 'free') {
-        checkCode(c.code.value, `${s.name} の駅コード`, { kind: 'station', stationId: s.id });
+        const target = { kind: 'station', stationId: s.id } as const;
+        checkCode(c.code.value, `${s.name} の駅コード`, target, !destCodeIds.has(c.id));
       }
     }
   }
@@ -144,7 +152,7 @@ export function validate(
     const [serviceId = '', kindId = '', index = '0'] = key.split('#');
     const target = { kind: 'departure', serviceId, kindId, entryIndex: Number(index) } as const;
     if (o.formation !== undefined) checkCode(o.formation, '各駅発の形式コード', target);
-    if (o.foreignName) checkCode(o.foreignName, '他団体の編成名', target);
+    if (o.foreignName) checkCode(o.foreignName, '他団体の編成名', target, true);
   }
 
   // ---- 行先コードの重複 ----
