@@ -1,0 +1,56 @@
+# ---- 非公開の資料・Claude 用ドキュメント ----
+# 元資料の Excel（置き場所を問わず除外）
+*.xlsx
+*.xlsm
+~$*
+# Claude の実装用ドキュメント
+CLAUDE.md
+CLAUDE.local.md
+docs/
+.claude/
+
+# ---- 依存・ビルド成果物 ----
+node_modules/
+dist/
+dist-ssr/
+dev-dist/
+*.tsbuildinfo
+.vite/
+.eslintcache
+
+# ---- テスト ----
+coverage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# ---- Python（Excel 抽出スクリプト用） ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ---- 環境変数 ----
+.env
+.env.*
+!.env.example
+
+# ---- ログ ----
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- エディタ・OS ----
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
