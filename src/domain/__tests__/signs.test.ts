@@ -73,6 +73,32 @@ describe('のりばのパターンと看板（rules §4.2〜4.3）', () => {
     expect(c.signs[0]!.lines).toEqual(['[+train]', 'destroy', '', '']);
   });
 
+  it('直通の終点（T）：destroy を置かず station → destination', () => {
+    const b = ruriDown();
+    b.project.services[0]!.throughNote = '翠鉄城東線 トクテルダム中央行';
+    const c = card(b, 'KL13', 2);
+    expect(c.pattern).toBe('T');
+    expect(text(c)).toEqual(['[+train] station 5 / 5 / right', '[+train] destination / KL13-2']);
+    expect(c.notes.join('\n')).toContain('翠鉄城東線 トクテルダム中央行');
+    // 直通先がなければ D のまま
+    expect(card(ruriDown(), 'KL13', 2).pattern).toBe('D');
+  });
+
+  it('直通しない系統も終点にするのりばは T にしない', () => {
+    const b = ruriDown();
+    b.project.services[0]!.throughNote = '翠鉄城東線';
+    b.service(
+      '区間便',
+      'down',
+      [
+        ['KL12', 1],
+        ['KL13', 2],
+      ],
+      [{ tag: 'Lo', formation: 'K300' }],
+    );
+    expect(card(b, 'KL13', 2).pattern).toBe('D');
+  });
+
   it('T8：瑠璃中央 1番（G、行き止まり）', () => {
     const c = card(ruriDown(), 'KU01', 1);
     expect(c.pattern).toBe('G');

@@ -46,7 +46,7 @@ R, L = "right", "left"
 # 向きは Excel の station 看板の4行目。D（降車専用）と Excel にないのりばは「推定」で right。
 STATIONS = [
     ("イアリーオ国際空港", ["IIA"], {1: (R,), 2: (R,)}, "org-CR", True),  # 2番の向きは推定
-    ("アカシア島", ["KL01"], {1: (R,), 2: (R,), 3: (R,)}, SELF, True),  # 3番（種別表の直通快速）は Excel に看板なし・向き推定
+    ("アカシア島", ["KL01"], {1: (R,), 2: (R,), 3: (R,)}, SELF, True),  # 3番（直通快速、ユーザー確認済み）は Excel に看板なし・向き推定
     ("オット", ["KL02"], {1: (R,), 2: (R,)}, SELF, True),
     ("瑠前TT", ["KL03"], {1: (R,), 2: (R,)}, SELF, True),
     ("瑠璃中央", ["KL04", "KU01"], {1: (R, "KU01", True), 2: (R,), 3: (L,), 4: (L,), 5: (R,)}, SELF, True),
@@ -122,7 +122,7 @@ SERVICES = [
         "id": "sv-direct-up",
         "name": "HRA赤石線→瑠璃線→CRアカシア線 普通(瑠璃線内直通快速) イアリーオ国際空港行",
         "direction": "up",
-        "entries": [("NSC", 1), ("GSK", None), ("QUL", None), ("KB02", 2), ("KB01", 4), ("KL09", 2), ("KL08", 1),
+        "entries": [("NSC", 1), ("GSK", None), ("QUL", None), ("KB02", 4), ("KB01", 4), ("KL09", 2), ("KL08", 1),
                     ("KL07", 3), ("KL06", 2), ("KL05", 3), ("KL04", 5), ("KL03", 2), ("KL02", 2), ("KL01", 2),
                     ("IIA", 2)],
         "kinds": [("Ra", "K303", 1.0, {"pass": ["KL08", "KL06", "KL03", "KL02"]})],
@@ -189,8 +189,9 @@ SERVICES = [
     },
 ]
 
-# 選択駅の上書き（Excel の経路に合わせる）
+# 選択駅の上書き（Excel の経路に合わせる）。HRA からの直通は南瑠順 4番を通る（ユーザー確認済み）
 CHOICE = {
+    "KL01#3": "exclude",  # 直通快速の IIA 発を KL4NSC にする（ユーザー確認済み）
     "KL10#2": "include",  # rules §3.2 の例（KL10IIA）
     "KL01#2": "include",  # KL10IIA・KL5IIA などの経路に KL01-2 が入っている
     "KB01#4": "include",  # KB2U6・KB1U6・KB1IIA に KB01-4 が入っている

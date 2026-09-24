@@ -1346,7 +1346,7 @@
         },
         {
           "stationId": "st-KB02",
-          "platform": 2
+          "platform": 4
         },
         {
           "stationId": "st-KL10",
@@ -1974,6 +1974,7 @@
   ],
   "overrides": {
     "choice": {
+      "st-KL01#3": "exclude",
       "st-KL10#2": "include",
       "st-KL01#2": "include",
       "st-KL10#4": "include",

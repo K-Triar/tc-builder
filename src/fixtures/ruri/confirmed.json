@@ -1,4 +1,27 @@
 {
-  "note": "Excel（expected.json）との差分のうち、ユーザーが確認したもの。キー → 確認結果",
-  "diffs": {}
+  "note": "Excel（expected.json）との差分のうち、ユーザーが確認したもの（2026-09-24）。キー → 確認結果",
+  "diffs": {
+    "departure-missing:st-KL01#1|K302_KL4NSC_Ra": "直通快速はアカシア島 3番を使う（種別表どおり）。Excel の看板表・各駅発の 1番は誤り",
+    "departure-extra:st-KL01#3|K302_KL4NSC_Ra": "同上。直通快速はアカシア島 3番から出る",
+    "sign:KL01-1": "同上。直通快速の spawn はアカシア島 3番に置く",
+    "sign-extra:KL01-3": "同上。アカシア島 3番の看板は Excel の駅看板表にない",
+    "departure-foreign:st-KL13#2|(翠鉄設定)": "エメラルド城 2番は直通の終点（パターン T）。発車はない",
+    "sign:KL13-2": "エメラルド城 2番は直通の終点（パターン T）：station → destination。Excel の spawn / mmmm は置かない",
+    "sign:KL13-1": "直通で入ってくる列車の property 看板は v1 では出さない",
+    "departure-foreign:st-KB02#2|[HRA設定]_KB2IIA_Ra": "HRA から瑠璃線へ入る列車は南瑠順 4番を通る（経路 KB2IIA どおり）。南瑠順発は H3004_KB1IIA_Ra（Excel の編成表と一致）",
+    "departure-extra:st-KB02#4|H3004_KB1IIA_Ra": "同上。南瑠順 4番から出る",
+    "sign:KB02-2": "同上。南瑠順 2番を通る系統がなくなるため destination だけ",
+    "sign:KB02-4": "同上。南瑠順 4番に HRA の直通（停車）と新快速（通過）が加わる",
+    "departure-extra:st-NSC#1|H3004_KB2IIA_Ra": "西水中央発の HRA 編成は他団体の編成として持つ（コマンドは作らない）。Excel の各駅発編成表には載っていない",
+    "departure-extra:st-NSC#2|H2006_KB2U6_SR-LSR": "同上",
+    "sign:KB02-1": "skip 条件は D14 どおり !t@Lo（Excel の t@EX-MKR と意味は同じ）",
+    "sign:KB02-3": "skip 条件は D14 どおり !t@Ra（Excel の t@SR-LSR と意味は同じ）",
+    "sign:KL05-5": "特急はセナポンタウンを通過するので skip が要る（Excel の漏れ）",
+    "sign:KL05-4": "同上",
+    "sign:KL07-2": "特急はクォーツを通過するので |t@EX-MKR が要る（Excel の漏れ）",
+    "sign:KL07-3": "同上",
+    "sign:KU03-1": "クロアチア 1番の各停は K301_KU1_Lo（Excel の K300_KU6_Lo は誤記。各駅発編成表どおり）",
+    "sign:KB01-4": "spawn の並びは種別の登録順（新快速 → 特急）",
+    "sign:KU06-2": "行き止まりはルール G の並び（spawn → station → destination → skip destroy → destroy）"
+  }
 }

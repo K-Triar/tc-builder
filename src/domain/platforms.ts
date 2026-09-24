@@ -29,6 +29,10 @@ export interface PlatformSummary {
   spawns: SpawnItem[];
   /** いずれかの系統の終点 */
   isTerminal: boolean;
+  /** 直通の終点：ここを終点とする系統がすべて直通先を持つ（rules §3.6） */
+  throughTerminal: boolean;
+  /** ここを終点とする系統の直通先（重複なし） */
+  throughNotes: string[];
   /** spawn があるか、停車して先へ進む系統がある */
   hasDeparture: boolean;
 }
@@ -47,6 +51,8 @@ export function summarizePlatforms(
     stopKinds: Set<string>;
     passKinds: Set<string>;
     isTerminal: boolean;
+    allThrough: boolean;
+    throughNotes: Set<string>;
     continues: boolean;
   }
   const acc = new Map<string, Acc>();
@@ -58,6 +64,8 @@ export function summarizePlatforms(
         stopKinds: new Set(),
         passKinds: new Set(),
         isTerminal: false,
+        allThrough: true,
+        throughNotes: new Set(),
         continues: false,
       };
       acc.set(key, a);
@@ -71,7 +79,11 @@ export function summarizePlatforms(
       if (e.platform === null) return;
       const a = get(platformKey(e.stationId, e.platform));
       a.used = true;
-      if (i === m) a.isTerminal = true;
+      if (i === m) {
+        a.isTerminal = true;
+        if (service.throughNote) a.throughNotes.add(service.throughNote);
+        else a.allThrough = false;
+      }
       for (const sk of service.kinds) {
         if (sk.stops[i]) {
           a.stopKinds.add(sk.kindId);
@@ -127,6 +139,8 @@ export function summarizePlatforms(
         passTags: tagsOf(a?.passKinds ?? []).filter((t) => !stopTags.includes(t)),
         spawns,
         isTerminal: a?.isTerminal ?? false,
+        throughTerminal: (a?.isTerminal ?? false) && (a?.allThrough ?? false),
+        throughNotes: [...(a?.throughNotes ?? [])],
         hasDeparture: spawns.length > 0 || (a?.continues ?? false),
       });
     }

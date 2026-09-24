@@ -205,6 +205,9 @@ describe('検証（rules §6）', () => {
         target: { kind: 'platform', stationId: 'st-KL02', platform: 1 },
       }),
     ]);
+    // 直通の終点なら警告しない
+    b.project.services[1]!.throughNote = '他社線';
+    expect(find(validate(b.build()), 'TERMINAL_THROUGH')).toEqual([]);
   });
 
   it('MANY_SPAWNS：spawn が5枚以上', () => {

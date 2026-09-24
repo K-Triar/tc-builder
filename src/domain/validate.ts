@@ -262,7 +262,7 @@ export function validate(
       );
     }
     const s = summaryByKey.get(card.id);
-    if (s?.isTerminal && (card.pattern === 'A' || card.pattern === 'B')) {
+    if (s?.isTerminal && !s.throughTerminal && (card.pattern === 'A' || card.pattern === 'B')) {
       add(
         'TERMINAL_THROUGH',
         `${name} は通り抜けできるのりばですが、終点になっています（乗客が降りない可能性）。`,

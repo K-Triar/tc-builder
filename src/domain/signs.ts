@@ -17,12 +17,13 @@ export interface Sign {
   manual?: boolean;
 }
 
-export type Pattern = 'A' | 'B' | 'D' | 'G' | 'foreign' | 'passOnly';
+export type Pattern = 'A' | 'B' | 'D' | 'T' | 'G' | 'foreign' | 'passOnly';
 
 export const PATTERN_LABELS: Record<Pattern, string> = {
   A: 'A：全列車が止まるのりば',
   B: 'B：通過列車があるのりば',
   D: 'D：終点（降車専用）',
+  T: 'T：直通の終点（相手団体の線へそのまま走る）',
   G: 'G：折り返し（行き止まり）',
   foreign: '他団体の設定に従うのりば',
   passOnly: '通過専用の線路',
@@ -112,12 +113,16 @@ export function skipCondition(
 // ---- パターン（rules §4.3） ----
 
 export function platformPattern(
-  s: Pick<PlatformSummary, 'stopTags' | 'passTags' | 'isTerminal' | 'hasDeparture'>,
+  s: Pick<
+    PlatformSummary,
+    'stopTags' | 'passTags' | 'isTerminal' | 'throughTerminal' | 'hasDeparture'
+  >,
   platform: Pick<Platform, 'deadEnd'>,
   signsBySelf: boolean,
 ): Pattern {
   if (!signsBySelf) return 'foreign';
   if (s.stopTags.length === 0) return 'passOnly';
+  if (!s.hasDeparture && s.throughTerminal) return 'T';
   if (!s.hasDeparture && s.isTerminal && !platform.deadEnd) return 'D';
   if (platform.deadEnd && s.hasDeparture) return 'G';
   if (s.passTags.length > 0) return 'B';
@@ -183,6 +188,8 @@ function platformCard(
     passTags: [],
     spawns: [],
     isTerminal: false,
+    throughTerminal: false,
+    throughNotes: [],
     hasDeparture: false,
   };
   const destCode = lookup.destText(stationId, pf.number);
@@ -227,6 +234,12 @@ function platformCard(
     case 'passOnly':
       signs = [destination];
       break;
+    case 'T':
+      signs = [station, destination];
+      notes.push(
+        `直通先（${s.throughNotes.join('、')}）へそのまま走るので destroy を置きません。直通先の看板は相手団体の設定に従います。`,
+      );
+      break;
     case 'D':
       signs = [destroySign(), destination];
       notes.push('到着した列車は入口の destroy で消えます（想定どおり）。');
@@ -262,7 +275,7 @@ function platformCard(
       break;
   }
 
-  if (s.isTerminal && (pattern === 'A' || pattern === 'B')) {
+  if (s.isTerminal && !s.throughTerminal && (pattern === 'A' || pattern === 'B')) {
     notes.push('通り抜けできるのりばが終点になっています。乗客が降りない可能性があります。');
   }
   if (!pf.dir) notes.push('進む向きが未入力です。のりばの設定で入力してください。');
