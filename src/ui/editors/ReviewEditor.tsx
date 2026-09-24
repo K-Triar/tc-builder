@@ -69,7 +69,7 @@ function ChoiceReview() {
       help="choice"
       lead="のりばを選ぶ必要がある駅は自動で経路に入ります。KT式の実例と違うときだけ上書きしてください（上書きはすべての系統に効きます）。"
     >
-      <div className={styles.tableWrap}>
+      <div className={styles.tableWrap} tabIndex={0} role="region" aria-label="経路に入れる駅の表">
         <table className={styles.table}>
           <thead>
             <tr>
@@ -154,7 +154,13 @@ function DepartureReview() {
             const kind = project.kinds.find((x) => x.id === k.kindId);
             const last = s.entries.length - 1;
             return (
-              <div key={k.kindId} className={styles.tableWrap}>
+              <div
+                key={k.kindId}
+                className={styles.tableWrap}
+                tabIndex={0}
+                role="region"
+                aria-label={`${s.name} ${kind?.name ?? ''} の各駅発`}
+              >
                 <table className={styles.table}>
                   <caption style={{ textAlign: 'left', fontWeight: 700 }}>
                     {kind?.name}（{kind ? kindTag(kind) : '?'}）・形式 {k.formation}

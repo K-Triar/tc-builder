@@ -7,7 +7,6 @@ import { useProjectStore } from '../../store/projectStore';
 import { Button } from '../components/Button';
 import { ConfirmDialog } from '../components/Dialog';
 import { NumberField, Section, SelectField, TextField } from '../components/Field';
-import { Help } from '../components/Help';
 import { Matrix } from '../components/Matrix';
 import { useProject } from '../hooks/useDerived';
 import { must, newId, stationLabel } from './common';
@@ -345,8 +344,11 @@ function KindList({ service }: { service: Service }) {
               <details style={{ flex: '1 1 100%' }}>
                 <summary>
                   衝突設定（mob {k.mobCollision}・プレイヤー {k.playerCollision}）
-                  <Help topic="collision" />
                 </summary>
+                <p className="field-hint">
+                  mob やプレイヤーにぶつかったときの動き。KT式では
+                  cancel（止まらずに通り抜ける）が標準です。
+                </p>
                 <div className={styles.grid2}>
                   <TextField
                     label="mob 衝突"

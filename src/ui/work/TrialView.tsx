@@ -68,7 +68,12 @@ export function TrialView() {
 
       <section className={styles.extra}>
         <h2>うまくいかないとき</h2>
-        <div style={{ overflowX: 'auto' }}>
+        <div
+          style={{ overflowX: 'auto' }}
+          tabIndex={0}
+          role="region"
+          aria-label="うまくいかないときの表"
+        >
           <table className={styles.trouble}>
             <thead>
               <tr>

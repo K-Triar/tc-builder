@@ -68,7 +68,12 @@ function DocTable({ table }: { table: Table }) {
           className="no-print"
         />
       </div>
-      <div className={styles.wrap}>
+      <div
+        className={styles.wrap}
+        tabIndex={0}
+        role="region"
+        aria-label={`${table.title}（横にスクロールできます）`}
+      >
         <table className={styles.table}>
           <thead>
             <tr>

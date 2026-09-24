@@ -17,7 +17,7 @@ export interface MatrixProps {
 /** 停車 ○/× のマトリクス（Excel 種別表と同じ見た目）。記号でも示す */
 export function Matrix({ caption, rows, columns, value, onToggle, cellLabel }: MatrixProps) {
   return (
-    <div className={styles.wrap}>
+    <div className={styles.wrap} tabIndex={0} role="region" aria-label={caption}>
       <table className={styles.table}>
         <caption className="visually-hidden">{caption}</caption>
         <thead>

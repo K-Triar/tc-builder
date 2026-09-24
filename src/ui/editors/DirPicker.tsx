@@ -7,7 +7,10 @@ import styles from './editors.module.css';
 export function DirDiagram({ dir, title }: { dir: Dir; title?: string }) {
   const toRight = dir === 'right';
   return (
-    <svg viewBox="0 0 180 96" role="img" aria-label={title}>
+    <svg
+      viewBox="0 0 180 96"
+      {...(title ? { role: 'img', 'aria-label': title } : { 'aria-hidden': true })}
+    >
       {/* 線路 */}
       <rect x="4" y="18" width="172" height="26" rx="3" fill="var(--surface-3)" />
       <line x1="4" y1="24" x2="176" y2="24" stroke="var(--text-muted)" strokeWidth="2" />

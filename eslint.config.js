@@ -48,7 +48,7 @@ export default defineConfig([
   },
   {
     // テストでは「あるはずの要素」を ! で取り出してよい（無ければテストが落ちる）
-    files: ['src/**/*.test.{ts,tsx}', 'src/**/__tests__/**/*.{ts,tsx}'],
+    files: ['src/**/*.test.{ts,tsx}', 'src/**/__tests__/**/*.{ts,tsx}', 'e2e/**/*.ts'],
     rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
   },
   prettier,

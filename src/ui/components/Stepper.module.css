@@ -55,8 +55,14 @@
 }
 
 @media (max-width: 640px) {
+  /* 狭い画面では今のステップ以外の名前を隠す（読み上げには残す） */
   .todo .label,
   .done .label {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 }
