@@ -1,0 +1,110 @@
+/* デザイントークン（design §6.5）。ライト／ダークはシステム設定に従い、data-theme で手動切り替えもできる */
+
+:root {
+  color-scheme: light;
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --surface-3: #e2e7ee;
+  --border: #cfd6df;
+  --text: #1c232b;
+  --text-muted: #56616e;
+  --accent: #2f5f8f;
+  --accent-hover: #264e76;
+  --accent-soft: #e3edf7;
+  --accent-contrast: #ffffff;
+  --danger: #b3261e;
+  --danger-soft: #fbe9e7;
+  --warning: #8a5a00;
+  --warning-soft: #fff4d6;
+  --info: #2f5f8f;
+  --info-soft: #e3edf7;
+  --ok: #1e6b3a;
+  --ok-soft: #e3f4e8;
+  --focus: #1a73e8;
+  --shadow: 0 1px 2px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 6%);
+  --overlay: rgb(20 26 33 / 45%);
+
+  /* 看板（Minecraft の木の看板を思わせる色。画像は使わない） */
+  --sign-bg: #c9a46a;
+  --sign-border: #7a5a2c;
+  --sign-text: #1b1206;
+
+  --font:
+    system-ui, -apple-system, 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI',
+    sans-serif;
+  --mono: ui-monospace, 'SFMono-Regular', Consolas, 'BIZ UDGothic', 'Noto Sans Mono', monospace;
+
+  --radius: 8px;
+  --radius-sm: 4px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --touch: 44px;
+  --header-h: 56px;
+  --nav-w: 220px;
+  --panel-w: 320px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #12161b;
+    --surface: #1a2027;
+    --surface-2: #222a33;
+    --surface-3: #2c3641;
+    --border: #3a4552;
+    --text: #e6eaef;
+    --text-muted: #a3adb9;
+    --accent: #7fb0e0;
+    --accent-hover: #9cc3ea;
+    --accent-soft: #1f3347;
+    --accent-contrast: #0d1620;
+    --danger: #f2877e;
+    --danger-soft: #3b1f1d;
+    --warning: #f0c060;
+    --warning-soft: #3a2f14;
+    --info: #7fb0e0;
+    --info-soft: #1f3347;
+    --ok: #7fd197;
+    --ok-soft: #173222;
+    --focus: #8ab4f8;
+    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 12px rgb(0 0 0 / 30%);
+    --overlay: rgb(0 0 0 / 60%);
+    --sign-bg: #a7844d;
+    --sign-border: #5c421d;
+    --sign-text: #140d03;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #12161b;
+  --surface: #1a2027;
+  --surface-2: #222a33;
+  --surface-3: #2c3641;
+  --border: #3a4552;
+  --text: #e6eaef;
+  --text-muted: #a3adb9;
+  --accent: #7fb0e0;
+  --accent-hover: #9cc3ea;
+  --accent-soft: #1f3347;
+  --accent-contrast: #0d1620;
+  --danger: #f2877e;
+  --danger-soft: #3b1f1d;
+  --warning: #f0c060;
+  --warning-soft: #3a2f14;
+  --info: #7fb0e0;
+  --info-soft: #1f3347;
+  --ok: #7fd197;
+  --ok-soft: #173222;
+  --focus: #8ab4f8;
+  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 12px rgb(0 0 0 / 30%);
+  --overlay: rgb(0 0 0 / 60%);
+  --sign-bg: #a7844d;
+  --sign-border: #5c421d;
+  --sign-text: #140d03;
+}

@@ -1,0 +1,257 @@
+.shell {
+  display: grid;
+  grid-template-columns: var(--nav-w) minmax(0, 1fr) var(--panel-w);
+  grid-template-rows: auto auto 1fr;
+  grid-template-areas:
+    'header header header'
+    'unsaved unsaved unsaved'
+    'nav main aside';
+  min-height: 100vh;
+}
+
+.header {
+  grid-area: header;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--header-h);
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.home {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch);
+  height: var(--touch);
+  border-radius: var(--radius);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.home:hover {
+  background: var(--surface-2);
+}
+
+.titleBox {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.projectName {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.badgeError {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.badgeWarn {
+  color: var(--warning);
+}
+
+.unsaved {
+  grid-area: unsaved;
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  background: var(--warning-soft);
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+.nav {
+  grid-area: nav;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.nav ul {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-3);
+  position: sticky;
+  top: var(--header-h);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.navLink:hover {
+  background: var(--surface-2);
+}
+
+.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.navIcon {
+  width: 1.5em;
+  text-align: center;
+}
+
+.main {
+  grid-area: main;
+  min-width: 0;
+  padding: var(--space-5);
+}
+
+.aside {
+  grid-area: aside;
+  border-left: 1px solid var(--border);
+  background: var(--surface);
+  max-height: calc(100vh - var(--header-h));
+  overflow-y: auto;
+  position: sticky;
+  top: var(--header-h);
+}
+
+.sheetHandle {
+  display: none;
+}
+
+.themeButton {
+  white-space: nowrap;
+}
+
+/* タブレット：検証パネルは下部シート */
+@media (max-width: 1100px) {
+  .shell {
+    grid-template-columns: var(--nav-w) minmax(0, 1fr);
+    grid-template-areas:
+      'header header'
+      'unsaved unsaved'
+      'nav main';
+  }
+
+  .aside {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    z-index: 40;
+    max-height: 70vh;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    border-radius: var(--radius) var(--radius) 0 0;
+    box-shadow: var(--shadow);
+    transform: translateY(100%);
+    visibility: hidden;
+    transition:
+      transform 0.2s,
+      visibility 0.2s;
+  }
+
+  .sheetOpen {
+    transform: none;
+    visibility: visible;
+  }
+
+  .sheetHandle {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--space-2) var(--space-2) 0;
+  }
+}
+
+/* スマホ：下タブ */
+@media (max-width: 768px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'header'
+      'unsaved'
+      'main';
+    padding-bottom: calc(var(--touch) + 20px);
+  }
+
+  .header {
+    padding: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .themeButton {
+    display: none;
+  }
+
+  .main {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .nav ul {
+    position: static;
+    flex-direction: row;
+    padding: var(--space-1);
+  }
+
+  .nav li {
+    flex: 1 1 0;
+  }
+
+  .navLink {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    padding: var(--space-1);
+    font-size: 0.75rem;
+    min-height: calc(var(--touch) + 8px);
+  }
+
+  .navIcon {
+    font-size: 1.1rem;
+  }
+
+  .aside {
+    bottom: calc(var(--touch) + 16px);
+  }
+}
