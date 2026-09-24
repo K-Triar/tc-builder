@@ -101,10 +101,13 @@ describe('はじめての質問（集中モード）で、新しい路線網を�
 
     // C のりば：1駅＝1カード
     await h1('A駅ののりば');
+    // 端の駅だけ、行き止まりの説明を出す
+    expect(screen.getByText('この駅は路線の端です。')).toBeInTheDocument();
     expect(screen.getByText('1 / 3')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('radio', { name: /左から右へ/ }));
     click('次の駅：B駅 →');
     await h1('B駅ののりば');
+    expect(screen.queryByText('この駅は路線の端です。')).toBeNull();
     click('＋ のりばを足す');
     for (const r of screen.getAllByRole('radio', { name: /左から右へ/ })) fireEvent.click(r);
     click('次の駅：C駅 →');

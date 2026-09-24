@@ -169,6 +169,8 @@ test('新規作成 → はじめての質問（集中モード）→ いまこ�
   }
   await check('駅');
   await page.getByRole('button', { name: 'のりばの設定へ進む →' }).click();
+  await expect(page.getByText('この駅は路線の端です。')).toBeVisible();
+  await check('のりば（端の駅）');
   for (const [nextLabel, deadEnd] of [
     ['次の駅：中駅 →', true],
     ['次の駅：西駅 →', false],

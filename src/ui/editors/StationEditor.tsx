@@ -295,7 +295,22 @@ export function StationPlatforms({ stationId }: { stationId: string }) {
   const mut = (fn: (st: Station, p: Project) => void) =>
     update((p) => fn(must(p.stations.find((x) => x.id === stationId)), p));
   const fp = params.get('station') === stationId ? Number(params.get('platform')) : undefined;
-  return <PlatformList station={s} mut={mut} focusPlatform={fp} guided />;
+  const index = project.stations.indexOf(s);
+  // 路線の端の駅は折り返しが多い。印を忘れると「通り抜けできるのりばが終点」の警告になる
+  const isEnd =
+    project.stations.length >= 2 && (index === 0 || index === project.stations.length - 1);
+  const signs = isSelfStation(project, s) || s.signsBySelf;
+  return (
+    <>
+      {isEnd && signs && (
+        <p className={styles.endNote}>
+          <strong>この駅は路線の端です。</strong>
+          列車が同じ線路に着いて、向きを変えて折り返すのりばは、下の「行き止まり」に印を付けてください。印がないと、終点なのに通り抜けできるのりばとして扱われます。
+        </p>
+      )}
+      <PlatformList station={s} mut={mut} focusPlatform={fp} guided />
+    </>
+  );
 }
 
 /** 編集「駅とのりば」（すべての項目を出す） */
