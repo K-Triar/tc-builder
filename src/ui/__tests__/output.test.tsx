@@ -52,8 +52,9 @@ describe('駅の看板カード（8.1・8.2）', () => {
   });
 
   it('駅ごとの C と switcher の指示、他団体の駅', async () => {
-    await openAt('/p/out/work/signs');
-    const kl05 = screen.getByRole('region', { name: 'セナポンタウン（KL05）' });
+    // 駅を1つずつ見る画面。すべての駅を並べる表示にもできる
+    await openAt('/p/out/work/signs?station=all');
+    const kl05 = screen.getByRole('region', { name: /^セナポンタウン\s*KL05/ });
     expect(within(kl05).getAllByText(/C 空車削除/).length).toBeGreaterThan(0);
     expect(within(kl05).getByRole('heading', { name: /switcher（ポイント）/ })).toBeInTheDocument();
     const nsc = screen.getByRole('region', { name: /西水中央/ });

@@ -10,12 +10,22 @@ test('トップページが表示される', async ({ page }) => {
 
 test('サンプル → 作業 → コピー → チェック → リロードで保持', async ({ page }) => {
   await page.goto('./');
-  await page.getByRole('button', { name: 'サンプル（瑠璃線系統）を開く' }).click();
-  await expect(page).toHaveURL(/#\/p\/[^/]+\/work\/signs/);
+  await page.getByRole('button', { name: '完成例（瑠璃線系統）を見る' }).click();
+  // 開くと「いまここ」。次にやることが出る
+  await expect(page).toHaveURL(/#\/p\/[^/]+\/$/);
   await expect(page.getByText('瑠璃線系統（サンプル）').first()).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('経路と編成を登録する');
 
-  // オット 1番の看板カード
-  await page.getByLabel('駅').selectOption({ label: 'オット（KL02）' });
+  // 設置する → 看板を置く → 駅の路線図でオットを選ぶ
+  await page
+    .getByRole('navigation', { name: '画面' })
+    .getByRole('link', { name: /設置する/ })
+    .click();
+  await page.getByRole('link', { name: /② 看板を置く/ }).click();
+  await page
+    .getByRole('navigation', { name: '看板を置く駅' })
+    .getByRole('link', { name: /^オット/ })
+    .click();
   const card = page.getByRole('article', { name: 'オット 1番のりば' });
   await expect(card.getByText('B：通過列車があるのりば')).toBeVisible();
 
@@ -29,7 +39,7 @@ test('サンプル → 作業 → コピー → チェック → リロードで
   await expect(card.getByLabel('設置した')).toBeChecked();
 
   // コマンドの1行ずつモード
-  await page.getByRole('link', { name: /① コマンド/ }).click();
+  await page.getByRole('link', { name: /① コマンドを打つ/ }).click();
   await page.getByRole('button', { name: '▶ 次の行をコピー（1行ずつモード）' }).click();
   const bar = page.getByRole('region', { name: '1行ずつコピー' });
   await expect(bar).toContainText('/train route set');
@@ -50,12 +60,14 @@ test('サンプル → 作業 → コピー → チェック → リロードで
   await expect(page.getByRole('link', { name: '瑠璃線系統（サンプル）' }).first()).toBeVisible();
 });
 
-test('アクセシビリティ（axe）：ホーム・看板・コマンド・資料・ウィザード', async ({ page }) => {
-  // 8画面を順に調べるので長めに待つ
-  test.setTimeout(90_000);
+test('アクセシビリティ（axe）：ホーム・いまここ・看板・コマンド・資料・質問・編集', async ({
+  page,
+}) => {
+  // 13画面を順に調べるので長めに待つ
+  test.setTimeout(150_000);
   await page.goto('./');
-  await page.getByRole('button', { name: 'サンプル（瑠璃線系統）を開く' }).click();
-  await expect(page).toHaveURL(/work\/signs/);
+  await page.getByRole('button', { name: '完成例（瑠璃線系統）を見る' }).click();
+  await expect(page).toHaveURL(/#\/p\/[^/]+\/$/);
   const id = page.url().match(/#\/p\/([^/]+)/)![1];
   for (const path of [
     '',
@@ -63,9 +75,13 @@ test('アクセシビリティ（axe）：ホーム・看板・コマンド・�
     `#/p/${id}/work/commands`,
     `#/p/${id}/work/trial`,
     `#/p/${id}/docs/stops`,
+    `#/p/${id}/`,
+    `#/p/${id}/setup/0`,
+    `#/p/${id}/setup/1`,
+    `#/p/${id}/setup/2?station=st-KL04`,
+    `#/p/${id}/setup/3`,
     `#/p/${id}/setup/4`,
-    `#/p/${id}/setup/5`,
-    `#/p/${id}/setup/6`,
+    `#/p/${id}/edit/stations`,
   ]) {
     await page.goto(`./${path}`);
     await page.waitForTimeout(300);
@@ -79,11 +95,11 @@ test('アクセシビリティ（axe）：ホーム・看板・コマンド・�
 
 test('キーボードだけで看板のチェックとダイアログを操作できる', async ({ page }) => {
   await page.goto('./');
-  await page.getByRole('button', { name: '＋ 新しいプロジェクト' }).focus();
+  await page.getByRole('button', { name: '＋ 新しい路線をつくる' }).focus();
   await page.keyboard.press('Enter');
-  const dialog = page.getByRole('dialog', { name: '新しいプロジェクト' });
+  const dialog = page.getByRole('dialog', { name: '新しい路線をつくる' });
   await expect(dialog).toBeVisible();
-  await expect(dialog.getByLabel('プロジェクト名')).toBeFocused();
+  await expect(dialog.getByLabel('路線の名前')).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(dialog).toBeHidden();
 });
@@ -91,14 +107,15 @@ test('キーボードだけで看板のチェックとダイアログを操作�
 test('ダークモードでも文字のコントラストが足りる', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('./');
-  await page.getByRole('button', { name: 'サンプル（瑠璃線系統）を開く' }).click();
-  await expect(page).toHaveURL(/work\/signs/);
+  await page.getByRole('button', { name: '完成例（瑠璃線系統）を見る' }).click();
+  await expect(page).toHaveURL(/#\/p\/[^/]+\/$/);
   const id = page.url().match(/#\/p\/([^/]+)/)![1];
   for (const path of [
     '',
     `#/p/${id}/work/signs?station=st-KL02`,
     `#/p/${id}/work/commands`,
-    `#/p/${id}/setup/5`,
+    `#/p/${id}/setup/2?station=st-KL04`,
+    `#/p/${id}/`,
   ]) {
     await page.goto(`./${path}`);
     await page.waitForTimeout(300);

@@ -7,10 +7,10 @@
 }
 
 .caution {
-  padding: var(--space-3);
-  border-left: 4px solid var(--warning);
+  padding: var(--space-2) var(--space-3);
+  border-left: 4px solid var(--amber);
   background: var(--warning-soft);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-input);
   font-size: var(--fs-sm);
 }
 
@@ -42,12 +42,42 @@
 }
 
 .stationTitle {
-  position: sticky;
-  top: var(--header-h);
-  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
   padding: var(--space-2) 0;
-  background: var(--bg);
-  border-bottom: 2px solid var(--border);
+  font-size: var(--fs-xl);
+  border-bottom: 3px solid var(--text);
+}
+
+.stationCodes {
+  display: inline-flex;
+  gap: var(--space-1);
+}
+
+/* 左に駅の路線図、右にその駅の看板 */
+.split {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.splitSide {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-3));
+  max-height: calc(100vh - var(--header-h) - 40px);
+  overflow-y: auto;
+}
+
+.splitMain {
+  min-width: 0;
+}
+
+.allLink {
+  font-size: var(--fs-sm);
+  margin: var(--space-3) 0 0 34px;
 }
 
 .pill {
@@ -60,13 +90,51 @@
   color: var(--info);
 }
 
+/* のりば1つ＝作業指示書1枚 */
 .platformCard,
 .extra {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--space-4);
-  margin-bottom: var(--space-3);
+  border-top: 3px solid var(--text);
+  border-radius: var(--radius-sheet);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.platformLabel {
+  margin-left: var(--space-2);
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.destBox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* 手順の番号（1 置く順、2 書く文字） */
+.step {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 var(--space-2);
+  font-weight: 500;
+}
+
+.stepNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--surface);
+  font-size: var(--fs-xs);
+  font-weight: 700;
 }
 
 .platformHead {
@@ -93,9 +161,9 @@
 }
 
 .pattern {
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  color: var(--accent);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  margin: calc(var(--space-2) * -1) 0 0;
 }
 
 .order {
@@ -106,46 +174,84 @@
 
 .signRow {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--space-4) var(--space-3);
   padding-bottom: var(--space-2);
 }
 
 .sign {
   margin: 0;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .signCaption {
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
-  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+  font-size: var(--fs-sm);
+  line-height: 1.3;
 }
 
+/* 図の番号と同じ丸数字 */
 .signIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--text);
+  border-radius: 50%;
   font-weight: 700;
-  color: var(--text);
-  margin-right: var(--space-1);
+  font-size: var(--fs-xs);
+}
+
+.signRole {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+}
+
+.signTc {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  color: var(--text-muted);
 }
 
 .manual {
-  margin-left: var(--space-1);
+  margin-left: auto;
   padding: 0 var(--space-1);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-sign);
   background: var(--danger-soft);
   color: var(--danger);
   font-weight: 700;
+  font-size: var(--fs-xs);
 }
 
+/* 看板の板：オークの板目。角はほぼ丸めない */
 .signBoard {
   list-style: none;
   margin: 0;
-  padding: var(--space-1);
-  background: var(--sign-bg);
+  padding: var(--space-1) var(--space-1);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 9px, var(--sign-grain) 9px 10px), var(--sign-bg);
   border: 3px solid var(--sign-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-sign);
   color: var(--sign-text);
   font-family: var(--mono);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%);
+}
+
+/* 看板の支柱 */
+.signPost {
+  align-self: center;
+  width: 10px;
+  height: 14px;
+  background: var(--post);
 }
 
 .signLine {
@@ -154,31 +260,30 @@
   justify-content: space-between;
   gap: var(--space-1);
   min-height: 32px;
-  border-bottom: 1px dashed rgb(0 0 0 / 15%);
-}
-
-.signLine:last-child {
-  border-bottom: none;
 }
 
 .signText {
+  flex: 1 1 auto;
   padding: 0 var(--space-1);
-  font-weight: 600;
+  font-weight: 700;
+  text-align: center;
   white-space: pre;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .lineCopy {
-  min-height: 32px !important;
-  min-width: 32px !important;
+  min-height: 30px !important;
+  min-width: 30px !important;
   padding: 0 var(--space-2) !important;
   color: var(--sign-text) !important;
   font-size: var(--fs-xs);
+  opacity: 0.7;
 }
 
 .lineCopy:hover {
-  background: rgb(255 255 255 / 25%) !important;
+  background: rgb(255 255 255 / 30%) !important;
+  opacity: 1;
 }
 
 .notes {
@@ -190,9 +295,12 @@
 .checks {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
-  border-top: 1px solid var(--border);
-  padding-top: var(--space-3);
+  gap: var(--space-2) var(--space-5);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-input);
+  background: var(--bg);
 }
 
 .check {
@@ -237,9 +345,14 @@
 .block {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-left: 4px solid var(--border-strong);
+  border-radius: var(--radius-sheet);
   padding: var(--space-3) var(--space-4);
   margin-bottom: var(--space-2);
+}
+
+.blockDone {
+  border-left-color: var(--ok);
 }
 
 .blockCurrent {
@@ -313,6 +426,22 @@
   overflow-wrap: anywhere;
 }
 
+@media (max-width: 900px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+
+  .splitSide {
+    position: static;
+    max-height: 40vh;
+    padding: var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sheet);
+    background: var(--surface);
+  }
+}
+
 @media (max-width: 768px) {
   .signRow {
     grid-template-columns: minmax(0, 1fr);
@@ -377,4 +506,35 @@
 
 .scrollX {
   overflow-x: auto;
+}
+
+/* 完成：終点の駅名標 */
+.complete {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  padding: var(--space-4);
+  background: var(--ok-soft);
+  border: 1px solid var(--ok);
+  border-left: 8px solid var(--ok);
+  border-radius: var(--radius-sheet);
+}
+
+.complete h2 {
+  margin: 0 0 var(--space-1);
+  color: var(--ok);
+}
+
+.complete p {
+  margin: 0;
+}
+
+.completeMark {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border: 8px solid var(--ok);
+  border-radius: var(--radius-sign);
+  background: var(--surface);
 }

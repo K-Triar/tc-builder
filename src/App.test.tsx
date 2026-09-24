@@ -21,21 +21,19 @@ describe('ホーム', () => {
   it('見出しと、はじめるボタン', async () => {
     renderAt('/');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('KT式 TC ビルダー');
-    expect(screen.getByRole('button', { name: '＋ 新しいプロジェクト' })).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'サンプル（瑠璃線系統）を開く' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '＋ 新しい路線をつくる' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '完成例（瑠璃線系統）を見る' })).toBeInTheDocument();
   });
 
   it('新しいプロジェクトを K プリセットで作るとウィザードへ進む', async () => {
     renderAt('/');
-    fireEvent.click(screen.getByRole('button', { name: '＋ 新しいプロジェクト' }));
-    const dialog = screen.getByRole('dialog', { name: '新しいプロジェクト' });
-    fireEvent.change(within(dialog).getByLabelText('プロジェクト名'), {
+    fireEvent.click(screen.getByRole('button', { name: '＋ 新しい路線をつくる' }));
+    const dialog = screen.getByRole('dialog', { name: '新しい路線をつくる' });
+    fireEvent.change(within(dialog).getByLabelText('路線の名前'), {
       target: { value: '試験線' },
     });
     expect(within(dialog).getByRole('radio', { name: /Kトライア/ })).toBeChecked();
-    fireEvent.click(within(dialog).getByRole('button', { name: '作ってウィザードへ' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: 'つくって始める' }));
     expect(await screen.findByText('試験線')).toBeInTheDocument();
     const p = useProjectStore.getState().project!;
     expect(p.name).toBe('試験線');

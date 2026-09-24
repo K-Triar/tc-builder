@@ -1,0 +1,43 @@
+/* 作業指示書の頭：何を・どこで・何を確かめる */
+.task {
+  margin: 0 0 var(--space-5);
+}
+
+.title {
+  margin-bottom: var(--space-3);
+}
+
+.taskList {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--accent);
+  border-radius: var(--radius-sheet);
+  max-width: 52em;
+}
+
+.taskList dt {
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  padding-top: 2px;
+}
+
+.taskList dd {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .taskList {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--space-3);
+  }
+
+  .taskList dd + dt {
+    margin-top: var(--space-2);
+  }
+}

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { CHECK_COMMANDS } from '../../domain/commands';
-import { workIds } from '../../domain/progress';
+import { workIds, workStatus } from '../../domain/progress';
 import { copyText } from '../clipboard';
 import { Button } from '../components/Button';
 import { CopyButton } from '../components/CopyButton';
@@ -42,6 +42,7 @@ export function ErrorsStop() {
 
 /** 作業「コマンド」：0. 準備 → 1. 経路 → 2. 編成 → 3. 仕上げ（design §6.4） */
 export function CommandsView() {
+  const project = useProject();
   const { derived } = useDerived();
   const plan = derived.commandPlan;
   const [stepMode, setStepMode] = useState(false);
@@ -130,8 +131,13 @@ export function CommandsView() {
           {g.note && <p className="muted">{g.note}</p>}
           {g.blocks.map((b) => {
             const isCurrent = current?.blockId === b.id;
+            const done =
+              workStatus(project.progress, { id: workIds.command(b.id), hash: b.hash }) === 'done';
             return (
-              <div key={b.id} className={`${styles.block} ${isCurrent ? styles.blockCurrent : ''}`}>
+              <div
+                key={b.id}
+                className={`${styles.block} ${isCurrent ? styles.blockCurrent : ''} ${done ? styles.blockDone : ''}`}
+              >
                 <div className={styles.blockHead}>
                   <h3 className={styles.blockTitle}>{b.title}</h3>
                   <div className="row">

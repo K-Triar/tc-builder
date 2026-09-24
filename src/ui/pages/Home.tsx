@@ -97,47 +97,85 @@ export function Home() {
   return (
     <div className={`${styles.page} ${dragging ? styles.dragging : ''}`} {...dropProps}>
       <header className={styles.header}>
-        <div>
-          <h1 className={styles.title}>KT式 TC ビルダー</h1>
-          <p className={styles.lead}>
-            質問に答えていくだけで、TrainCarts の KT式（経路コード方式）の看板とコマンドが作れます。
-          </p>
-        </div>
+        <h1 className={styles.brand}>
+          <span className={styles.brandMark} aria-hidden="true" />
+          KT式 TC ビルダー
+        </h1>
         <Button variant="ghost" size="sm" onClick={() => setTheme(nextTheme(theme))}>
           {THEME_LABELS[theme]}
         </Button>
       </header>
 
-      <section className={styles.actions} aria-label="はじめる">
-        <Button variant="primary" onClick={() => setCreating(true)}>
-          ＋ 新しいプロジェクト
-        </Button>
-        <Button onClick={onSample}>サンプル（瑠璃線系統）を開く</Button>
-        <Button onClick={() => fileInput.current?.click()}>ファイルを開く</Button>
-        <input
-          ref={fileInput}
-          type="file"
-          accept=".json,application/json"
-          className="visually-hidden"
-          aria-label="プロジェクトファイルを選ぶ"
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            e.target.value = '';
-            if (f) void onFile(f);
-          }}
-        />
+      <section className={styles.start} aria-labelledby="start-title">
+        <h2 id="start-title" className={styles.startTitle}>
+          路線をつくる
+        </h2>
+        <p className={styles.lead}>
+          Minecraft の鉄道について順番に答えるだけで、TrainCarts
+          の看板に書く文字と、ゲーム内で打つコマンドを作ります。TrainCarts
+          を知らなくても大丈夫です。
+        </p>
+        <ol className={styles.flow}>
+          <li>
+            <span className={styles.flowStop} aria-hidden="true" />
+            <strong>質問に答える</strong>
+            <span>駅・のりば・列車の走り方</span>
+          </li>
+          <li>
+            <span className={styles.flowStop} aria-hidden="true" />
+            <strong>自動でできる</strong>
+            <span>看板の文字とコマンド</span>
+          </li>
+          <li>
+            <span className={styles.flowStop} aria-hidden="true" />
+            <strong>Minecraft に置く</strong>
+            <span>手順どおりに看板を置く</span>
+          </li>
+          <li>
+            <span className={`${styles.flowStop} ${styles.flowEnd}`} aria-hidden="true" />
+            <strong>試運転して完成</strong>
+            <span>チェックを付けて確かめる</span>
+          </li>
+        </ol>
+        <div className={styles.actions}>
+          <Button variant="primary" size="lg" onClick={() => setCreating(true)}>
+            ＋ 新しい路線をつくる
+          </Button>
+          <Button variant="ghost" onClick={onSample}>
+            完成例（瑠璃線系統）を見る
+          </Button>
+          <Button variant="ghost" onClick={() => fileInput.current?.click()}>
+            書き出したファイルを開く
+          </Button>
+          <input
+            ref={fileInput}
+            type="file"
+            accept=".json,application/json"
+            className="visually-hidden"
+            aria-label="プロジェクトファイルを選ぶ"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              e.target.value = '';
+              if (f) void onFile(f);
+            }}
+          />
+        </div>
+        <p className={`${styles.dropHint} muted`}>
+          .ktc.json ファイルをこの画面にドラッグ＆ドロップしても開けます。
+        </p>
       </section>
-      <p className={`${styles.dropHint} muted`}>
-        .ktc.json ファイルをこの画面にドラッグ＆ドロップしても開けます。
-      </p>
 
       <section aria-labelledby="list-title">
-        <h2 id="list-title">このブラウザのプロジェクト</h2>
+        <h2 id="list-title" className={styles.listTitle}>
+          続きから
+        </h2>
         {loadError && <p role="alert">{loadError}</p>}
         {projects === null ? (
           <p className="muted">読み込み中…</p>
         ) : projects.length === 0 ? (
-          <p className="muted">まだありません。新しく作るか、サンプルを開いてみてください。</p>
+          <p className="muted">
+            まだありません。新しくつくるか、完成例を開いて中身を見てみてください。
+          </p>
         ) : (
           <ul className={styles.list}>
             {projects.map((m) => (
@@ -155,7 +193,7 @@ export function Home() {
                     {m.name || '（名前なし）'}
                   </a>
                   <span className={styles.itemMeta}>
-                    更新 {formatDate(m.updatedAt)}
+                    最後に触った日 {formatDate(m.updatedAt)}
                     {hasUnexportedChanges(m) && (
                       <span className={styles.unsaved}>・ファイルに未保存</span>
                     )}
@@ -328,19 +366,19 @@ function NewProjectDialog({
   return (
     <Dialog
       open={open}
-      title="新しいプロジェクト"
+      title="新しい路線をつくる"
       onClose={onCancel}
       actions={
         <>
           <Button onClick={onCancel}>やめる</Button>
           <Button variant="primary" onClick={create}>
-            作ってウィザードへ
+            つくって始める
           </Button>
         </>
       }
     >
       <div className="field">
-        <label htmlFor="new-name">プロジェクト名</label>
+        <label htmlFor="new-name">路線の名前</label>
         <input
           id="new-name"
           data-autofocus
@@ -353,7 +391,7 @@ function NewProjectDialog({
         />
       </div>
       <fieldset className={styles.presets}>
-        <legend>団体のプリセット</legend>
+        <legend>どの団体の決まりで作りますか？</legend>
         {PRESETS.map((p) => (
           <label key={p.id} className={styles.presetOption}>
             <input
@@ -367,8 +405,8 @@ function NewProjectDialog({
               {p.label}
               <span className="field-hint">
                 {p.id === 'K'
-                  ? '団体コード K、路線 L/B/Q/U/Y、種別 Lo/Ra/SR/EX/ET/Te、用途番号が入っています'
-                  : '団体・路線・種別を自分で入力します'}
+                  ? '駅コードや列車の種類が入った状態から始めます（ふつうはこちら）'
+                  : '団体・路線・列車の種類のコードを自分で決めます'}
               </span>
             </span>
           </label>

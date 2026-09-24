@@ -1,59 +1,91 @@
-import { useSearchParams } from 'react-router';
-import { workIds } from '../../domain/progress';
+import { useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router';
+import type { Project } from '../../domain/model';
+import { workIds, workStatus } from '../../domain/progress';
 import { PATTERN_LABELS, type PlatformCard, type StationCard } from '../../domain/signs';
-import { SelectField } from '../components/Field';
+import { StationLinks, type StationLinkItem } from '../components/StationLine';
 import { Help } from '../components/Help';
 import { useDerived, useProject } from '../hooks/useDerived';
-import { stationLabel } from '../editors/common';
+import { stationCodesText } from '../editors/common';
 import { ErrorsStop } from './CommandsView';
 import { PlatformDiagram } from './PlatformDiagram';
 import { SignView } from './SignView';
 import { WorkCheck } from './WorkCheck';
 import styles from './work.module.css';
 
-/** 作業「駅の看板」：駅ごとにのりばカード＋C＋switcher（design §6.3） */
+/** 駅の駅コードの表示 */
+function codesOf(project: Project, stationId: string): string {
+  const st = project.stations.find((x) => x.id === stationId);
+  return st ? stationCodesText(project, st) : '';
+}
+
+/** 開く駅：指定がなければ、まだ看板を置き終えていない最初の駅 */
+function pickStation(cards: readonly StationCard[], done: (id: string) => boolean) {
+  return (
+    cards.find((c) => c.platformCards.some((pc) => pc.pattern !== 'foreign' && !done(pc.id))) ??
+    cards[0]
+  );
+}
+
+/** 作業「看板を置く」：左に駅の路線図、右にその駅ののりばごとの看板（design §6.3） */
 export function SignsView() {
   const project = useProject();
   const { derived } = useDerived();
-  const [params, setParams] = useSearchParams();
-  const only = params.get('station') ?? '';
-  const cards = derived.stationCards.filter((s) => !only || s.stationId === only);
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const requested = params.get('station');
+  const isDone = (cardId: string) =>
+    workStatus(project.progress, {
+      id: workIds.install(cardId),
+      hash: derived.platformCards.find((c) => c.id === cardId)?.hash ?? '',
+    }) === 'done';
+  const cards = derived.stationCards;
+  const showAll = requested === 'all';
+  const selected = showAll
+    ? undefined
+    : (cards.find((c) => c.stationId === requested) ?? pickStation(cards, isDone));
+  const base = `/p/${project.id}/work/signs`;
+
+  // 開いた駅を URL に固定する（チェックを付けるたびに次の駅へ移ってしまわないように）
+  const pin = !requested && selected ? selected.stationId : undefined;
+  useEffect(() => {
+    if (pin) void navigate(`${base}?station=${encodeURIComponent(pin)}`, { replace: true });
+  }, [pin, base, navigate]);
+
   if (derived.hasErrors) return <ErrorsStop />;
 
+  const items: StationLinkItem[] = cards.map((c) => {
+    const own = c.platformCards.filter((pc) => pc.pattern !== 'foreign');
+    const done = own.filter((pc) => isDone(pc.id)).length;
+    return {
+      key: c.stationId,
+      label: c.name || '（名前なし）',
+      sub: c.foreign ? '相手の団体' : `${done} / ${own.length}`,
+      state: own.length > 0 && done === own.length ? 'done' : 'todo',
+      to: `${base}?station=${encodeURIComponent(c.stationId)}`,
+      selected: c.stationId === selected?.stationId,
+    };
+  });
+
   return (
-    <div>
-      <div className={styles.toolbar}>
-        <SelectField
-          label="駅"
-          value={only}
-          options={[
-            { value: '', label: `すべての駅（${derived.stationCards.length}）` },
-            ...derived.stationCards.map((s) => ({
-              value: s.stationId,
-              label: stationLabel(project, s.stationId),
-            })),
-          ]}
-          onChange={(v) =>
-            setParams(
-              (prev) => {
-                const next = new URLSearchParams(prev);
-                if (v) next.set('station', v);
-                else next.delete('station');
-                return next;
-              },
-              { replace: true },
-            )
-          }
-        />
+    <div className={styles.split}>
+      <div className={`${styles.splitSide} no-print`}>
+        <StationLinks items={items} label="看板を置く駅" />
+        <p className={styles.allLink}>
+          <Link to={`${base}?station=all`} replace>
+            すべての駅を並べて見る（印刷用）
+          </Link>
+        </p>
       </div>
-      <p className={styles.caution}>
-        看板は「ホームから線路を見て文字面が正面に見える向き」（線路と直角、文字面はホーム側）に付けます。
-        spawn
-        の向きはソースから調べた決まり方で、ゲーム内では未確認です。設置したら必ず試運転で向きを確かめてください。
-      </p>
-      {cards.map((s) => (
-        <StationCardView key={s.stationId} card={s} />
-      ))}
+      <div className={styles.splitMain}>
+        <p className={styles.caution}>
+          看板は、ホームから線路を見て文字が正面に読める向き（線路と直角、文字面はホーム側）に付けます。
+          列車の出る向きはゲーム内で未確認のルールから決めているので、置いたら必ず列車を出して確かめてください。
+        </p>
+        {showAll
+          ? cards.map((s) => <StationCardView key={s.stationId} card={s} />)
+          : selected && <StationCardView card={selected} />}
+      </div>
     </div>
   );
 }
@@ -67,7 +99,17 @@ function StationCardView({ card }: { card: StationCard }) {
       aria-labelledby={`st-${card.stationId}`}
     >
       <h2 id={`st-${card.stationId}`} className={styles.stationTitle}>
-        {stationLabel(project, card.stationId)}
+        {card.name || '（名前なし）'}
+        <span className={styles.stationCodes}>
+          {codesOf(project, card.stationId)
+            .split('・')
+            .filter(Boolean)
+            .map((c) => (
+              <span key={c} className="code-tag">
+                {c}
+              </span>
+            ))}
+        </span>
         {card.foreign && <span className={styles.pill}>相手団体の設定に従う</span>}
       </h2>
       {card.notes.map((n) => (
@@ -129,16 +171,36 @@ function PlatformCardView({ card }: { card: PlatformCard }) {
       <header className={styles.platformHead}>
         <h3 className={styles.platformTitle}>
           {card.platform}番のりば
-          {pf?.label && <span className="muted">（{pf.label}）</span>}
-          <span className={styles.dest}>{card.destCode}</span>
+          {pf?.label && <span className={styles.platformLabel}>{pf.label}</span>}
         </h3>
-        <span className={styles.pattern}>{PATTERN_LABELS[card.pattern]}</span>
+        <span className={styles.destBox}>
+          <span className="muted text-xs">行先コード</span>
+          <span className="code-tag">{card.destCode}</span>
+        </span>
       </header>
+      <p className={styles.pattern}>{PATTERN_LABELS[card.pattern]}</p>
       {!isForeign && card.signs.length > 0 && (
         <>
+          <p className={styles.step}>
+            <span className={styles.stepNum}>1</span>
+            ホームに立って線路を見たとき、
+            {card.dir === 'left'
+              ? '列車は右から左へ出ていきます。'
+              : '列車は左から右へ出ていきます。'}
+            左からこの順に看板を置きます。
+          </p>
           <PlatformDiagram card={card} />
+          <p className={styles.step}>
+            <span className={styles.stepNum}>2</span>
+            看板に書く文字（列車が進む順。番号は図と同じ）。1行ずつコピーできます。
+          </p>
+          <div className={styles.signRow}>
+            {card.signs.map((s, i) => (
+              <SignView key={i} sign={s} index={i + 1} />
+            ))}
+          </div>
           <p className={styles.order}>
-            進行方向順：
+            進む順：
             {card.signs
               .map(
                 (s, i) =>
@@ -148,13 +210,7 @@ function PlatformCardView({ card }: { card: PlatformCard }) {
                     .join(' ')}`,
               )
               .join(' → ')}
-            {card.dir && `（ホームから見て${card.dir === 'right' ? '左から右' : '右から左'}へ）`}
           </p>
-          <div className={styles.signRow}>
-            {card.signs.map((s, i) => (
-              <SignView key={i} sign={s} index={i + 1} />
-            ))}
-          </div>
         </>
       )}
       {card.notes.length > 0 && (

@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { GENERAL_CHECKS, workIds, workStatus } from '../../domain/progress';
 import { TROUBLESHOOTING } from '../../content/help';
-import { useDerived, useProject } from '../hooks/useDerived';
+import { useDerived, useJourney, useProject } from '../hooks/useDerived';
 import { WorkCheck } from './WorkCheck';
 import styles from './work.module.css';
 
@@ -9,6 +9,7 @@ import styles from './work.module.css';
 export function TrialView() {
   const project = useProject();
   const { derived, workItems } = useDerived();
+  const j = useJourney();
   const platformTrials = workItems.filter((i) => i.id.startsWith('trial:') && i.id.includes('#'));
   const doneTrials = platformTrials.filter(
     (i) => workStatus(project.progress, i) === 'done',
@@ -16,6 +17,17 @@ export function TrialView() {
 
   return (
     <div>
+      {j.next.stage === 'done' && (
+        <section className={styles.complete} aria-labelledby="complete-title">
+          <span className={styles.completeMark} aria-hidden="true" />
+          <div>
+            <h2 id="complete-title">路線が完成しました</h2>
+            <p>
+              看板・コマンド・試運転がすべて済みました。入力を変えたときは、変わったところに「要更新」の印が付きます。
+            </p>
+          </div>
+        </section>
+      )}
       <section className={styles.extra}>
         <h2>仕上げの確認</h2>
         <div className="stack">

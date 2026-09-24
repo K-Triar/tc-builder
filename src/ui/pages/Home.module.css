@@ -14,37 +14,126 @@
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-3);
-  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-6);
+  border-bottom: 3px solid var(--text);
 }
 
-.title {
-  font-size: var(--fs-2xl);
+/* ロゴ：駅名標のような小さな印＋名前 */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-lg);
+  margin: 0;
+}
+
+.brandMark {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 5px solid var(--accent);
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.start {
+  margin-bottom: var(--space-7);
+}
+
+.startTitle {
+  font-size: 2.25rem;
+  margin-bottom: var(--space-3);
 }
 
 .lead {
+  max-width: 38em;
+  font-size: var(--fs-lg);
+  margin-bottom: var(--space-5);
+}
+
+/* 路線図：質問に答える → 自動でできる → Minecraft に置く → 完成 */
+.flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  list-style: none;
+  margin: 0 0 var(--space-6);
+  padding: 0;
+}
+
+.flow li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-top: 34px;
+  padding-right: var(--space-3);
+}
+
+.flow li::before {
+  content: '';
+  position: absolute;
+  top: 11px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--accent);
+}
+
+.flow li:last-child::before {
+  right: auto;
+  width: 14px;
+}
+
+.flow strong {
+  font-size: var(--fs-md);
+}
+
+.flow span:not(.flowStop) {
+  font-size: var(--fs-sm);
   color: var(--text-muted);
+}
+
+.flowStop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  border: 6px solid var(--accent);
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.flowEnd {
+  border-radius: var(--radius-sign);
+  border-color: var(--ok);
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
 }
 
 .dropHint {
   font-size: var(--fs-sm);
-  margin: var(--space-2) 0 var(--space-6);
+  margin: var(--space-3) 0 0;
+}
+
+.listTitle {
+  font-size: var(--fs-lg);
+  padding-bottom: var(--space-2);
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--border-strong);
 }
 
 .list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
 }
 
 .item {
@@ -54,19 +143,14 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  transition:
-    border-color var(--ease),
-    box-shadow var(--ease);
+  padding: var(--space-3) var(--space-2);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--ease);
 }
 
-/* カード全体が押せる：指したら縁取りと影で知らせる */
+/* 行全体が押せる：指したら背景で知らせる */
 .item:hover {
-  border-color: var(--accent);
-  box-shadow: var(--shadow);
+  background: var(--surface);
 }
 
 .item:has(.itemName:focus-visible) {
@@ -183,6 +267,38 @@
 @media (max-width: 640px) {
   .page {
     padding: var(--space-4) var(--space-3);
+  }
+
+  .startTitle {
+    font-size: var(--fs-2xl);
+  }
+
+  .lead {
+    font-size: var(--fs-md);
+  }
+
+  /* 狭い画面では路線図を縦にする */
+  .flow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .flow li {
+    padding: 0 0 var(--space-3) 40px;
+    min-height: 56px;
+  }
+
+  .flow li::before {
+    top: 0;
+    bottom: 0;
+    left: 11px;
+    right: auto;
+    width: 6px;
+    height: auto;
+  }
+
+  .flow li:last-child::before {
+    height: 14px;
+    width: 6px;
   }
 
   .actions > * {
