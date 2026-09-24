@@ -162,7 +162,7 @@ function DepartureReview() {
                 aria-label={`${s.name} ${kind?.name ?? ''} の各駅発`}
               >
                 <table className={styles.table}>
-                  <caption style={{ textAlign: 'left', fontWeight: 700 }}>
+                  <caption className={styles.caption}>
                     {kind?.name}（{kind ? kindTag(kind) : '?'}）・形式 {k.formation}
                   </caption>
                   <thead>

@@ -32,7 +32,11 @@
   border-radius: var(--radius);
   color: var(--text);
   text-decoration: none;
-  font-size: 1.2rem;
+  font-size: var(--fs-lg);
+}
+
+.home {
+  transition: background var(--ease);
 }
 
 .home:hover {
@@ -66,6 +70,12 @@
   font-weight: 700;
 }
 
+/* 名前以外（ボタン類）は縮めず、折り返さない */
+.header > :not(.titleBox) {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 .badgeError {
   border-color: var(--danger);
   color: var(--danger);
@@ -78,11 +88,56 @@
 
 .unsaved {
   grid-area: unsaved;
-  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
   background: var(--warning-soft);
+  border-bottom: 1px solid var(--border);
   color: var(--text);
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
+}
+
+.unsaved p {
+  flex: 1 1 320px;
+  margin: 0;
+}
+
+.statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-3);
+  min-width: 0;
+}
+
+.saveStatus {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.saveError {
+  color: var(--danger);
+  font-weight: 700;
+  white-space: normal;
+}
+
+.historyButtons {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.historyButtons button {
+  font-size: var(--fs-lg);
+}
+
+.mobileTools {
+  display: none;
 }
 
 .nav {
@@ -114,6 +169,12 @@
   font-weight: 600;
 }
 
+.navLink {
+  transition:
+    background var(--ease),
+    color var(--ease);
+}
+
 .navLink:hover {
   background: var(--surface-2);
 }
@@ -121,6 +182,7 @@
 .active {
   background: var(--accent-soft);
   color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 
 .navIcon {
@@ -201,16 +263,32 @@
       'header'
       'unsaved'
       'main';
-    padding-bottom: calc(var(--touch) + 20px);
+    padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom));
   }
 
+  /* 折り返さず、プロジェクト名のほうを縮める */
   .header {
     padding: var(--space-2);
-    flex-wrap: wrap;
   }
 
-  .themeButton {
+  .themeButton,
+  .historyButtons,
+  .wideOnly {
     display: none;
+  }
+
+  .saveStatus:not(.saveError) {
+    display: none;
+  }
+
+  .mobileTools {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border);
   }
 
   .main {
@@ -243,16 +321,16 @@
     justify-content: center;
     gap: 0;
     padding: var(--space-1);
-    font-size: 0.75rem;
+    font-size: var(--fs-xs);
     min-height: calc(var(--touch) + 8px);
   }
 
   .navIcon {
-    font-size: 1.1rem;
+    font-size: var(--fs-lg);
   }
 
   .aside {
-    bottom: calc(var(--touch) + 16px);
+    bottom: var(--bottom-nav-h);
   }
 }
 
@@ -263,5 +341,12 @@
 
   .main {
     padding: 0;
+  }
+}
+
+/* 下タブでは、選んでいる印を上辺の線にする */
+@media (max-width: 768px) {
+  .active {
+    box-shadow: inset 0 3px 0 var(--accent);
   }
 }

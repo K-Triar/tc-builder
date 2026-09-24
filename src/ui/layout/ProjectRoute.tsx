@@ -28,7 +28,7 @@ export function ProjectRoute() {
 
   if (current?.id === id) return <ProjectLayout />;
   return (
-    <main style={{ padding: 'var(--space-6) var(--space-4)', maxWidth: 720, margin: '0 auto' }}>
+    <main className="page-narrow">
       {state === 'loading' ? (
         <p className="muted">読み込み中…</p>
       ) : (

@@ -14,12 +14,18 @@
   cursor: pointer;
   text-decoration: none;
   transition:
-    background 0.15s,
-    border-color 0.15s;
+    background var(--ease),
+    border-color var(--ease),
+    color var(--ease);
 }
 
 .button:hover:not(:disabled) {
   background: var(--surface-2);
+  border-color: var(--text-muted);
+}
+
+.button:active:not(:disabled) {
+  background: var(--surface-3);
 }
 
 .button:disabled {
@@ -43,6 +49,10 @@
   border-color: transparent;
 }
 
+.ghost:hover:not(:disabled) {
+  border-color: transparent;
+}
+
 .danger {
   color: var(--danger);
   border-color: var(--danger);
@@ -50,6 +60,23 @@
 
 .danger:hover:not(:disabled) {
   background: var(--danger-soft);
+  border-color: var(--danger);
+}
+
+/* 一覧の行の「消す」。ふだんは目立たせず、指したときだけ赤くする */
+.dangerQuiet {
+  background: transparent;
+  border-color: transparent;
+  color: var(--danger);
+}
+
+.dangerQuiet:hover:not(:disabled) {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+}
+
+.dangerQuiet:disabled {
+  color: var(--text-muted);
 }
 
 .sm {
@@ -57,7 +84,7 @@
   min-height: 36px;
   min-width: 36px;
   padding: 0 var(--space-3);
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
 }
 
 @media (pointer: coarse) {

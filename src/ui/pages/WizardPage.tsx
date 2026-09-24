@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from 'react-router';
 import { Button } from '../components/Button';
 import { Section } from '../components/Field';
-import { Stepper } from '../components/Stepper';
+import { Stepper, type StepMark } from '../components/Stepper';
 import { KindEditor } from '../editors/KindEditor';
 import { LineEditor, OrgEditor } from '../editors/OrgEditor';
 import { ReviewEditor } from '../editors/ReviewEditor';
@@ -9,6 +9,8 @@ import { ServiceEditor } from '../editors/ServiceEditor';
 import { StationEditor } from '../editors/StationEditor';
 import { useDerived, useProject } from '../hooks/useDerived';
 import { issueCounts } from '../issues';
+import type { IssueTarget } from '../../domain/validate';
+import styles from './WizardPage.module.css';
 
 const WIZARD_STEPS = ['団体', '路線', '種別', '駅', 'のりば', '系統', '確認', '完成'] as const;
 
@@ -23,18 +25,38 @@ const INTRO: Record<number, string> = {
   7: '入力はここまでです。',
 };
 
+/** 検証の対象を、それを直すウィザードのステップに対応させる */
+const STEP_OF: Record<IssueTarget['kind'], number> = {
+  org: 0,
+  line: 1,
+  kind: 2,
+  station: 3,
+  platform: 4,
+  service: 5,
+  formation: 5,
+  departure: 6,
+  route: 6,
+};
+
 /** ウィザード（design §6.2）。どのステップにも戻れ、途中でも自動保存される */
 export function WizardPage() {
   const project = useProject();
   const navigate = useNavigate();
   const step = Math.min(Math.max(Number(useParams().step) || 0, 0), WIZARD_STEPS.length - 1);
   const go = (n: number) => void navigate(`/p/${project.id}/setup/${n}`);
+  const { derived } = useDerived();
+  const marks: StepMark[] = WIZARD_STEPS.map(() => undefined);
+  for (const issue of derived.issues) {
+    const i = STEP_OF[issue.target.kind];
+    if (issue.severity === 'error') marks[i] = 'error';
+    else if (issue.severity === 'warning' && marks[i] !== 'error') marks[i] = 'warning';
+  }
 
   return (
     <div>
       <h1>ウィザード：{WIZARD_STEPS[step]}</h1>
-      <Stepper steps={WIZARD_STEPS} current={step} onSelect={go} />
-      <p>{INTRO[step]}</p>
+      <Stepper steps={WIZARD_STEPS} current={step} onSelect={go} marks={marks} />
+      <p className={styles.intro}>{INTRO[step]}</p>
       {step === 0 && <OrgEditor />}
       {step === 1 && <LineEditor />}
       {step === 2 && <KindEditor />}
@@ -43,15 +65,11 @@ export function WizardPage() {
       {step === 5 && <ServiceEditor />}
       {step === 6 && <ReviewEditor />}
       {step === 7 && <Finish />}
-      <nav
-        className="row"
-        aria-label="ウィザードの移動"
-        style={{ justifyContent: 'space-between' }}
-      >
+      <nav className={`${styles.moveBar} no-print`} aria-label="ウィザードの移動">
         <Button disabled={step === 0} onClick={() => go(step - 1)}>
           ← 戻る
         </Button>
-        <Link to={`/p/${project.id}/edit/org`} className="muted">
+        <Link to={`/p/${project.id}/edit/org`} className={styles.tableLink}>
           表形式でまとめて編集する
         </Link>
         {step < WIZARD_STEPS.length - 1 ? (
@@ -75,12 +93,12 @@ function Finish() {
   return (
     <Section title="完成">
       {counts.error > 0 ? (
-        <p role="alert">
+        <p role="alert" className={styles.finishError}>
           ✖ エラーが {counts.error}{' '}
           件あります。検証の一覧から該当する入力を直してください。エラーがあると、その部分の看板やコマンドが正しく出ません。
         </p>
       ) : (
-        <p>
+        <p className={styles.finishOk}>
           ✓ エラーはありません。
           {counts.warning > 0 &&
             `警告が ${counts.warning} 件あるので、検証の一覧で確かめてください。`}
@@ -93,7 +111,7 @@ function Finish() {
         </li>
       </ul>
       <p>次は「作業」で、駅ごとの看板カードとコマンドの手順を見ながら進めます。</p>
-      <div className="row">
+      <div className={styles.nextLinks}>
         <Link to={`/p/${project.id}/work/commands`}>コマンドの手順</Link>
         <Link to={`/p/${project.id}/work/signs`}>駅の看板</Link>
         <Link to={`/p/${project.id}/docs/routes`}>資料（経路・編成の一覧）</Link>

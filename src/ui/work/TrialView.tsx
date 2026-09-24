@@ -48,9 +48,7 @@ export function TrialView() {
               <div key={s.id}>
                 <WorkCheck id={workIds.trialService(s.id)} label={s.name || '（名前なし）'} />
                 {codes.length > 0 && (
-                  <div className="muted mono" style={{ fontSize: '0.8rem', marginLeft: 30 }}>
-                    {codes.join('、')}
-                  </div>
+                  <div className={`muted mono text-xs ${styles.checkNote}`}>{codes.join('、')}</div>
                 )}
               </div>
             );
@@ -69,7 +67,7 @@ export function TrialView() {
       <section className={styles.extra}>
         <h2>うまくいかないとき</h2>
         <div
-          style={{ overflowX: 'auto' }}
+          className={styles.scrollX}
           tabIndex={0}
           role="region"
           aria-label="うまくいかないときの表"

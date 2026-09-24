@@ -4,7 +4,9 @@ import type { Platform, Project, Station, StationCode } from '../../domain/model
 import { useProjectStore } from '../../store/projectStore';
 import { Button } from '../components/Button';
 import { CheckField, NumberField, Section, SelectField, TextField } from '../components/Field';
+import { RemoveButton } from '../components/RemoveButton';
 import { useProject } from '../hooks/useDerived';
+import { removeWithUndo } from '../toast';
 import { codeText, isSelfStation, must, newId, stationCodesText } from './common';
 import { DirPicker } from './DirPicker';
 import styles from './editors.module.css';
@@ -20,30 +22,33 @@ export function StationEditor({ part = 'all' }: { part?: StationPart }) {
   const focusPlatform = params.get('platform');
 
   const addStation = () =>
-    update((p) => {
-      const codeId = newId();
-      const line = p.lines.find((l) => l.orgId === p.selfOrgId);
-      p.stations.push({
-        id: newId(),
-        name: '',
-        managerOrgId: p.selfOrgId,
-        signsBySelf: true,
-        codes: [
-          {
-            id: codeId,
-            code: line
-              ? {
-                  kind: 'numbered',
-                  orgId: p.selfOrgId,
-                  lineId: line.id,
-                  number: p.stations.length + 1,
-                }
-              : { kind: 'free', value: '' },
-          },
-        ],
-        platforms: [{ number: 1, codeId, deadEnd: false }],
-      });
-    });
+    update(
+      (p) => {
+        const codeId = newId();
+        const line = p.lines.find((l) => l.orgId === p.selfOrgId);
+        p.stations.push({
+          id: newId(),
+          name: '',
+          managerOrgId: p.selfOrgId,
+          signsBySelf: true,
+          codes: [
+            {
+              id: codeId,
+              code: line
+                ? {
+                    kind: 'numbered',
+                    orgId: p.selfOrgId,
+                    lineId: line.id,
+                    number: p.stations.length + 1,
+                  }
+                : { kind: 'free', value: '' },
+            },
+          ],
+          platforms: [{ number: 1, codeId, deadEnd: false }],
+        });
+      },
+      { checkpoint: true },
+    );
 
   return (
     <>
@@ -96,7 +101,6 @@ function StationCard({
   const project = useProject();
   const update = useProjectStore((st) => st.update);
   const ref = useRef<HTMLDivElement>(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
   const self = isSelfStation(project, s);
   const used = project.services.some((v) => v.entries.some((e) => e.stationId === s.id));
 
@@ -126,48 +130,37 @@ function StationCard({
               aria-label={`${s.name}を上へ`}
               disabled={index === 0}
               onClick={() =>
-                update((p) => void p.stations.splice(index - 1, 0, ...p.stations.splice(index, 1)))
+                update(
+                  (p) => void p.stations.splice(index - 1, 0, ...p.stations.splice(index, 1)),
+                  { checkpoint: true },
+                )
               }
             >
-              ↑
+              {'↑︎'}
             </Button>
             <Button
               size="sm"
               aria-label={`${s.name}を下へ`}
               disabled={index === project.stations.length - 1}
               onClick={() =>
-                update((p) => void p.stations.splice(index + 1, 0, ...p.stations.splice(index, 1)))
+                update(
+                  (p) => void p.stations.splice(index + 1, 0, ...p.stations.splice(index, 1)),
+                  { checkpoint: true },
+                )
               }
             >
-              ↓
+              {'↓︎'}
             </Button>
-            {confirmDelete ? (
-              <>
-                <span>本当に消しますか？</span>
-                <Button size="sm" onClick={() => setConfirmDelete(false)}>
-                  やめる
-                </Button>
-                <Button
-                  size="sm"
-                  variant="danger"
-                  onClick={() =>
-                    update((p) => void (p.stations = p.stations.filter((x) => x.id !== s.id)))
-                  }
-                >
-                  消す
-                </Button>
-              </>
-            ) : (
-              <Button
-                size="sm"
-                variant="danger"
-                disabled={used}
-                title={used ? '系統の経由リストで使っているので消せません' : undefined}
-                onClick={() => setConfirmDelete(true)}
-              >
-                消す
-              </Button>
-            )}
+            <RemoveButton
+              describe={`${s.name || '駅'}を消す`}
+              blocked={used && '系統で使用中'}
+              onRemove={() =>
+                removeWithUndo(
+                  `駅「${s.name || '駅名なし'}」を消しました`,
+                  (p) => void (p.stations = p.stations.filter((x) => x.id !== s.id)),
+                )
+              }
+            />
           </div>
         )}
       </div>
@@ -187,6 +180,7 @@ function StationBasic({
   mut: (fn: (st: Station, p: Project) => void) => void;
 }) {
   const project = useProject();
+  const update = useProjectStore((st) => st.update);
   const self = isSelfStation(project, s);
   const selfLines = project.lines.filter((l) => l.orgId === project.selfOrgId);
   const usedCodeIds = new Set(s.platforms.map((p) => p.codeId));
@@ -219,7 +213,7 @@ function StationBasic({
           onChange={(v) => mut((st) => void (st.signsBySelf = v))}
         />
       )}
-      <h3 style={{ marginTop: 'var(--space-3)' }}>駅コード</h3>
+      <h3 className={styles.subhead}>駅コード</h3>
       <ul className={styles.rows}>
         {s.codes.map((c, ci) => (
           <li key={c.id} className={styles.rowItem}>
@@ -257,6 +251,8 @@ function StationBasic({
                   label="駅番号"
                   value={c.code.number}
                   min={0}
+                  integer
+                  required
                   onChange={(v) =>
                     v !== undefined &&
                     mut((st) => {
@@ -280,25 +276,36 @@ function StationBasic({
                 }
               />
             )}
-            <span className="mono" aria-label="表示">
-              {codeText(project, s, c.id)}
+            <span className={styles.tagBox}>
+              <span className="muted text-xs">表示</span>
+              <span className={styles.tag}>{codeText(project, s, c.id)}</span>
             </span>
-            <Button
-              size="sm"
-              variant="danger"
-              disabled={s.codes.length <= 1 || usedCodeIds.has(c.id)}
-              title={usedCodeIds.has(c.id) ? 'のりばで使っているので消せません' : undefined}
-              onClick={() => mut((st) => void (st.codes = st.codes.filter((x) => x.id !== c.id)))}
-            >
-              消す
-            </Button>
+            <RemoveButton
+              describe={`駅コード ${codeText(project, s, c.id)} を消す`}
+              blocked={
+                s.codes.length <= 1 ? '最後の1つ' : usedCodeIds.has(c.id) && 'のりばで使用中'
+              }
+              onRemove={() =>
+                removeWithUndo(`駅コード ${codeText(project, s, c.id)} を消しました`, (p) => {
+                  const st = must(p.stations.find((x) => x.id === s.id));
+                  st.codes = st.codes.filter((x) => x.id !== c.id);
+                })
+              }
+            />
           </li>
         ))}
       </ul>
       <Button
         size="sm"
         onClick={() =>
-          mut((st) => void st.codes.push({ id: newId(), code: { kind: 'free', value: '' } }))
+          update(
+            (p) =>
+              void must(p.stations.find((x) => x.id === s.id)).codes.push({
+                id: newId(),
+                code: { kind: 'free', value: '' },
+              }),
+            { checkpoint: true },
+          )
         }
       >
         ＋ 駅コードを足す（乗換駅）
@@ -318,9 +325,13 @@ function PlatformList({
 }) {
   const project = useProject();
   const renumber = useProjectStore((st) => st.renumberPlatform);
+  const update = useProjectStore((st) => st.update);
   const self = isSelfStation(project, s);
   const needsSigns = self || s.signsBySelf;
-  const [renumberError, setRenumberError] = useState<string | null>(null);
+  const [renumberError, setRenumberError] = useState<{
+    platform: number;
+    message: string;
+  } | null>(null);
   const usedPlatforms = new Set(
     project.services.flatMap((v) =>
       v.entries.filter((e) => e.stationId === s.id).map((e) => e.platform),
@@ -332,13 +343,12 @@ function PlatformList({
 
   return (
     <>
-      <h3 style={{ marginTop: 'var(--space-3)' }}>のりば</h3>
+      <h3 className={styles.subhead}>のりば</h3>
       {!needsSigns && (
         <p className="muted">
           看板は相手団体の設定に従います。行先コードに使うので、番号と駅コードだけ入れてください。
         </p>
       )}
-      {renumberError && <p role="alert">{renumberError}</p>}
       {s.platforms.map((pf) => (
         <div
           key={pf.number}
@@ -349,13 +359,16 @@ function PlatformList({
               label="のりば番号"
               value={pf.number}
               min={1}
+              integer
+              required
+              error={renumberError?.platform === pf.number ? renumberError.message : null}
               onChange={(v) => {
-                if (v === undefined || !Number.isInteger(v) || v === pf.number) return;
+                if (v === undefined || v === pf.number) return;
                 try {
                   setRenumberError(null);
                   renumber(s.id, pf.number, v);
                 } catch (e) {
-                  setRenumberError((e as Error).message);
+                  setRenumberError({ platform: pf.number, message: (e as Error).message });
                 }
               }}
             />
@@ -378,8 +391,11 @@ function PlatformList({
               }
             />
           </div>
-          <p className="mono" style={{ margin: 0 }}>
-            行先コード：{codeText(project, s, pf.codeId)}-{pf.number}
+          <p className={styles.destLine}>
+            行先コード{' '}
+            <span className={styles.tag}>
+              {codeText(project, s, pf.codeId)}-{pf.number}
+            </span>
           </p>
           {needsSigns && (
             <>
@@ -427,31 +443,34 @@ function PlatformList({
               </details>
             </>
           )}
-          <div className="row" style={{ justifyContent: 'flex-end' }}>
-            <Button
-              size="sm"
-              variant="danger"
-              disabled={usedPlatforms.has(pf.number)}
-              title={usedPlatforms.has(pf.number) ? '系統で使っているので消せません' : undefined}
-              onClick={() =>
-                mut(
-                  (st) => void (st.platforms = st.platforms.filter((x) => x.number !== pf.number)),
-                )
+          <div className={styles.platformFoot}>
+            <RemoveButton
+              describe={`${s.name} ${pf.number}番のりばを消す`}
+              blocked={usedPlatforms.has(pf.number) && '系統で使用中'}
+              onRemove={() =>
+                removeWithUndo(`${s.name || '駅'} ${pf.number}番のりばを消しました`, (p) => {
+                  const st = must(p.stations.find((x) => x.id === s.id));
+                  st.platforms = st.platforms.filter((x) => x.number !== pf.number);
+                })
               }
             >
               このりばを消す
-            </Button>
+            </RemoveButton>
           </div>
         </div>
       ))}
       <Button
         size="sm"
         onClick={() =>
-          mut((st) => {
-            const next = Math.max(0, ...st.platforms.map((x) => x.number)) + 1;
-            const codeId = st.codes[0]?.id ?? '';
-            st.platforms.push({ number: next, codeId, deadEnd: false });
-          })
+          update(
+            (p) => {
+              const st = must(p.stations.find((x) => x.id === s.id));
+              const next = Math.max(0, ...st.platforms.map((x) => x.number)) + 1;
+              const codeId = st.codes[0]?.id ?? '';
+              st.platforms.push({ number: next, codeId, deadEnd: false });
+            },
+            { checkpoint: true },
+          )
         }
       >
         ＋ のりばを足す
@@ -466,6 +485,7 @@ function PasteStations() {
   const update = useProjectStore((s) => s.update);
   const [text, setText] = useState('');
   const [open, setOpen] = useState(project.stations.length === 0);
+  const [added, setAdded] = useState<number | null>(null);
   const selfCode = project.orgs.find((o) => o.id === project.selfOrgId)?.code ?? '';
 
   const parseCode = (p: Project, t: string): StationCode => {
@@ -484,23 +504,27 @@ function PasteStations() {
       .split(/\r?\n/)
       .map((r) => r.trim().split(/[\s\t,，、]+/))
       .filter((r) => r[0]);
-    update((p) => {
-      for (const [name = '', ...codes] of rows) {
-        const entries = (codes.length > 0 ? codes : ['']).map((c) => ({
-          id: newId(),
-          code: parseCode(p, c),
-        }));
-        p.stations.push({
-          id: newId(),
-          name,
-          managerOrgId: p.selfOrgId,
-          signsBySelf: true,
-          codes: entries,
-          platforms: [{ number: 1, codeId: entries[0]?.id ?? '', deadEnd: false }],
-        });
-      }
-    });
+    update(
+      (p) => {
+        for (const [name = '', ...codes] of rows) {
+          const entries = (codes.length > 0 ? codes : ['']).map((c) => ({
+            id: newId(),
+            code: parseCode(p, c),
+          }));
+          p.stations.push({
+            id: newId(),
+            name,
+            managerOrgId: p.selfOrgId,
+            signsBySelf: true,
+            codes: entries,
+            platforms: [{ number: 1, codeId: entries[0]?.id ?? '', deadEnd: false }],
+          });
+        }
+      },
+      { checkpoint: true },
+    );
     setText('');
+    setAdded(rows.length);
   };
 
   if (!open) {
@@ -522,7 +546,10 @@ function PasteStations() {
         rows={5}
         value={text}
         placeholder={'アカシア島 KL01\n瑠璃中央 KL04 KU01\nイアリーオ国際空港 IIA'}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value);
+          setAdded(null);
+        }}
         className="mono"
       />
       <div className="row">
@@ -532,6 +559,9 @@ function PasteStations() {
         <Button size="sm" onClick={() => setOpen(false)}>
           閉じる
         </Button>
+        <span role="status" className="status-msg">
+          {added !== null && `✓ ${added} 駅を足しました。下の一覧で確かめてください。`}
+        </span>
       </div>
     </Section>
   );

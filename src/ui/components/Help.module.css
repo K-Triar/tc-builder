@@ -16,8 +16,11 @@
   background: var(--surface-2);
   color: var(--accent);
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
   cursor: pointer;
+  transition:
+    background var(--ease),
+    border-color var(--ease);
   /* タップしやすいよう周りに余白をとる */
   position: relative;
 }
@@ -44,7 +47,7 @@
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   font-weight: 400;
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
   line-height: 1.6;
   color: var(--text);
   text-align: left;
@@ -52,7 +55,7 @@
 }
 
 .title {
-  font-size: 0.95rem;
+  font-size: var(--fs-md);
 }
 
 .body {
@@ -60,5 +63,32 @@
 }
 
 .link {
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
+}
+
+.trigger:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.trigger[aria-expanded='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* 狭い画面：「？」の位置によっては画面の外にはみ出すので、画面下に横いっぱいで出す */
+@media (max-width: 640px) {
+  .popover {
+    position: fixed;
+    top: auto;
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: calc(var(--bottom-nav-h) + var(--space-2));
+    z-index: 60;
+    width: auto;
+    max-height: 60vh;
+    overflow-y: auto;
+    transform: none;
+  }
 }

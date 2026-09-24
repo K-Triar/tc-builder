@@ -20,7 +20,7 @@
 }
 
 .title {
-  font-size: 1.75rem;
+  font-size: var(--fs-2xl);
 }
 
 .lead {
@@ -34,7 +34,7 @@
 }
 
 .dropHint {
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
   margin: var(--space-2) 0 var(--space-6);
 }
 
@@ -48,6 +48,7 @@
 }
 
 .item {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -57,6 +58,20 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  transition:
+    border-color var(--ease),
+    box-shadow var(--ease);
+}
+
+/* カード全体が押せる：指したら縁取りと影で知らせる */
+.item:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+}
+
+.item:has(.itemName:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
 }
 
 .itemMain {
@@ -67,10 +82,53 @@
 
 .itemName {
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: var(--fs-lg);
   display: inline-flex;
   align-items: center;
   min-height: 32px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.itemName:focus-visible {
+  outline: none;
+}
+
+/* 名前のリンクの押せる範囲をカード全体に広げる */
+.itemName::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+}
+
+.item:hover .itemName {
+  color: var(--accent);
+}
+
+.itemMeta {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+/* ボタンはカード全体のリンクより手前に置く */
+.itemActions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.chevron {
+  font-size: var(--fs-xl);
+  line-height: 1;
+  color: var(--text-muted);
+  padding-left: var(--space-2);
+}
+
+.item:hover .chevron {
+  color: var(--accent);
 }
 
 .unsaved {
@@ -83,7 +141,7 @@
   flex-direction: column;
   gap: var(--space-1);
   margin-top: var(--space-6);
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
 }
 
 .presets {
@@ -119,7 +177,7 @@
 
 .errors {
   padding-left: 1.2em;
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
 }
 
 @media (max-width: 640px) {

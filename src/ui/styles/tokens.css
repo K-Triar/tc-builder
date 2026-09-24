@@ -35,6 +35,16 @@
     sans-serif;
   --mono: ui-monospace, 'SFMono-Regular', Consolas, 'BIZ UDGothic', 'Noto Sans Mono', monospace;
 
+  /* 文字の大きさ（6段階。これ以外の値は使わない） */
+  --fs-xs: 0.75rem; /* 小さな札・補足 */
+  --fs-sm: 0.875rem; /* ヒント・表・小さいボタン */
+  --fs-md: 1rem; /* 本文 */
+  --fs-lg: 1.125rem; /* h3・カードの見出し */
+  --fs-xl: 1.375rem; /* h2・まとまりの見出し */
+  --fs-2xl: 1.75rem; /* h1・画面の見出し */
+
+  --ease: 150ms ease;
+
   --radius: 8px;
   --radius-sm: 4px;
   --space-1: 4px;
@@ -45,6 +55,8 @@
   --space-6: 32px;
   --touch: 44px;
   --header-h: 56px;
+  /* スマホの下タブの高さ（下に固定するものはこの上に置く） */
+  --bottom-nav-h: calc(var(--touch) + 16px);
   --nav-w: 220px;
   --panel-w: 320px;
 }

@@ -46,7 +46,7 @@ describe('ホーム', () => {
     await saveProject({ ...createSampleProject('listed', new Date()), name: '一覧テスト' });
     renderAt('/');
     expect(await screen.findByRole('link', { name: '一覧テスト' })).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: '削除' }).length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: '一覧テストを消す' })).toBeInTheDocument();
   });
 });
 

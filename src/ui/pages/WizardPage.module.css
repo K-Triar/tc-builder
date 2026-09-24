@@ -1,0 +1,64 @@
+.intro {
+  font-size: var(--fs-lg);
+  margin-bottom: var(--space-5);
+}
+
+/* 戻る／次へは画面の下に固定する（長いステップでも最後までスクロールしなくてよい） */
+.moveBar {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin: var(--space-5) calc(var(--space-5) * -1) 0;
+  padding: var(--space-3) var(--space-5);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 12px rgb(0 0 0 / 6%);
+}
+
+.tableLink {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.finishError,
+.finishOk {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.finishError {
+  border-left: 4px solid var(--danger);
+  background: var(--danger-soft);
+}
+
+.finishOk {
+  border-left: 4px solid var(--ok);
+  background: var(--ok-soft);
+}
+
+.nextLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+}
+
+@media (max-width: 768px) {
+  .moveBar {
+    bottom: var(--bottom-nav-h);
+    margin: var(--space-4) calc(var(--space-3) * -1) 0;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  /* 真ん中のリンクは下の段に回し、戻る・次へを左右の端に置く */
+  .tableLink {
+    order: 3;
+    flex: 1 1 100%;
+    text-align: center;
+  }
+}

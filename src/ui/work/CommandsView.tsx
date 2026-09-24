@@ -1,20 +1,42 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router';
 import { CHECK_COMMANDS } from '../../domain/commands';
 import { workIds } from '../../domain/progress';
 import { copyText } from '../clipboard';
 import { Button } from '../components/Button';
 import { CopyButton } from '../components/CopyButton';
-import { useDerived } from '../hooks/useDerived';
+import { useDerived, useProject } from '../hooks/useDerived';
+import { issueLink } from '../issues';
 import { WorkCheck } from './WorkCheck';
 import styles from './work.module.css';
 
-/** エラーがあるときは出力を止める（R9.2） */
+/** エラーがあるときに出す件数 */
+const ERRORS_SHOWN = 5;
+
+/** エラーがあるときは出力を止める（R9.2）。直すべきエラーをその場に並べ、入力へ飛べるようにする */
 export function ErrorsStop() {
+  const project = useProject();
+  const { derived } = useDerived();
+  const errors = derived.issues.filter((i) => i.severity === 'error');
   return (
-    <p role="alert" className={styles.caution}>
-      ✖
-      入力にエラーがあるため、看板とコマンドを出していません。検証の一覧からエラーを直してください。
-    </p>
+    <div role="alert" className={`${styles.caution} ${styles.cautionError}`}>
+      <p className={styles.cautionTitle}>
+        ✖ 入力にエラーが {errors.length} 件あるため、看板とコマンドを出していません
+      </p>
+      <p>次のエラーを直すと表示されます。押すと、直す場所へ移ります。</p>
+      <ul className={styles.errorList}>
+        {errors.slice(0, ERRORS_SHOWN).map((issue, i) => (
+          <li key={`${issue.code}-${i}`}>
+            <Link to={issueLink(project.id, issue.target)}>{issue.message}</Link>
+          </li>
+        ))}
+      </ul>
+      {errors.length > ERRORS_SHOWN && (
+        <p className="text-sm">
+          ほか {errors.length - ERRORS_SHOWN} 件は、検証の一覧で見られます。
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -60,7 +82,7 @@ export function CommandsView() {
           Minecraft のチャットには1行ずつ貼り付けます。「次の行をコピー」を使うと順に進めます。
         </li>
       </ul>
-      <div className="row" style={{ marginBottom: 'var(--space-4)' }}>
+      <div className={`row ${styles.modeRow}`}>
         <Button
           variant={stepMode ? 'secondary' : 'primary'}
           onClick={() => {
@@ -149,11 +171,11 @@ export function CommandsView() {
 
       <details>
         <summary>確認に使うコマンド</summary>
-        <table>
+        <table className={styles.checkTable}>
           <tbody>
             {CHECK_COMMANDS.map((c) => (
               <tr key={c.command}>
-                <th scope="row" style={{ textAlign: 'left', paddingRight: 16 }}>
+                <th scope="row">
                   <code>{c.command}</code>
                 </th>
                 <td>{c.purpose}</td>

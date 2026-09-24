@@ -2,7 +2,9 @@ import { kindTag } from '../../domain/codes';
 import { useProjectStore } from '../../store/projectStore';
 import { Button } from '../components/Button';
 import { Section, TextField } from '../components/Field';
+import { RemoveButton } from '../components/RemoveButton';
 import { useProject } from '../hooks/useDerived';
+import { removeWithUndo } from '../toast';
 import { must, newId } from './common';
 import styles from './editors.module.css';
 
@@ -19,7 +21,11 @@ export function KindEditor() {
       actions={
         <Button
           size="sm"
-          onClick={() => update((p) => void p.kinds.push({ id: newId(), typeCode: '', name: '' }))}
+          onClick={() =>
+            update((p) => void p.kinds.push({ id: newId(), typeCode: '', name: '' }), {
+              checkpoint: true,
+            })
+          }
         >
           ＋ 種別を足す
         </Button>
@@ -54,13 +60,9 @@ export function KindEditor() {
               placeholder="新快速"
               onChange={(v) => update((p) => void (must(p.kinds[i]).name = v))}
             />
-            <div className="field" style={{ flex: '0 0 auto', marginBottom: 0 }}>
-              <span className="muted" style={{ fontSize: '0.8rem' }}>
-                タグ
-              </span>
-              <div>
-                <span className={styles.tag}>{kindTag(k) || '—'}</span>
-              </div>
+            <div className={styles.tagBox}>
+              <span className="muted text-xs">タグ（自動）</span>
+              <span className={styles.tag}>{kindTag(k) || '—'}</span>
             </div>
             <div className="row">
               <Button
@@ -68,30 +70,35 @@ export function KindEditor() {
                 aria-label={`${k.name || kindTag(k)}を上へ`}
                 disabled={i === 0}
                 onClick={() =>
-                  update((p) => void p.kinds.splice(i - 1, 0, ...p.kinds.splice(i, 1)))
+                  update((p) => void p.kinds.splice(i - 1, 0, ...p.kinds.splice(i, 1)), {
+                    checkpoint: true,
+                  })
                 }
               >
-                ↑
+                {'↑︎'}
               </Button>
               <Button
                 size="sm"
                 aria-label={`${k.name || kindTag(k)}を下へ`}
                 disabled={i === project.kinds.length - 1}
                 onClick={() =>
-                  update((p) => void p.kinds.splice(i + 1, 0, ...p.kinds.splice(i, 1)))
+                  update((p) => void p.kinds.splice(i + 1, 0, ...p.kinds.splice(i, 1)), {
+                    checkpoint: true,
+                  })
                 }
               >
-                ↓
+                {'↓︎'}
               </Button>
-              <Button
-                size="sm"
-                variant="danger"
-                disabled={used.has(k.id)}
-                title={used.has(k.id) ? '系統で使っているので消せません' : undefined}
-                onClick={() => update((p) => void (p.kinds = p.kinds.filter((x) => x.id !== k.id)))}
-              >
-                消す
-              </Button>
+              <RemoveButton
+                describe={`${k.name || kindTag(k) || '種別'}を消す`}
+                blocked={used.has(k.id) && '系統で使用中'}
+                onRemove={() =>
+                  removeWithUndo(
+                    `種別「${k.name || kindTag(k)}」を消しました`,
+                    (p) => void (p.kinds = p.kinds.filter((x) => x.id !== k.id)),
+                  )
+                }
+              />
             </div>
           </li>
         ))}

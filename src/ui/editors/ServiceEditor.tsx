@@ -5,10 +5,12 @@ import type { Service, ServiceKind } from '../../domain/model';
 import { defaultServiceKind, reverseService, suggestPlatform } from '../../domain/suggest';
 import { useProjectStore } from '../../store/projectStore';
 import { Button } from '../components/Button';
-import { ConfirmDialog } from '../components/Dialog';
 import { NumberField, Section, SelectField, TextField } from '../components/Field';
 import { Matrix } from '../components/Matrix';
+import { RemoveButton } from '../components/RemoveButton';
 import { useProject } from '../hooks/useDerived';
+import * as ops from '../../store/projectOps';
+import { removeWithUndo } from '../toast';
 import { must, newId, stationLabel } from './common';
 import styles from './editors.module.css';
 
@@ -34,6 +36,7 @@ export function ServiceEditor() {
     const id = newId();
     update(
       (p) => void p.services.push({ id, name: '', direction: 'down', entries: [], kinds: [] }),
+      { checkpoint: true },
     );
     select(id);
   };
@@ -76,9 +79,7 @@ function ServiceDetail({
   onSelect: (id: string) => void;
 }) {
   const project = useProject();
-  const store = useProjectStore();
-  const update = store.update;
-  const [deleting, setDeleting] = useState(false);
+  const update = useProjectStore((s) => s.update);
   const mut = (fn: (s: Service) => void) =>
     update((p) => fn(must(p.services.find((x) => x.id === service.id))));
 
@@ -119,36 +120,31 @@ function ServiceDetail({
           <Button
             onClick={() => {
               const id = newId();
-              update((p) => void p.services.push(reverseService(service, id)));
+              update((p) => void p.services.push(reverseService(service, id)), {
+                checkpoint: true,
+              });
               onSelect(id);
             }}
           >
             ⇄ 反対方向を作る
           </Button>
-          <Button variant="danger" onClick={() => setDeleting(true)}>
+          <RemoveButton
+            onRemove={() => {
+              const next = project.services.find((s) => s.id !== service.id);
+              removeWithUndo(`系統「${service.name || '名前なし'}」を消しました`, (p) =>
+                ops.removeService(p, service.id),
+              );
+              if (next) onSelect(next.id);
+            }}
+          >
             この系統を消す
-          </Button>
+          </RemoveButton>
         </div>
       </Section>
 
       <EntryList service={service} />
       <KindList service={service} />
       {service.kinds.length > 0 && service.entries.length > 0 && <StopMatrix service={service} />}
-
-      <ConfirmDialog
-        open={deleting}
-        title="系統を消しますか？"
-        message={<p>「{service.name || '名前なし'}」と、その各駅発の上書きを消します。</p>}
-        confirmLabel="消す"
-        danger
-        onCancel={() => setDeleting(false)}
-        onConfirm={() => {
-          setDeleting(false);
-          store.removeService(service.id);
-          const next = project.services.find((s) => s.id !== service.id);
-          if (next) onSelect(next.id);
-        }}
-      />
     </>
   );
 }
@@ -226,7 +222,7 @@ function EntryList({ service }: { service: Service }) {
                   disabled={i === 0}
                   onClick={() => store.moveEntry(service.id, i, i - 1)}
                 >
-                  ↑
+                  {'↑︎'}
                 </Button>
                 <Button
                   size="sm"
@@ -234,7 +230,7 @@ function EntryList({ service }: { service: Service }) {
                   disabled={i === service.entries.length - 1}
                   onClick={() => store.moveEntry(service.id, i, i + 1)}
                 >
-                  ↓
+                  {'↓︎'}
                 </Button>
                 <Button
                   size="sm"
@@ -247,26 +243,28 @@ function EntryList({ service }: { service: Service }) {
                 >
                   ＋
                 </Button>
-                <Button
-                  size="sm"
-                  variant="danger"
-                  aria-label={`${i + 1}番目を消す`}
-                  onClick={() => store.removeEntry(service.id, i)}
+                <RemoveButton
+                  describe={`${i + 1}番目（${st?.name ?? '駅'}）を消す`}
+                  onRemove={() =>
+                    removeWithUndo(
+                      `${i + 1}番目の ${st?.name ?? '駅'} を経由リストから消しました`,
+                      (p) => ops.removeEntry(p, service.id, i),
+                    )
+                  }
                 >
                   ✕
-                </Button>
+                </RemoveButton>
               </span>
             </li>
           );
         })}
       </ol>
-      <div className="row" style={{ alignItems: 'flex-end' }}>
+      <div className="add-row">
         <SelectField
           label="駅を最後に足す"
           value={adding}
           options={[{ value: '', label: '駅を選ぶ…' }, ...stationOptions]}
           onChange={setAdding}
-          className="field"
         />
         <Button
           variant="primary"
@@ -275,7 +273,6 @@ function EntryList({ service }: { service: Service }) {
             add(adding);
             setAdding('');
           }}
-          style={{ marginBottom: 'var(--space-4)' }}
         >
           足す
         </Button>
@@ -309,7 +306,7 @@ function KindList({ service }: { service: Service }) {
           const kind = project.kinds.find((x) => x.id === k.kindId);
           return (
             <li key={k.kindId} className={styles.rowItem}>
-              <div style={{ flex: '1 1 100%' }}>
+              <div className={styles.rowTitle}>
                 <strong>{kind?.name}</strong>{' '}
                 <span className={styles.tag}>{kind ? kindTag(kind) : '?'}</span>
               </div>
@@ -326,6 +323,7 @@ function KindList({ service }: { service: Service }) {
                 help="maxSpeed"
                 value={k.maxSpeed}
                 min={0}
+                required
                 onChange={(v) => v !== undefined && kmut(k.kindId, (x) => void (x.maxSpeed = v))}
               />
               <TextField
@@ -341,7 +339,7 @@ function KindList({ service }: { service: Service }) {
                   })
                 }
               />
-              <details style={{ flex: '1 1 100%' }}>
+              <details className={styles.rowFull}>
                 <summary>
                   衝突設定（mob {k.mobCollision}・プレイヤー {k.playerCollision}）
                 </summary>
@@ -364,19 +362,23 @@ function KindList({ service }: { service: Service }) {
                   />
                 </div>
               </details>
-              <Button
-                size="sm"
-                variant="danger"
-                onClick={() => store.removeServiceKind(service.id, k.kindId)}
+              <RemoveButton
+                describe={`${kind?.name ?? '種別'}をこの系統から外す`}
+                onRemove={() =>
+                  removeWithUndo(
+                    `${kind?.name ?? '種別'}をこの系統から外しました（停車駅の ○/× も外れました）`,
+                    (p) => ops.removeServiceKind(p, service.id, k.kindId),
+                  )
+                }
               >
                 外す
-              </Button>
+              </RemoveButton>
             </li>
           );
         })}
       </ul>
       {available.length > 0 && (
-        <div className="row" style={{ alignItems: 'flex-end' }}>
+        <div className="add-row">
           <SelectField
             label="種別を載せる"
             value={adding}
@@ -389,12 +391,14 @@ function KindList({ service }: { service: Service }) {
           <Button
             variant="primary"
             disabled={!adding}
-            style={{ marginBottom: 'var(--space-4)' }}
             onClick={() => {
-              store.update((p) => {
-                const s = must(p.services.find((x) => x.id === service.id));
-                s.kinds.push(defaultServiceKind(p, adding, s.direction, s.entries.length));
-              });
+              store.update(
+                (p) => {
+                  const s = must(p.services.find((x) => x.id === service.id));
+                  s.kinds.push(defaultServiceKind(p, adding, s.direction, s.entries.length));
+                },
+                { checkpoint: true },
+              );
               setAdding('');
             }}
           >
@@ -437,10 +441,13 @@ function StopMatrix({ service }: { service: Service }) {
           return `${rowName(r)} ${kind?.name ?? ''}`;
         }}
         onToggle={(r, c) =>
-          update((p) => {
-            const k = must(must(p.services.find((x) => x.id === service.id)).kinds[c]);
-            k.stops[r] = !k.stops[r];
-          })
+          update(
+            (p) => {
+              const k = must(must(p.services.find((x) => x.id === service.id)).kinds[c]);
+              k.stops[r] = !k.stops[r];
+            },
+            { checkpoint: true },
+          )
         }
       />
     </Section>

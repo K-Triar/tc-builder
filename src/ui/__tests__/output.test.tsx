@@ -65,7 +65,10 @@ describe('駅の看板カード（8.1・8.2）', () => {
     delete p.stations[1]!.platforms[0]!.dir;
     await saveProject(p);
     await openAt('/p/broken/work/signs');
-    expect(screen.getByRole('alert')).toHaveTextContent('出していません');
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveTextContent('出していません');
+    // 直すべきエラーがその場に並び、入力へ飛べる
+    expect(within(alert).getByRole('link', { name: /進む向きが未入力/ })).toBeInTheDocument();
   });
 });
 
@@ -116,7 +119,8 @@ describe('検証パネル（8.6）', () => {
     delete p.stations[2]!.platforms[0]!.dir;
     await saveProject(p);
     await openAt('/p/broken2/work/signs');
-    const link = screen.getByRole('link', { name: /オット 1番 の進む向きが未入力/ });
+    const panel = screen.getByRole('complementary', { name: '検証結果' });
+    const link = within(panel).getByRole('link', { name: /オット 1番 の進む向きが未入力/ });
     expect(link).toHaveAttribute('href', '/p/broken2/edit/stations?station=st-KL02&platform=1');
     fireEvent.click(link);
     expect(await screen.findByRole('heading', { level: 1, name: '編集' })).toBeInTheDocument();

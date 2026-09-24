@@ -1,0 +1,63 @@
+/* 画面上（ヘッダーのすぐ下）に出す。下に固定した「次へ」や1行ずつコピーのバーを隠さないため */
+.host {
+  position: fixed;
+  left: 50%;
+  top: calc(var(--header-h) + var(--space-3));
+  z-index: 90;
+  transform: translateX(-50%);
+  width: min(560px, calc(100% - 2 * var(--space-4)));
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border-radius: var(--radius);
+  background: var(--text);
+  color: var(--bg);
+  box-shadow: var(--shadow);
+  pointer-events: auto;
+  animation: toast-in var(--ease);
+}
+
+.message {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+}
+
+/* 暗い地の上のボタン */
+.action {
+  background: transparent !important;
+  border-color: var(--bg) !important;
+  color: var(--bg) !important;
+}
+
+.action:hover {
+  background: color-mix(in srgb, var(--bg) 18%, transparent) !important;
+}
+
+.close {
+  flex: 0 0 auto;
+  width: var(--touch);
+  height: var(--touch);
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--bg);
+  font-size: var(--fs-lg);
+  cursor: pointer;
+}
+
+.close:hover {
+  background: color-mix(in srgb, var(--bg) 18%, transparent);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}

@@ -11,7 +11,30 @@
   border-left: 4px solid var(--warning);
   background: var(--warning-soft);
   border-radius: var(--radius-sm);
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
+}
+
+.caution > :last-child {
+  margin-bottom: 0;
+}
+
+.cautionError {
+  border-left-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.cautionTitle {
+  font-weight: 700;
+  font-size: var(--fs-md);
+}
+
+.errorList {
+  margin: 0 0 var(--space-2);
+  padding-left: 1.2em;
+}
+
+.errorList li + li {
+  margin-top: var(--space-1);
 }
 
 .station {
@@ -32,7 +55,7 @@
   margin-left: var(--space-2);
   padding: 0 var(--space-2);
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   background: var(--info-soft);
   color: var(--info);
 }
@@ -57,7 +80,7 @@
 
 .platformTitle {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: var(--fs-lg);
 }
 
 .dest {
@@ -66,17 +89,17 @@
   padding: 1px var(--space-2);
   border-radius: var(--radius-sm);
   background: var(--surface-2);
-  font-size: 0.95rem;
+  font-size: var(--fs-md);
 }
 
 .pattern {
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--accent);
 }
 
 .order {
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
   color: var(--text-muted);
   margin: var(--space-2) 0;
 }
@@ -94,7 +117,7 @@
 }
 
 .signCaption {
-  font-size: 0.75rem;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   margin-bottom: 2px;
 }
@@ -151,7 +174,7 @@
   min-width: 32px !important;
   padding: 0 var(--space-2) !important;
   color: var(--sign-text) !important;
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
 }
 
 .lineCopy:hover {
@@ -161,7 +184,7 @@
 .notes {
   margin: var(--space-3) 0;
   padding-left: 1.2em;
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
 }
 
 .checks {
@@ -198,7 +221,7 @@
 }
 
 .stale {
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   font-weight: 700;
   color: var(--warning);
   padding: 0 var(--space-2);
@@ -235,7 +258,7 @@
 .blockTitle {
   margin: 0;
   font-family: var(--mono);
-  font-size: 1rem;
+  font-size: var(--fs-md);
 }
 
 .cmdList {
@@ -296,12 +319,12 @@
   }
 
   .stepper {
-    bottom: calc(var(--touch) + 16px);
+    bottom: var(--bottom-nav-h);
     margin: 0 calc(var(--space-3) * -1) var(--space-4);
   }
 
   .stationTitle {
-    font-size: 1.1rem;
+    font-size: var(--fs-lg);
   }
 }
 
@@ -323,7 +346,7 @@
 
 .trouble {
   width: 100%;
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
 }
 
 .trouble th,
@@ -336,4 +359,22 @@
 
 .trouble thead th {
   background: var(--surface-2);
+}
+
+.checkNote {
+  /* チェックボックスの幅＋すき間の分だけ字下げして、ラベルとそろえる */
+  margin-left: calc(22px + var(--space-2));
+}
+
+.modeRow {
+  margin-bottom: var(--space-4);
+}
+
+.checkTable th {
+  text-align: left;
+  padding-right: var(--space-4);
+}
+
+.scrollX {
+  overflow-x: auto;
 }

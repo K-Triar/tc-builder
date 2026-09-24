@@ -14,7 +14,7 @@ export function IssuesPanel({ projectId, issues, onNavigate }: IssuesPanelProps)
   const counts = issueCounts(issues);
   return (
     <section className={styles.panel} aria-labelledby="issues-title">
-      <h2 id="issues-title" className={styles.title}>
+      <h2 id="issues-title" className={styles.title} tabIndex={-1}>
         検証
       </h2>
       <p className={styles.summary}>
@@ -30,18 +30,22 @@ export function IssuesPanel({ projectId, issues, onNavigate }: IssuesPanelProps)
       ) : (
         <ul className={styles.list}>
           {issues.map((issue, i) => (
-            <li key={`${issue.code}-${i}`} className={`${styles.item} ${styles[issue.severity]}`}>
+            <li
+              key={`${issue.code}-${i}`}
+              className={`${styles.item} ${styles[issue.severity]}`}
+              title={`検証コード：${issue.code}`}
+            >
               <Link
                 to={issueLink(projectId, issue.target)}
                 className={styles.link}
                 onClick={onNavigate}
               >
-                <span className={styles.mark} aria-label={SEVERITY_MARK[issue.severity].label}>
+                <span className={styles.mark} aria-hidden="true">
                   {SEVERITY_MARK[issue.severity].mark}
                 </span>
                 <span>
+                  <span className="visually-hidden">{SEVERITY_MARK[issue.severity].label}：</span>
                   {issue.message}
-                  <span className={styles.code}>{issue.code}</span>
                 </span>
               </Link>
             </li>

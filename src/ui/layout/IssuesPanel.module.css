@@ -3,7 +3,7 @@
 }
 
 .title {
-  font-size: 1.05rem;
+  font-size: var(--fs-lg);
   margin-bottom: var(--space-2);
 }
 
@@ -11,7 +11,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
 }
 
 .count {
@@ -41,8 +41,12 @@
   padding: var(--space-2) var(--space-3);
   color: var(--text);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
   min-height: var(--touch);
+}
+
+.link {
+  transition: background var(--ease);
 }
 
 .link:hover {
@@ -54,11 +58,12 @@
   font-weight: 700;
 }
 
-.code {
-  display: block;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--text-muted);
+.title:focus {
+  outline: none;
+}
+
+.title:focus-visible {
+  outline: 3px solid var(--focus);
 }
 
 .error {

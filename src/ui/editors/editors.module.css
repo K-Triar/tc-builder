@@ -25,7 +25,6 @@
   align-items: flex-end;
   gap: var(--space-3);
   padding: var(--space-3);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface-2);
 }
@@ -37,6 +36,15 @@
 
 .rowItem > button {
   margin-bottom: 0;
+}
+
+.tagBox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-height: var(--touch);
+  justify-content: flex-end;
+  align-items: flex-start;
 }
 
 .tag {
@@ -61,8 +69,26 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-4);
   border-bottom: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--surface-2);
+  font-size: var(--fs-lg);
+}
+
+.stationHead :global(.muted) {
+  font-size: var(--fs-sm);
+  font-weight: 400;
+}
+
+.subhead {
+  margin: var(--space-5) 0 var(--space-2);
+  font-size: var(--fs-md);
+  color: var(--text-muted);
+}
+
+.stationBody > .subhead:first-child {
+  margin-top: 0;
 }
 
 .stationBody {
@@ -74,12 +100,21 @@
   outline-offset: 2px;
 }
 
+/* のりば：枠で囲まず、区切り線で分ける（駅カードの中の入れ子を浅くする） */
 .platform {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--space-3);
-  margin-bottom: var(--space-3);
-  background: var(--surface-2);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--border);
+}
+
+.destLine {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.platformFoot {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .dirPicker {
@@ -160,7 +195,7 @@
 
 .badge {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: var(--fs-xs);
   font-weight: 700;
   padding: 1px var(--space-2);
   border-radius: 999px;
@@ -176,7 +211,7 @@
 .table {
   width: 100%;
   border: 1px solid var(--border);
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
 }
 
 .table th,
@@ -217,4 +252,19 @@
   .entryActions {
     grid-column: 2;
   }
+}
+
+.rowTitle,
+.rowFull {
+  flex: 1 1 100%;
+}
+
+.rowTitle {
+  font-size: var(--fs-lg);
+}
+
+.caption {
+  text-align: left;
+  font-weight: 700;
+  padding-bottom: var(--space-2);
 }

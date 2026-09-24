@@ -38,7 +38,7 @@ export function DocsPage() {
     <div>
       <h1 className="no-print">資料</h1>
       <TabNav base={`/p/${project.id}/docs`} tabs={TABS} label="資料の種類" />
-      <div className="row no-print" style={{ marginBottom: 'var(--space-3)' }}>
+      <div className={`row no-print ${styles.toolbar}`}>
         <Button onClick={() => window.print()}>印刷する</Button>
         {tables.length > 1 && (
           <CopyButton
@@ -103,9 +103,7 @@ function DocTable({ table }: { table: Table }) {
           </tbody>
         </table>
       </div>
-      <p className="muted" style={{ fontSize: '0.8rem' }}>
-        {table.rows.length} 行
-      </p>
+      <p className="muted text-xs">{table.rows.length} 行</p>
     </section>
   );
 }

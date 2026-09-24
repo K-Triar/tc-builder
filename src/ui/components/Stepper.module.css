@@ -34,7 +34,7 @@
   height: 24px;
   border-radius: 50%;
   background: var(--surface-3);
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   font-weight: 700;
 }
 
@@ -65,4 +65,29 @@
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
+}
+
+.button {
+  transition:
+    background var(--ease),
+    border-color var(--ease);
+}
+
+.button:hover {
+  border-color: var(--accent);
+}
+
+/* 検証の印（エラー・警告）は済みの ✓ より優先する */
+.error .num {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.error .button {
+  border-color: var(--danger);
+}
+
+.warning .num {
+  background: var(--warning-soft);
+  color: var(--warning);
 }

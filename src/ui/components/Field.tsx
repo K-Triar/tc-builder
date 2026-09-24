@@ -1,6 +1,7 @@
 import { useId, useState, type ReactNode } from 'react';
 import type { HelpKey } from '../../content/help';
 import { Help } from './Help';
+import { readNumber } from './readNumber';
 
 interface BaseProps {
   label: ReactNode;
@@ -12,12 +13,17 @@ interface BaseProps {
 }
 
 function Label({ id, label, help, hideLabel }: BaseProps & { id: string }) {
+  if (hideLabel) {
+    return (
+      <span className="visually-hidden">
+        <label htmlFor={id}>{label}</label>
+      </span>
+    );
+  }
   return (
-    <span className={hideLabel ? 'visually-hidden' : undefined}>
-      <label htmlFor={id} style={{ display: 'inline' }}>
-        {label}
-      </label>
-      {help && !hideLabel && <Help topic={help} />}
+    <span className="label-row">
+      <label htmlFor={id}>{label}</label>
+      {help && <Help topic={help} />}
     </span>
   );
 }
@@ -46,25 +52,42 @@ export function TextField({
         className={mono ? 'mono' : undefined}
         autoComplete="off"
         spellCheck={false}
+        aria-describedby={base.hint ? `${id}-hint` : undefined}
         onChange={(e) => onChange(e.target.value)}
       />
-      {base.hint && <div className="field-hint">{base.hint}</div>}
+      {base.hint && (
+        <div id={`${id}-hint`} className="field-hint">
+          {base.hint}
+        </div>
+      )}
     </div>
   );
 }
 
-/** 数値欄。入力途中の文字（空、「1.」など）を許し、数値として読めたときだけ反映する */
+/**
+ * 数値欄。入力途中の文字（空、「1.」など）を許し、数値として読めたときだけ反映する。
+ * 読めないときは赤枠と理由を出し、欄を離れたら保存されている値に戻す。
+ */
 export function NumberField({
   value,
   onChange,
   min,
   step,
+  integer,
+  required,
+  error,
   ...base
 }: BaseProps & {
   value: number | undefined;
   onChange: (v: number | undefined) => void;
   min?: number;
   step?: number | 'any';
+  /** 整数だけを受け付ける */
+  integer?: boolean;
+  /** 空欄を受け付けない（空にしても反映しない） */
+  required?: boolean;
+  /** 外から渡すエラー（番号の重なりなど） */
+  error?: string | null;
 }) {
   const id = useId();
   const [text, setText] = useState(value === undefined ? '' : String(value));
@@ -74,6 +97,12 @@ export function NumberField({
     setSynced(value);
     setText(value === undefined ? '' : String(value));
   }
+  const parsed = readNumber(text, { min, integer, required });
+  const shown = value === undefined ? '空欄' : String(value);
+  const message = !parsed.ok ? `${parsed.reason}（今は ${shown} のままです）` : (error ?? null);
+  const describedBy = [message ? `${id}-error` : '', base.hint ? `${id}-hint` : '']
+    .filter(Boolean)
+    .join(' ');
   return (
     <div className={base.className ?? 'field'}>
       <Label id={id} {...base} />
@@ -82,25 +111,36 @@ export function NumberField({
         type="text"
         inputMode="decimal"
         value={text}
+        aria-invalid={message ? true : undefined}
+        aria-describedby={describedBy || undefined}
         onChange={(e) => {
-          const t = e.target.value.replace(/[０-９．]/g, (c) =>
-            String.fromCharCode(c.charCodeAt(0) - 0xfee0),
+          const t = e.target.value.replace(/[０-９．－]/g, (c) =>
+            c === '－' ? '-' : String.fromCharCode(c.charCodeAt(0) - 0xfee0),
           );
           setText(t);
-          if (t.trim() === '') {
-            setSynced(undefined);
-            onChange(undefined);
-            return;
+          const r = readNumber(t, { min, integer, required });
+          if (r.ok && r.value !== value) {
+            setSynced(r.value);
+            onChange(r.value);
           }
-          const n = Number(t);
-          if (Number.isFinite(n) && (min === undefined || n >= min)) {
-            setSynced(n);
-            onChange(n);
+        }}
+        onBlur={() => {
+          if (!readNumber(text, { min, integer, required }).ok) {
+            setText(value === undefined ? '' : String(value));
           }
         }}
         step={step}
       />
-      {base.hint && <div className="field-hint">{base.hint}</div>}
+      {message && (
+        <div id={`${id}-error`} className="field-error">
+          {message}
+        </div>
+      )}
+      {base.hint && (
+        <div id={`${id}-hint`} className="field-hint">
+          {base.hint}
+        </div>
+      )}
     </div>
   );
 }
@@ -119,14 +159,23 @@ export function SelectField<T extends string>({
   return (
     <div className={base.className ?? 'field'}>
       <Label id={id} {...base} />
-      <select id={id} value={value} onChange={(e) => onChange(e.target.value as T)}>
+      <select
+        id={id}
+        value={value}
+        aria-describedby={base.hint ? `${id}-hint` : undefined}
+        onChange={(e) => onChange(e.target.value as T)}
+      >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
           </option>
         ))}
       </select>
-      {base.hint && <div className="field-hint">{base.hint}</div>}
+      {base.hint && (
+        <div id={`${id}-hint`} className="field-hint">
+          {base.hint}
+        </div>
+      )}
     </div>
   );
 }
@@ -142,20 +191,22 @@ export function CheckField({
   const id = useId();
   return (
     <div className={className ?? 'field'}>
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, minHeight: 44 }}>
+      <span className="check-row">
         <input
           id={id}
           type="checkbox"
           checked={checked}
-          style={{ width: 22, height: 22 }}
+          aria-describedby={hint ? `${id}-hint` : undefined}
           onChange={(e) => onChange(e.target.checked)}
         />
-        <label htmlFor={id} style={{ margin: 0 }}>
-          {label}
-        </label>
+        <label htmlFor={id}>{label}</label>
         {help && <Help topic={help} />}
       </span>
-      {hint && <div className="field-hint">{hint}</div>}
+      {hint && (
+        <div id={`${id}-hint`} className="field-hint">
+          {hint}
+        </div>
+      )}
     </div>
   );
 }
@@ -175,15 +226,15 @@ export function Section({
   actions?: ReactNode;
 }) {
   return (
-    <section className="card stack" style={{ marginBottom: 'var(--space-4)' }}>
-      <div className="row" style={{ justifyContent: 'space-between' }}>
-        <h2 style={{ margin: 0 }}>
+    <section className="card stack section">
+      <div className="section-head">
+        <h2>
           {title}
           {help && <Help topic={help} />}
         </h2>
         {actions && <div className="row">{actions}</div>}
       </div>
-      {lead && <p className="muted">{lead}</p>}
+      {lead && <p className="section-lead">{lead}</p>}
       {children}
     </section>
   );

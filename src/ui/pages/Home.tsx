@@ -39,6 +39,7 @@ export function Home() {
   const [importErrors, setImportErrors] = useState<string[] | null>(null);
   const [conflict, setConflict] = useState<Project | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [sampleExists, setSampleExists] = useState<ProjectMeta | null>(null);
   const [theme, setTheme] = useTheme();
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -54,6 +55,9 @@ export function Home() {
   }, []);
 
   useEffect(refresh, [refresh]);
+  useEffect(() => {
+    document.title = 'KT式 TC ビルダー';
+  }, []);
 
   const openAndGo = async (p: Project, path: string) => {
     await saveProject(p);
@@ -61,7 +65,15 @@ export function Home() {
     await navigate(`/p/${p.id}/${path}`);
   };
 
-  const onSample = () => void openAndGo(createSampleProject(newId(), now.current()), 'work/signs');
+  const openNewSample = () =>
+    void openAndGo(createSampleProject(newId(), now.current()), 'work/signs');
+  /** サンプルがもうあれば、それを開くか新しく作るか聞く（押すたびに増えないように） */
+  const onSample = () => {
+    const name = createSampleProject('probe', now.current()).name;
+    const existing = projects?.find((m) => m.name === name);
+    if (existing) setSampleExists(existing);
+    else openNewSample();
+  };
 
   const onFile = useCallback(async (file: File) => {
     const r = await readProjectFile(file);
@@ -132,6 +144,7 @@ export function Home() {
             {projects.map((m) => (
               <li key={m.id} className={styles.item}>
                 <div className={styles.itemMain}>
+                  {/* 名前のリンクをカード全体に広げて、どこを押しても開けるようにする */}
                   <a
                     href={`#/p/${m.id}/work/signs`}
                     className={styles.itemName}
@@ -142,20 +155,33 @@ export function Home() {
                   >
                     {m.name || '（名前なし）'}
                   </a>
-                  <span className="muted">
+                  <span className={styles.itemMeta}>
                     更新 {formatDate(m.updatedAt)}
                     {hasUnexportedChanges(m) && (
                       <span className={styles.unsaved}>・ファイルに未保存</span>
                     )}
                   </span>
                 </div>
-                <div className="row">
-                  <Button size="sm" onClick={() => void onDuplicate(m)}>
+                <div className={styles.itemActions}>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    aria-label={`${m.name || '名前なし'}を複製`}
+                    onClick={() => void onDuplicate(m)}
+                  >
                     複製
                   </Button>
-                  <Button size="sm" variant="danger" onClick={() => setDeleting(m)}>
-                    削除
+                  <Button
+                    size="sm"
+                    variant="dangerQuiet"
+                    aria-label={`${m.name || '名前なし'}を消す`}
+                    onClick={() => setDeleting(m)}
+                  >
+                    消す
                   </Button>
+                  <span className={styles.chevron} aria-hidden="true">
+                    ›
+                  </span>
                 </div>
               </li>
             ))}
@@ -181,14 +207,15 @@ export function Home() {
 
       <ConfirmDialog
         open={deleting !== null}
-        title="プロジェクトを削除しますか？"
+        title="プロジェクトを消しますか？"
         message={
           <p>
             「{deleting?.name}
-            」をこのブラウザから削除します。書き出したファイルは消えません。元には戻せません。
+            」をこのブラウザから消します。書き出したファイルは消えません。
+            <strong>元には戻せません。</strong>
           </p>
         }
-        confirmLabel="削除する"
+        confirmLabel="消す"
         danger
         onCancel={() => setDeleting(null)}
         onConfirm={() => {
@@ -212,6 +239,40 @@ export function Home() {
         {importErrors && importErrors.length > 20 && (
           <p className="muted">ほか {importErrors.length - 20} 件</p>
         )}
+      </Dialog>
+
+      <Dialog
+        open={sampleExists !== null}
+        title="サンプルはすでにあります"
+        onClose={() => setSampleExists(null)}
+        actions={
+          <>
+            <Button
+              onClick={() => {
+                setSampleExists(null);
+                openNewSample();
+              }}
+            >
+              もう1つ作る
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                const m = sampleExists;
+                setSampleExists(null);
+                if (m) void navigate(`/p/${m.id}/work/signs`);
+              }}
+            >
+              今あるサンプルを開く
+            </Button>
+          </>
+        }
+      >
+        <p>
+          「{sampleExists?.name}」はこのブラウザにあります（更新{' '}
+          {sampleExists ? formatDate(sampleExists.updatedAt) : ''}
+          ）。手を加えていても、そのまま開けます。
+        </p>
       </Dialog>
 
       <Dialog
@@ -264,6 +325,7 @@ function NewProjectDialog({
   const [name, setName] = useState('');
   const [presetId, setPresetId] = useState<Preset['id']>('K');
   const preset = PRESETS.find((p) => p.id === presetId) ?? K_PRESET;
+  const create = () => onCreate(preset, name.trim() || '新しい路線');
   return (
     <Dialog
       open={open}
@@ -272,7 +334,7 @@ function NewProjectDialog({
       actions={
         <>
           <Button onClick={onCancel}>やめる</Button>
-          <Button variant="primary" onClick={() => onCreate(preset, name.trim() || '新しい路線')}>
+          <Button variant="primary" onClick={create}>
             作ってウィザードへ
           </Button>
         </>
@@ -286,6 +348,9 @@ function NewProjectDialog({
           value={name}
           placeholder="例：瑠璃線系統"
           onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.nativeEvent.isComposing) create();
+          }}
         />
       </div>
       <fieldset className={styles.presets}>

@@ -29,15 +29,24 @@ h4 {
 }
 
 h1 {
-  font-size: 1.5rem;
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  letter-spacing: 0.01em;
 }
 
 h2 {
-  font-size: 1.25rem;
+  font-size: var(--fs-xl);
+  font-weight: 700;
 }
 
 h3 {
-  font-size: 1.05rem;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+
+/* 画面が変わったときにフォーカスを移す見出し（枠は出さない） */
+h1[tabindex='-1']:focus {
+  outline: none;
 }
 
 p {
@@ -83,6 +92,20 @@ textarea {
   border-radius: var(--radius-sm);
   background: var(--surface);
   width: 100%;
+  transition:
+    border-color var(--ease),
+    box-shadow var(--ease);
+}
+
+input:hover:not(:disabled, [type='checkbox'], [type='radio']),
+select:hover:not(:disabled),
+textarea:hover:not(:disabled) {
+  border-color: var(--text-muted);
+}
+
+[aria-invalid='true'] {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 1px var(--danger);
 }
 
 label {
@@ -138,9 +161,118 @@ table {
 }
 
 .field-hint {
-  font-size: 0.875rem;
+  font-size: var(--fs-sm);
   color: var(--text-muted);
   margin-top: var(--space-1);
+}
+
+.field-error {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--danger);
+  margin-top: var(--space-1);
+}
+
+.text-xs {
+  font-size: var(--fs-xs);
+}
+
+.text-sm {
+  font-size: var(--fs-sm);
+}
+
+/* 項目名（label と「？」を横に並べる） */
+.label-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-1);
+  margin-bottom: var(--space-1);
+}
+
+.label-row > label {
+  display: inline;
+  margin: 0;
+}
+
+/* チェックボックス＋項目名 */
+.check-row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch);
+}
+
+.check-row > input {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.check-row > label {
+  margin: 0;
+}
+
+/* 見出し＋操作ボタンのまとまり（Section） */
+.section {
+  margin-bottom: var(--space-5);
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.section-head > h2 {
+  margin: 0;
+}
+
+.section-lead {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* 消すボタンと、押せないときの理由 */
+.remove {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-2);
+}
+
+.remove-reason {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+/* 追加の行（選択欄＋ボタン） */
+.add-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.add-row > .field {
+  flex: 1 1 220px;
+  margin-bottom: 0;
+}
+
+.page-narrow {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+.status-msg {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ok);
+  margin: 0;
 }
 
 @media print {
