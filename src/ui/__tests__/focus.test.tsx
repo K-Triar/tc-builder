@@ -100,15 +100,15 @@ describe('はじめての質問（集中モード）で、新しい路線網を�
     click('のりばの設定へ進む →');
 
     // C のりば：1駅＝1カード
-    await h1('A駅：列車はどちらへ進みますか？');
+    await h1('A駅ののりば');
     expect(screen.getByText('1 / 3')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('radio', { name: /左から右へ/ }));
     click('次の駅：B駅 →');
-    await h1('B駅：列車はどちらへ進みますか？');
+    await h1('B駅ののりば');
     click('＋ のりばを足す');
     for (const r of screen.getAllByRole('radio', { name: /左から右へ/ })) fireEvent.click(r);
     click('次の駅：C駅 →');
-    await h1('C駅：列車はどちらへ進みますか？');
+    await h1('C駅ののりば');
     fireEvent.click(screen.getByRole('radio', { name: /左から右へ/ }));
     click('列車の走り方へ進む →');
 

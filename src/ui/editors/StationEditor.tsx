@@ -411,7 +411,7 @@ function StationCard({
             </Button>
             <RemoveButton
               describe={`${s.name || '駅'}を消す`}
-              blocked={used && '系統で使用中'}
+              blocked={used && '列車の走り方で使用中'}
               onRemove={() =>
                 removeWithUndo(
                   `駅「${s.name || '駅名なし'}」を消しました`,
@@ -746,7 +746,7 @@ function PlatformList({
           <div className={styles.platformFoot}>
             <RemoveButton
               describe={`${s.name} ${pf.number}番のりばを消す`}
-              blocked={usedPlatforms.has(pf.number) && '系統で使用中'}
+              blocked={usedPlatforms.has(pf.number) && '列車の走り方で使用中'}
               onRemove={() =>
                 removeWithUndo(`${s.name || '駅'} ${pf.number}番のりばを消しました`, (p) => {
                   const st = must(p.stations.find((x) => x.id === s.id));

@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { kindTag } from '../../domain/codes';
 import type { Service, ServiceKind } from '../../domain/model';
 import { defaultServiceKind, reverseService, suggestPlatform } from '../../domain/suggest';
 import { useProjectStore } from '../../store/projectStore';
 import { Button } from '../components/Button';
+import { buttonClass } from '../components/buttonClass';
 import { Disclosure } from '../components/Disclosure';
 import { NumberField, Section, SelectField, TextField } from '../components/Field';
 import { Matrix } from '../components/Matrix';
@@ -24,7 +25,7 @@ function serviceEnds(project: Project, service: Service): string {
   return `${name(0)} → ${name(service.entries.length - 1)}`;
 }
 
-/** ウィザード「列車の走り方」・編集「系統」 */
+/** ウィザード「列車の走り方」・編集「列車の走り方」（表で直す画面） */
 export function ServiceEditor({ guided }: { guided?: boolean }) {
   const project = useProject();
   const update = useProjectStore((s) => s.update);
@@ -54,22 +55,32 @@ export function ServiceEditor({ guided }: { guided?: boolean }) {
   return (
     <>
       <Section
-        title={guided ? '列車の走り方（系統）' : '系統'}
+        title="列車の走り方"
         lead={
           guided
-            ? 'どこからどこへ、どの駅を通って走るかを、向きごとに1つずつ作ります。KT式ではこれを「系統」と呼びます。逆向きは「反対方向を作る」で写せます。'
+            ? 'どこからどこへ、どの駅を通って走るかを、向きごとに1つずつ作ります。逆向きは「反対方向を作る」で写せます。'
             : '1方向の運行パターンごとに1つ作ります。逆方向は「反対方向を作る」で複製できます。'
         }
         actions={
-          <Button size="sm" onClick={addService}>
-            ＋ 系統を足す
-          </Button>
+          <>
+            {guided && (
+              <Link
+                to={`/p/${project.id}/start/trains/new`}
+                className={buttonClass('primary', 'sm')}
+              >
+                ＋ 質問に答えて作る
+              </Link>
+            )}
+            <Button size="sm" onClick={addService}>
+              {guided ? '＋ 表で作る' : '＋ 列車の走り方を足す'}
+            </Button>
+          </>
         }
       >
         {project.services.length === 0 ? (
-          <p className="muted">まだ系統がありません。</p>
+          <p className="muted">まだ列車の走り方がありません。</p>
         ) : guided ? (
-          <ul className={styles.serviceList} aria-label="系統">
+          <ul className={styles.serviceList} aria-label="列車の走り方">
             {project.services.map((s, i) => (
               <li key={s.id}>
                 <button
@@ -83,7 +94,7 @@ export function ServiceEditor({ guided }: { guided?: boolean }) {
                     <strong>{s.name || '（名前なし）'}</strong>
                     <span className="muted text-sm">
                       {serviceEnds(project, s)}・{s.direction === 'up' ? '上り' : '下り'}・
-                      {s.kinds.length === 0 ? '列車の種類なし' : `${s.kinds.length} 種類`}
+                      {s.kinds.length === 0 ? '種別なし' : `種別 ${s.kinds.length}`}
                     </span>
                   </span>
                 </button>
@@ -92,7 +103,7 @@ export function ServiceEditor({ guided }: { guided?: boolean }) {
           </ul>
         ) : (
           <SelectField
-            label={`編集する系統（${project.services.length}）`}
+            label={`編集する列車の走り方（${project.services.length}）`}
             value={service?.id ?? ''}
             options={project.services.map((s, i) => ({
               value: s.id,
@@ -125,9 +136,9 @@ function ServiceDetail({
 
   return (
     <>
-      <Section title={guided ? `「${service.name || '名前なし'}」の設定` : '系統の設定'}>
+      <Section title={guided ? `「${service.name || '名前なし'}」の設定` : '列車の走り方の設定'}>
         <TextField
-          label="系統名"
+          label="走り方の名前"
           value={service.name}
           placeholder="CRアカシア線→瑠璃線→翠鉄城東線 トクテルダム中央行"
           onChange={(v) => mut((s) => void (s.name = v))}
@@ -171,13 +182,13 @@ function ServiceDetail({
           <RemoveButton
             onRemove={() => {
               const next = project.services.find((s) => s.id !== service.id);
-              removeWithUndo(`系統「${service.name || '名前なし'}」を消しました`, (p) =>
+              removeWithUndo(`列車の走り方「${service.name || '名前なし'}」を消しました`, (p) =>
                 ops.removeService(p, service.id),
               );
               if (next) onSelect(next.id);
             }}
           >
-            この系統を消す
+            この走り方を消す
           </RemoveButton>
         </div>
       </Section>
@@ -318,7 +329,7 @@ function EntryList({ service }: { service: Service }) {
         </Button>
       </div>
       <p className="field-hint">
-        のりばは、ほかの系統が同じ前の駅から入るのりばを提案します。違っていれば選び直してください。
+        のりばは、ほかの走り方が同じ前の駅から入るのりばを提案します。違っていれば選び直してください。
       </p>
     </Section>
   );
@@ -340,10 +351,10 @@ function KindList({ service, guided }: { service: Service; guided?: boolean }) {
 
   return (
     <Section
-      title="走る列車の種類"
+      title="走る種別"
       lead={
         guided
-          ? '各駅停車・快速など、この系統を走る列車の種類を選びます。形式コードや最高速度は自動で入ります。'
+          ? '普通・快速など、この走り方で走る種別を選びます。形式コードや最高速度は自動で入ります。'
           : '種別ごとに形式コード・最高速度・両数を入れます。'
       }
     >
@@ -479,10 +490,10 @@ function KindList({ service, guided }: { service: Service; guided?: boolean }) {
                 </>
               )}
               <RemoveButton
-                describe={`${kind?.name ?? '種別'}をこの系統から外す`}
+                describe={`${kind?.name ?? '種別'}をこの走り方から外す`}
                 onRemove={() =>
                   removeWithUndo(
-                    `${kind?.name ?? '種別'}をこの系統から外しました（停車駅の ○/× も外れました）`,
+                    `${kind?.name ?? '種別'}をこの走り方から外しました（停車駅の ○/× も外れました）`,
                     (p) => ops.removeServiceKind(p, service.id, k.kindId),
                   )
                 }
@@ -538,7 +549,7 @@ function StopMatrix({ service }: { service: Service }) {
   return (
     <Section
       title="止まる駅"
-      lead="列車の種類ごとに、止まる駅は ○、通過する駅は × にします。押すと切り替わります。始発と終点は必ず止まります。"
+      lead="種別ごとに、止まる駅は ○、通過する駅は × にします。押すと切り替わります。始発と終点は必ず止まります。"
     >
       <Matrix
         caption={`${service.name} の停車駅`}

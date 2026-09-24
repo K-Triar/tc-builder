@@ -10,9 +10,9 @@ import styles from './EditPage.module.css';
 
 const TABS = [
   { key: 'org', label: '鉄道会社・路線・数値' },
-  { key: 'kinds', label: '列車の種類' },
+  { key: 'kinds', label: '種別' },
   { key: 'stations', label: '駅とのりば' },
-  { key: 'services', label: '系統' },
+  { key: 'services', label: '列車の走り方' },
   { key: 'review', label: '自動推定の上書き' },
 ] as const;
 

@@ -70,11 +70,7 @@ export function PlatformCard({ stationId }: { stationId?: string }) {
       pos={index + 1}
       total={stations.length}
       progress={focusProgress('C', index, stations.length)}
-      title={
-        signs
-          ? `${station.name || '名前のない駅'}：列車はどちらへ進みますか？`
-          : `${station.name || '名前のない駅'}ののりば`
-      }
+      title={`${station.name || '名前のない駅'}ののりば`}
       lead={
         signs
           ? 'ホームに立って線路を見たとき、列車が左右どちらへ出ていくかを、のりばごとに選びます。'

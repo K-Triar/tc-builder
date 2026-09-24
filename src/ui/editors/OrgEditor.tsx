@@ -228,7 +228,7 @@ export function SettingsEditor() {
       <Section
         title="用途番号"
         help="formationCode"
-        lead="形式コードの2文字目。種別を系統に載せるときの最高速度の初期値になります。"
+        lead="形式コードの2文字目。種別を列車の走り方に載せるときの最高速度の初期値になります。"
         actions={
           <Button
             size="sm"

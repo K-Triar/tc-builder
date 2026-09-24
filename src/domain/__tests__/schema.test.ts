@@ -119,7 +119,7 @@ describe('parseProject', () => {
     const p = smallProject();
     p.services[0]!.kinds[0]!.stops = [true];
     expect(expectErrors(p)).toEqual([
-      '系統 1 番目 › 種別 1 番目 › 停車：経由リストと同じ数（2）にしてください',
+      '列車の走り方 1 番目 › 種別 1 番目 › 停車：経由リストと同じ数（2）にしてください',
     ]);
   });
 
@@ -132,8 +132,8 @@ describe('parseProject', () => {
     expect(expectErrors(p)).toEqual([
       '自分の鉄道会社：鉄道会社の一覧にない ID「nope」です',
       '駅 1 番目 › のりば 1 番目 › 行先コードに使う駅コード：この駅の駅コードにない ID「nope」です',
-      '系統 1 番目 › 経由リスト 2 番目 › 駅：駅の一覧にない ID「nope」です',
-      '系統 1 番目 › 種別 1 番目 › 種別：種別の一覧にない ID「nope」です',
+      '列車の走り方 1 番目 › 経由リスト 2 番目 › 駅：駅の一覧にない ID「nope」です',
+      '列車の走り方 1 番目 › 種別 1 番目 › 種別：種別の一覧にない ID「nope」です',
     ]);
   });
 

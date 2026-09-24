@@ -55,8 +55,8 @@ describe('質問に答えて小さな架空路線を作る（3駅・2種別）',
     // 列車の走り方：駅を順に足し、種別を載せる
     fireEvent.click(screen.getByRole('button', { name: '次へ：列車 →' }));
     await screen.findByRole('heading', { level: 1, name: '列車の走り方を決める' });
-    fireEvent.click(screen.getByRole('button', { name: '＋ 系統を足す' }));
-    fireEvent.change(screen.getByLabelText('系統名'), { target: { value: '下り C駅行' } });
+    fireEvent.click(screen.getByRole('button', { name: '＋ 表で作る' }));
+    fireEvent.change(screen.getByLabelText('走り方の名前'), { target: { value: '下り C駅行' } });
     for (const name of ['A駅', 'B駅', 'C駅']) {
       fireEvent.change(screen.getByLabelText('駅を最後に足す'), {
         target: { value: state().stations.find((s) => s.name === name)!.id },

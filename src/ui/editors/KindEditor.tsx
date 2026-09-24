@@ -91,7 +91,7 @@ export function KindEditor() {
               </Button>
               <RemoveButton
                 describe={`${k.name || kindTag(k) || '種別'}を消す`}
-                blocked={used.has(k.id) && '系統で使用中'}
+                blocked={used.has(k.id) && '列車の走り方で使用中'}
                 onRemove={() =>
                   removeWithUndo(
                     `種別「${k.name || kindTag(k)}」を消しました`,

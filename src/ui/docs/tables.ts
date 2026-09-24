@@ -64,7 +64,7 @@ export function departuresTable(project: Project, d: Derived): Table {
   );
   return {
     title: '各駅発編成一覧',
-    headers: ['駅', 'のりば', '行先コード', '編成コード', '系統', '上書き'],
+    headers: ['駅', 'のりば', '行先コード', '編成コード', '列車の走り方', '上書き'],
     rows: rows.map((x) => [
       stationName(d, x.stationId),
       `${x.platform}`,

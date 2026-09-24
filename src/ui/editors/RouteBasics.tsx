@@ -28,9 +28,9 @@ export function RouteBasics() {
 
   return (
     <>
-      <Section title="この路線の名前は？">
+      <Section title="この路線網の名前は？">
         <TextField
-          label="路線の名前"
+          label="路線網の名前"
           value={project.name}
           placeholder="例：瑠璃線系統"
           hint="自分が見分けるための名前です。看板やコマンドには出ません。"
@@ -39,7 +39,7 @@ export function RouteBasics() {
       </Section>
 
       <Section
-        title="どの鉄道会社の路線ですか？"
+        title="どの鉄道会社ですか？"
         lead="駅コードや形式コードの先頭には、鉄道会社コードが付きます。路線のコードは鉄道会社ごとに決まっています。"
       >
         {self?.code ? (
@@ -58,7 +58,7 @@ export function RouteBasics() {
                     </span>
                   ))}
             </dd>
-            <dt>列車の種類</dt>
+            <dt>種別</dt>
             <dd>
               {kinds.length === 0
                 ? 'まだありません'
@@ -78,7 +78,7 @@ export function RouteBasics() {
             」のように、鉄道会社・路線・駅の番号から自動で付きます。
           </p>
         )}
-        <Disclosure summary="詳しい設定（鉄道会社・路線・列車の種類のコード）" open={openDetails}>
+        <Disclosure summary="詳しい設定（鉄道会社・路線・種別のコード）" open={openDetails}>
           <OrgEditor />
           <LineEditor />
           <KindEditor />

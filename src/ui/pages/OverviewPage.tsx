@@ -67,7 +67,7 @@ export function OverviewPage() {
               </Link>
               <span className={styles.rowNote}>
                 {inputsDone
-                  ? `済み（駅 ${project.stations.length}・系統 ${project.services.length}）`
+                  ? `済み（駅 ${project.stations.length}・走り方 ${project.services.length}）`
                   : `いま：${j.stages[Math.min(j.current, SETUP_STAGE_COUNT - 1)]?.title}`}
               </span>
             </div>

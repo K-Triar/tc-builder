@@ -178,23 +178,27 @@ export function validate(
   project.services.forEach((v) => {
     const m = v.entries.length - 1;
     if (v.entries.length < 2) {
-      add('SERVICE_TOO_SHORT', `系統「${v.name}」の経由リストが2駅未満です。`, {
+      add('SERVICE_TOO_SHORT', `列車の走り方「${v.name}」の経由リストが2駅未満です。`, {
         kind: 'service',
         serviceId: v.id,
       });
     } else if (v.entries[m]?.platform === null) {
       const terminal = stationName(v.entries[m].stationId);
-      add('SERVICE_NO_TERMINAL', `系統「${v.name}」の終点（${terminal}）ののりばが未定です。`, {
-        kind: 'service',
-        serviceId: v.id,
-        entryIndex: m,
-      });
+      add(
+        'SERVICE_NO_TERMINAL',
+        `列車の走り方「${v.name}」の終点（${terminal}）ののりばが未定です。`,
+        {
+          kind: 'service',
+          serviceId: v.id,
+          entryIndex: m,
+        },
+      );
     }
     v.entries.forEach((e, i) => {
       if (e.platform !== null && !lookup.platform(e.stationId, e.platform)) {
         add(
           'PLATFORM_MISSING',
-          `系統「${v.name}」が ${platformName(e.stationId, e.platform)} を通りますが、そののりばがありません。`,
+          `列車の走り方「${v.name}」が ${platformName(e.stationId, e.platform)} を通りますが、そののりばがありません。`,
           { kind: 'service', serviceId: v.id, entryIndex: i },
         );
       }
@@ -208,7 +212,7 @@ export function validate(
       if (v.entries.length >= 2 && !hasMiddleStop && !hasDeparture) {
         add(
           'KIND_NO_STOP',
-          `系統「${v.name}」の${kindName(k.kindId)}は、途中の停車駅も発駅もありません。入力を確かめてください。`,
+          `列車の走り方「${v.name}」の${kindName(k.kindId)}は、途中の停車駅も発駅もありません。入力を確かめてください。`,
           { kind: 'service', serviceId: v.id, kindId: k.kindId },
         );
       }
@@ -218,7 +222,7 @@ export function validate(
         const dirName = v.direction === 'up' ? '上り' : '下り';
         add(
           'FORM_PARITY',
-          `系統「${v.name}」は${dirName}ですが、${kindName(k.kindId)}の形式 ${k.formation} は${parity === 'up' ? '上り（奇数）' : '下り（偶数）'}の番号です（${dirName}なら ${pairedFormCode(k.formation)}）。`,
+          `列車の走り方「${v.name}」は${dirName}ですが、${kindName(k.kindId)}の形式 ${k.formation} は${parity === 'up' ? '上り（奇数）' : '下り（偶数）'}の番号です（${dirName}なら ${pairedFormCode(k.formation)}）。`,
           { kind: 'service', serviceId: v.id, kindId: k.kindId },
         );
       }

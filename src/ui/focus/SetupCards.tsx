@@ -820,14 +820,16 @@ function CheckCard() {
           <div key={r.q}>
             <dt>{r.label}</dt>
             <dd>{r.value}</dd>
-            <Button
-              size="sm"
-              variant="ghost"
-              aria-label={`${r.label}を変える`}
-              onClick={() => go(`${r.q}?from=check`)}
-            >
-              変える
-            </Button>
+            <dd>
+              <Button
+                size="sm"
+                variant="ghost"
+                aria-label={`${r.label}を変える`}
+                onClick={() => go(`${r.q}?from=check`)}
+              >
+                変える
+              </Button>
+            </dd>
           </div>
         ))}
       </dl>

@@ -247,7 +247,7 @@ export function journey(
         return {
           stage,
           title: unfinishedService
-            ? `「${unfinishedService.name || '名前のない系統'}」の通る駅と列車の種類を決める`
+            ? `「${unfinishedService.name || '名前のない走り方'}」の通る駅と種別を決める`
             : project.services.length === 0
               ? 'どこからどこへ列車が走るかを決める'
               : '列車の走り方を直す',
@@ -292,7 +292,7 @@ export function journey(
           const service = project.services.find((s) => s.id === id.slice('trial:service:'.length));
           return {
             stage: 'trial',
-            title: `「${service?.name || '名前のない系統'}」を始発から終点まで走らせる`,
+            title: `「${service?.name || '名前のない走り方'}」を始発から終点まで走らせる`,
             detail:
               '止まる駅で止まり、通過する駅を通過し、分かれ道で正しい方へ進むかを確かめます。',
             path: 'work/trial',

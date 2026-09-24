@@ -312,7 +312,7 @@ const COLLECTION_LABELS: Record<string, string> = {
   stations: '駅',
   platforms: 'のりば',
   codes: '駅コード',
-  services: '系統',
+  services: '列車の走り方',
   entries: '経由リスト',
   stops: '停車',
   usages: '用途番号',

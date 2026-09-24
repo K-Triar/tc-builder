@@ -106,9 +106,9 @@ export function dropUnusedNamedKinds(p: Project): void {
 
 /** 名前付き列車を1つ足す（種別の後ろに入れる） */
 export function addNamedKind(p: Project, typeCode: string): string {
-  const base = p.kinds.find((k) => k.typeCode === typeCode && !isNamedKind(k));
   const id = newId();
-  const item = { id, typeCode, trainNameCode: '', name: base?.name ?? '' };
+  // 名前は愛称を入れてもらう（「特急」のままにしない）
+  const item = { id, typeCode, trainNameCode: '', name: '' };
   const last = p.kinds.findLastIndex((k) => k.typeCode === typeCode);
   if (last < 0) p.kinds.push(item);
   else p.kinds.splice(last + 1, 0, item);

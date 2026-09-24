@@ -43,7 +43,7 @@ export function TrialView() {
       </section>
 
       <section className={styles.extra}>
-        <h2>系統ごとの試運転</h2>
+        <h2>列車の走り方ごとの試運転</h2>
         <p className="muted">
           始発から終点まで走らせ、停車駅で止まり、通過駅を通過し、分岐で正しい方へ行くことを確かめます。
         </p>

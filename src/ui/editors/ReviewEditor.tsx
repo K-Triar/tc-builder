@@ -67,7 +67,7 @@ function ChoiceReview() {
     <Section
       title="経路に入れる駅"
       help="choice"
-      lead="のりばを選ぶ必要がある駅は自動で経路に入ります。KT式の実例と違うときだけ上書きしてください（上書きはすべての系統に効きます）。"
+      lead="のりばを選ぶ必要がある駅は自動で経路に入ります。KT式の実例と違うときだけ上書きしてください（上書きはすべての列車の走り方に効きます）。"
     >
       <div className={styles.tableWrap} tabIndex={0} role="region" aria-label="経路に入れる駅の表">
         <table className={styles.table}>
@@ -85,7 +85,7 @@ function ChoiceReview() {
               const override = project.overrides.choice[key];
               const st = project.stations.find((s) => s.id === r.stationId);
               const state =
-                r.chosen.size > 1 ? '系統による' : r.chosen.has(true) ? '○ 入れる' : '× 入れない';
+                r.chosen.size > 1 ? '走り方による' : r.chosen.has(true) ? '○ 入れる' : '× 入れない';
               return (
                 <tr key={key}>
                   <th scope="row">
