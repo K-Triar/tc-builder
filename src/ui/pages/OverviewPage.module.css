@@ -1,0 +1,139 @@
+/* 次にやること：画面でいちばん目立つ1枚。左の太い線は「いまの区間」 */
+.next {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 8px solid var(--accent);
+  border-radius: var(--radius-sheet);
+}
+
+.finished {
+  border-left-color: var(--ok);
+}
+
+.nextTitle {
+  font-size: var(--fs-xl);
+  margin: 0 0 var(--space-2);
+}
+
+.nextDetail {
+  color: var(--text-muted);
+  margin: 0 0 var(--space-4);
+}
+
+/* 完成までの道のり：罫線の表 */
+.sheet {
+  margin: 0 0 var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--text);
+  border-radius: var(--radius-sheet);
+}
+
+.sheetTitle {
+  font-size: var(--fs-md);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border-strong);
+  border-radius: 50%;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.markDone {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.rowBody {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-weight: 700;
+  color: var(--text);
+}
+
+a.rowTitle {
+  color: var(--accent);
+}
+
+.rowNote {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.meter {
+  display: block;
+  height: 4px;
+  margin-top: var(--space-1);
+  background: var(--surface-3);
+  max-width: 320px;
+}
+
+.meter > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.rowCount {
+  font-family: var(--mono);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.total {
+  margin: 0;
+  padding: var(--space-2) var(--space-4) var(--space-3);
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.more {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .next {
+    padding: var(--space-3) var(--space-3) var(--space-4);
+    border-left-width: 6px;
+  }
+
+  .row {
+    padding: var(--space-3);
+    gap: var(--space-2);
+  }
+}

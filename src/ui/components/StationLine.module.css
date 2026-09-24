@@ -1,0 +1,112 @@
+/* 縦の路線図：駅が線路の上の停車駅として縦に並ぶ（駅の選択・駅の一覧・経由リストで共通） */
+
+.line {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.stop {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+/* 駅と駅のあいだの線路 */
+.stop::before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--border-strong);
+}
+
+.stop:first-child::before {
+  top: 22px;
+}
+
+.stop:last-child::before {
+  bottom: calc(100% - 22px);
+}
+
+.stop:only-child::before {
+  display: none;
+}
+
+.dot {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin-top: 11px;
+  border: 4px solid var(--rail);
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.doneDot {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.warnDot {
+  border-color: var(--amber);
+}
+
+/* 通過駅（停まらない）は小さな印 */
+.passDot {
+  width: 12px;
+  height: 12px;
+  margin: 16px 5px 0;
+  border-width: 3px;
+}
+
+.body {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: var(--space-1) 0 var(--space-2);
+}
+
+/* 選べる駅（リンク） */
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: var(--touch);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-input);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.link:hover {
+  background: var(--surface-2);
+}
+
+.selected {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.selected:hover {
+  background: var(--accent-soft);
+}
+
+.sub {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-weight: 400;
+}
+
+.warnText {
+  color: var(--warning);
+  font-weight: 700;
+}

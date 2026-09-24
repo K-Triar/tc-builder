@@ -56,11 +56,28 @@ describe('プロジェクト画面', () => {
     renderAt('/p/sample-a/work/signs');
     expect(await screen.findByText('瑠璃線系統（サンプル）')).toBeInTheDocument();
     const nav = screen.getByRole('navigation', { name: '画面' });
-    expect(within(nav).getByRole('link', { name: /作業/ })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: '検証' })).toBeInTheDocument();
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    for (const name of ['いまここ', '質問に答える', '設置する', '詳しく編集', '資料']) {
+      expect(within(nav).getByRole('link', { name: new RegExp(name) })).toBeInTheDocument();
+    }
+    expect(screen.getByRole('heading', { name: '入力のチェック' })).toBeInTheDocument();
     // 書き出したことがないので強調される
     expect(screen.getByRole('button', { name: '● ファイルに書き出す' })).toBeInTheDocument();
+  });
+
+  it('開くと「いまここ」：路線図の進み具合と、次にやること', async () => {
+    await saveProject(createSampleProject('sample-b', new Date()));
+    renderAt('/p/sample-b');
+    expect(
+      await screen.findByRole('heading', { level: 1, name: /経路と編成を登録する/ }),
+    ).toBeInTheDocument();
+    const route = screen.getByRole('navigation', { name: '路線ができるまで' });
+    expect(within(route).getAllByRole('link')).toHaveLength(9);
+    expect(within(route).getByRole('link', { name: /コマンド（次にやる）/ })).toBeInTheDocument();
+    const next = screen.getByRole('heading', { level: 1 }).closest('section')!;
+    expect(within(next).getByRole('link', { name: 'コマンドを打つ' })).toHaveAttribute(
+      'href',
+      '/p/sample-b/work/commands',
+    );
   });
 
   it('ないプロジェクトは案内を出す', async () => {

@@ -1,39 +1,50 @@
-/* デザイントークン（design §6.5）。ライト／ダークはシステム設定に従い、data-theme で手動切り替えもできる */
+/*
+ * デザイントークン（design §6.5、docs/redesign.md §9）。
+ * 「鉄道の施工用ワークシート」：紙のような背景、罫線で区切る面、鉄道標識の青を主操作と現在地に使う。
+ * ライト／ダークはシステム設定に従い、data-theme で手動切り替えもできる。
+ */
 
 :root {
   color-scheme: light;
-  --bg: #f5f6f8;
-  --surface: #ffffff;
-  --surface-2: #eef1f5;
-  --surface-3: #e2e7ee;
-  --border: #cfd6df;
-  --text: #1c232b;
-  --text-muted: #56616e;
-  --accent: #2f5f8f;
-  --accent-hover: #264e76;
-  --accent-soft: #e3edf7;
+  /* 紙（背景）と、その上のワークシート面 */
+  --bg: #f7f5ef;
+  --surface: #fffefa;
+  --surface-2: #efece3;
+  --surface-3: #e4e0d4;
+  --border: #d5d2c9;
+  --border-strong: #b9b4a7;
+  /* 文字（Ink）と補助の文字・線路（Rail） */
+  --text: #20252a;
+  --text-muted: #59626a;
+  --rail: #66717a;
+  /* KT Blue：主操作・現在地・リンク */
+  --accent: #185a8d;
+  --accent-hover: #124770;
+  --accent-soft: #e2ebf2;
   --accent-contrast: #ffffff;
   --danger: #b3261e;
-  --danger-soft: #fbe9e7;
-  --warning: #8a5a00;
-  --warning-soft: #fff4d6;
-  --info: #2f5f8f;
-  --info-soft: #e3edf7;
-  --ok: #1e6b3a;
-  --ok-soft: #e3f4e8;
-  --focus: #1a73e8;
-  --shadow: 0 1px 2px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 6%);
-  --overlay: rgb(20 26 33 / 45%);
+  --danger-soft: #f9e6e3;
+  /* Railway Amber：塗りと線に使う。文字には --warning を使う */
+  --amber: #d69a2d;
+  --warning: #825400;
+  --warning-soft: #faefd8;
+  --info: #185a8d;
+  --info-soft: #e2ebf2;
+  --ok: #287a52;
+  --ok-soft: #e2f0e7;
+  --focus: #185a8d;
+  --shadow: 0 1px 2px rgb(32 37 42 / 10%), 0 8px 24px rgb(32 37 42 / 12%);
+  --overlay: rgb(32 37 42 / 45%);
 
-  /* 看板（Minecraft の木の看板を思わせる色。画像は使わない） */
-  --sign-bg: #c9a46a;
-  --sign-border: #7a5a2c;
+  /* 看板（Minecraft のオークの看板を思わせる色。画像は使わない） */
+  --sign-bg: #b8945a;
+  --sign-grain: #a9854d;
+  --sign-border: #6b4d22;
   --sign-text: #1b1206;
+  --post: #6b4d22;
 
-  --font:
-    system-ui, -apple-system, 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI',
-    sans-serif;
-  --mono: ui-monospace, 'SFMono-Regular', Consolas, 'BIZ UDGothic', 'Noto Sans Mono', monospace;
+  --font: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic UI', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, 'BIZ UDGothic', monospace;
 
   /* 文字の大きさ（6段階。これ以外の値は使わない） */
   --fs-xs: 0.75rem; /* 小さな札・補足 */
@@ -45,78 +56,99 @@
 
   --ease: 150ms ease;
 
-  --radius: 8px;
-  --radius-sm: 4px;
+  /* 角丸は意味で使い分ける（すべて同じにしない） */
+  --radius-page: 0;
+  --radius-sheet: 4px;
+  --radius-input: 4px;
+  --radius-sign: 1px;
+  --radius-pill: 999px;
+  /* 旧名（既存の CSS Modules が使う） */
+  --radius: var(--radius-sheet);
+  --radius-sm: var(--radius-input);
+
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
   --space-5: 24px;
   --space-6: 32px;
+  --space-7: 48px;
   --touch: 44px;
   --header-h: 56px;
   /* スマホの下タブの高さ（下に固定するものはこの上に置く） */
   --bottom-nav-h: calc(var(--touch) + 16px);
-  --nav-w: 220px;
-  --panel-w: 320px;
+  --nav-w: 200px;
+  --panel-w: 360px;
+  /* 本文の最大幅 */
+  --content-w: 960px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --bg: #12161b;
-    --surface: #1a2027;
-    --surface-2: #222a33;
-    --surface-3: #2c3641;
-    --border: #3a4552;
-    --text: #e6eaef;
-    --text-muted: #a3adb9;
-    --accent: #7fb0e0;
-    --accent-hover: #9cc3ea;
-    --accent-soft: #1f3347;
-    --accent-contrast: #0d1620;
+    --bg: #15181b;
+    --surface: #1c2024;
+    --surface-2: #252a2f;
+    --surface-3: #30363c;
+    --border: #3a4046;
+    --border-strong: #545b62;
+    --text: #e9e6df;
+    --text-muted: #a9b0b6;
+    --rail: #8d979f;
+    --accent: #80b6e3;
+    --accent-hover: #a3cbec;
+    --accent-soft: #1e3144;
+    --accent-contrast: #0c1620;
     --danger: #f2877e;
-    --danger-soft: #3b1f1d;
-    --warning: #f0c060;
-    --warning-soft: #3a2f14;
-    --info: #7fb0e0;
-    --info-soft: #1f3347;
-    --ok: #7fd197;
-    --ok-soft: #173222;
-    --focus: #8ab4f8;
-    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 12px rgb(0 0 0 / 30%);
+    --danger-soft: #3b201d;
+    --amber: #e0ae55;
+    --warning: #eec26c;
+    --warning-soft: #372c15;
+    --info: #80b6e3;
+    --info-soft: #1e3144;
+    --ok: #74c99a;
+    --ok-soft: #173225;
+    --focus: #80b6e3;
+    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px rgb(0 0 0 / 35%);
     --overlay: rgb(0 0 0 / 60%);
-    --sign-bg: #a7844d;
-    --sign-border: #5c421d;
+    --sign-bg: #9c7c48;
+    --sign-grain: #8f7040;
+    --sign-border: #4f3816;
     --sign-text: #140d03;
+    --post: #7a5a2c;
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --bg: #12161b;
-  --surface: #1a2027;
-  --surface-2: #222a33;
-  --surface-3: #2c3641;
-  --border: #3a4552;
-  --text: #e6eaef;
-  --text-muted: #a3adb9;
-  --accent: #7fb0e0;
-  --accent-hover: #9cc3ea;
-  --accent-soft: #1f3347;
-  --accent-contrast: #0d1620;
+  --bg: #15181b;
+  --surface: #1c2024;
+  --surface-2: #252a2f;
+  --surface-3: #30363c;
+  --border: #3a4046;
+  --border-strong: #545b62;
+  --text: #e9e6df;
+  --text-muted: #a9b0b6;
+  --rail: #8d979f;
+  --accent: #80b6e3;
+  --accent-hover: #a3cbec;
+  --accent-soft: #1e3144;
+  --accent-contrast: #0c1620;
   --danger: #f2877e;
-  --danger-soft: #3b1f1d;
-  --warning: #f0c060;
-  --warning-soft: #3a2f14;
-  --info: #7fb0e0;
-  --info-soft: #1f3347;
-  --ok: #7fd197;
-  --ok-soft: #173222;
-  --focus: #8ab4f8;
-  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 12px rgb(0 0 0 / 30%);
+  --danger-soft: #3b201d;
+  --amber: #e0ae55;
+  --warning: #eec26c;
+  --warning-soft: #372c15;
+  --info: #80b6e3;
+  --info-soft: #1e3144;
+  --ok: #74c99a;
+  --ok-soft: #173225;
+  --focus: #80b6e3;
+  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px rgb(0 0 0 / 35%);
   --overlay: rgb(0 0 0 / 60%);
-  --sign-bg: #a7844d;
-  --sign-border: #5c421d;
+  --sign-bg: #9c7c48;
+  --sign-grain: #8f7040;
+  --sign-border: #4f3816;
   --sign-text: #140d03;
+  --post: #7a5a2c;
 }

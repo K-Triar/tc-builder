@@ -3,6 +3,7 @@ import { ProjectRoute } from './ui/layout/ProjectRoute';
 import { DocsPage } from './ui/pages/DocsPage';
 import { EditPage } from './ui/pages/EditPage';
 import { Home } from './ui/pages/Home';
+import { OverviewPage } from './ui/pages/OverviewPage';
 import { WizardPage } from './ui/pages/WizardPage';
 import { WorkPage } from './ui/pages/WorkPage';
 
@@ -11,7 +12,7 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/p/:id" element={<ProjectRoute />}>
-        <Route index element={<Navigate to="work/signs" replace />} />
+        <Route index element={<OverviewPage />} />
         <Route path="setup/:step" element={<WizardPage />} />
         <Route path="edit/:tab" element={<EditPage />} />
         <Route path="work/:tab" element={<WorkPage />} />

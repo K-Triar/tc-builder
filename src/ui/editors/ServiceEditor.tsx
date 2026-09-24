@@ -5,17 +5,27 @@ import type { Service, ServiceKind } from '../../domain/model';
 import { defaultServiceKind, reverseService, suggestPlatform } from '../../domain/suggest';
 import { useProjectStore } from '../../store/projectStore';
 import { Button } from '../components/Button';
+import { Disclosure } from '../components/Disclosure';
 import { NumberField, Section, SelectField, TextField } from '../components/Field';
 import { Matrix } from '../components/Matrix';
 import { RemoveButton } from '../components/RemoveButton';
 import { useProject } from '../hooks/useDerived';
+import type { Project } from '../../domain/model';
 import * as ops from '../../store/projectOps';
 import { removeWithUndo } from '../toast';
 import { must, newId, stationLabel } from './common';
 import styles from './editors.module.css';
 
-/** ウィザード 6・編集「系統」 */
-export function ServiceEditor() {
+/** 系統の始発と終点（「A → B」） */
+function serviceEnds(project: Project, service: Service): string {
+  const name = (i: number) =>
+    project.stations.find((s) => s.id === service.entries[i]?.stationId)?.name ?? '？';
+  if (service.entries.length === 0) return '通る駅がまだありません';
+  return `${name(0)} → ${name(service.entries.length - 1)}`;
+}
+
+/** ウィザード「列車の走り方」・編集「系統」 */
+export function ServiceEditor({ guided }: { guided?: boolean }) {
   const project = useProject();
   const update = useProjectStore((s) => s.update);
   const [params, setParams] = useSearchParams();
@@ -44,8 +54,12 @@ export function ServiceEditor() {
   return (
     <>
       <Section
-        title="系統"
-        lead="1方向の運行パターンごとに1つ作ります。逆方向は「反対方向を作る」で複製できます。"
+        title={guided ? '列車の走り方（系統）' : '系統'}
+        lead={
+          guided
+            ? 'どこからどこへ、どの駅を通って走るかを、向きごとに1つずつ作ります。KT式ではこれを「系統」と呼びます。逆向きは「反対方向を作る」で写せます。'
+            : '1方向の運行パターンごとに1つ作ります。逆方向は「反対方向を作る」で複製できます。'
+        }
         actions={
           <Button size="sm" onClick={addService}>
             ＋ 系統を足す
@@ -54,6 +68,28 @@ export function ServiceEditor() {
       >
         {project.services.length === 0 ? (
           <p className="muted">まだ系統がありません。</p>
+        ) : guided ? (
+          <ul className={styles.serviceList} aria-label="系統">
+            {project.services.map((s, i) => (
+              <li key={s.id}>
+                <button
+                  type="button"
+                  className={`${styles.serviceItem} ${s.id === service?.id ? styles.serviceItemOn : ''}`}
+                  aria-pressed={s.id === service?.id}
+                  onClick={() => select(s.id)}
+                >
+                  <span className={styles.serviceNum}>{i + 1}</span>
+                  <span className={styles.serviceText}>
+                    <strong>{s.name || '（名前なし）'}</strong>
+                    <span className="muted text-sm">
+                      {serviceEnds(project, s)}・{s.direction === 'up' ? '上り' : '下り'}・
+                      {s.kinds.length === 0 ? '列車の種類なし' : `${s.kinds.length} 種類`}
+                    </span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
         ) : (
           <SelectField
             label={`編集する系統（${project.services.length}）`}
@@ -66,7 +102,9 @@ export function ServiceEditor() {
           />
         )}
       </Section>
-      {service && <ServiceDetail key={service.id} service={service} onSelect={select} />}
+      {service && (
+        <ServiceDetail key={service.id} service={service} onSelect={select} guided={guided} />
+      )}
     </>
   );
 }
@@ -74,9 +112,11 @@ export function ServiceEditor() {
 function ServiceDetail({
   service,
   onSelect,
+  guided,
 }: {
   service: Service;
   onSelect: (id: string) => void;
+  guided?: boolean;
 }) {
   const project = useProject();
   const update = useProjectStore((s) => s.update);
@@ -85,7 +125,7 @@ function ServiceDetail({
 
   return (
     <>
-      <Section title="系統の設定">
+      <Section title={guided ? `「${service.name || '名前なし'}」の設定` : '系統の設定'}>
         <TextField
           label="系統名"
           value={service.name}
@@ -143,7 +183,7 @@ function ServiceDetail({
       </Section>
 
       <EntryList service={service} />
-      <KindList service={service} />
+      <KindList service={service} guided={guided} />
       {service.kinds.length > 0 && service.entries.length > 0 && <StopMatrix service={service} />}
     </>
   );
@@ -168,9 +208,9 @@ function EntryList({ service }: { service: Service }) {
 
   return (
     <Section
-      title="経由リスト"
+      title="通る駅とのりば"
       help="entries"
-      lead="列車が通る駅を、通過する駅も含めて順にすべて入れ、各駅で通るのりばを選びます。"
+      lead="始発から終点まで、列車が通る駅を順にすべて入れます。止まらずに通過する駅も入れ、各駅で通るのりばを選びます。"
     >
       {service.entries.length === 0 && <p className="muted">最初の駅（始発）を足してください。</p>}
       <ol className={styles.entries}>
@@ -284,7 +324,7 @@ function EntryList({ service }: { service: Service }) {
   );
 }
 
-function KindList({ service }: { service: Service }) {
+function KindList({ service, guided }: { service: Service; guided?: boolean }) {
   const project = useProject();
   const store = useProjectStore();
   const [adding, setAdding] = useState('');
@@ -299,7 +339,14 @@ function KindList({ service }: { service: Service }) {
     );
 
   return (
-    <Section title="この系統を走る種別" lead="種別ごとに形式コード・最高速度・両数を入れます。">
+    <Section
+      title="走る列車の種類"
+      lead={
+        guided
+          ? '各駅停車・快速など、この系統を走る列車の種類を選びます。形式コードや最高速度は自動で入ります。'
+          : '種別ごとに形式コード・最高速度・両数を入れます。'
+      }
+    >
       {service.kinds.length === 0 && <p className="muted">種別を載せてください。</p>}
       <ul className={styles.rows}>
         {service.kinds.map((k) => {
@@ -310,58 +357,127 @@ function KindList({ service }: { service: Service }) {
                 <strong>{kind?.name}</strong>{' '}
                 <span className={styles.tag}>{kind ? kindTag(kind) : '?'}</span>
               </div>
-              <TextField
-                label="形式コード"
-                help="formationCode"
-                mono
-                value={k.formation}
-                placeholder="K300"
-                onChange={(v) => kmut(k.kindId, (x) => void (x.formation = v))}
-              />
-              <NumberField
-                label="最高速度"
-                help="maxSpeed"
-                value={k.maxSpeed}
-                min={0}
-                required
-                onChange={(v) => v !== undefined && kmut(k.kindId, (x) => void (x.maxSpeed = v))}
-              />
-              <TextField
-                label="両数（任意）"
-                help="cars"
-                mono
-                value={k.cars ?? ''}
-                placeholder="mmmm"
-                onChange={(v) =>
-                  kmut(k.kindId, (x) => {
-                    if (v) x.cars = v;
-                    else delete x.cars;
-                  })
-                }
-              />
-              <details className={styles.rowFull}>
-                <summary>
-                  衝突設定（mob {k.mobCollision}・プレイヤー {k.playerCollision}）
-                </summary>
-                <p className="field-hint">
-                  mob やプレイヤーにぶつかったときの動き。KT式では
-                  cancel（止まらずに通り抜ける）が標準です。
-                </p>
-                <div className={styles.grid2}>
+              {guided ? (
+                <Disclosure
+                  className={styles.rowFull}
+                  open={!k.formation}
+                  summary={`詳しい設定（形式 ${k.formation || '未入力'}・最高速度 ${k.maxSpeed}${k.cars ? `・両数 ${k.cars}` : ''}）`}
+                >
+                  <div className={styles.kindFields}>
+                    <TextField
+                      label="形式コード"
+                      help="formationCode"
+                      mono
+                      value={k.formation}
+                      placeholder="K300"
+                      onChange={(v) => kmut(k.kindId, (x) => void (x.formation = v))}
+                    />
+                    <NumberField
+                      label="最高速度"
+                      help="maxSpeed"
+                      value={k.maxSpeed}
+                      min={0}
+                      required
+                      onChange={(v) =>
+                        v !== undefined && kmut(k.kindId, (x) => void (x.maxSpeed = v))
+                      }
+                    />
+                    <TextField
+                      label="両数（任意）"
+                      help="cars"
+                      mono
+                      value={k.cars ?? ''}
+                      placeholder="mmmm"
+                      onChange={(v) =>
+                        kmut(k.kindId, (x) => {
+                          if (v) x.cars = v;
+                          else delete x.cars;
+                        })
+                      }
+                    />
+                    <details className={styles.rowFull}>
+                      <summary>
+                        衝突設定（mob {k.mobCollision}・プレイヤー {k.playerCollision}）
+                      </summary>
+                      <p className="field-hint">
+                        mob やプレイヤーにぶつかったときの動き。KT式では
+                        cancel（止まらずに通り抜ける）が標準です。
+                      </p>
+                      <div className={styles.grid2}>
+                        <TextField
+                          label="mob 衝突"
+                          mono
+                          value={k.mobCollision}
+                          onChange={(v) => kmut(k.kindId, (x) => void (x.mobCollision = v))}
+                        />
+                        <TextField
+                          label="プレイヤー衝突"
+                          mono
+                          value={k.playerCollision}
+                          onChange={(v) => kmut(k.kindId, (x) => void (x.playerCollision = v))}
+                        />
+                      </div>
+                    </details>
+                  </div>
+                </Disclosure>
+              ) : (
+                <>
                   <TextField
-                    label="mob 衝突"
+                    label="形式コード"
+                    help="formationCode"
                     mono
-                    value={k.mobCollision}
-                    onChange={(v) => kmut(k.kindId, (x) => void (x.mobCollision = v))}
+                    value={k.formation}
+                    placeholder="K300"
+                    onChange={(v) => kmut(k.kindId, (x) => void (x.formation = v))}
+                  />
+                  <NumberField
+                    label="最高速度"
+                    help="maxSpeed"
+                    value={k.maxSpeed}
+                    min={0}
+                    required
+                    onChange={(v) =>
+                      v !== undefined && kmut(k.kindId, (x) => void (x.maxSpeed = v))
+                    }
                   />
                   <TextField
-                    label="プレイヤー衝突"
+                    label="両数（任意）"
+                    help="cars"
                     mono
-                    value={k.playerCollision}
-                    onChange={(v) => kmut(k.kindId, (x) => void (x.playerCollision = v))}
+                    value={k.cars ?? ''}
+                    placeholder="mmmm"
+                    onChange={(v) =>
+                      kmut(k.kindId, (x) => {
+                        if (v) x.cars = v;
+                        else delete x.cars;
+                      })
+                    }
                   />
-                </div>
-              </details>
+                  <details className={styles.rowFull}>
+                    <summary>
+                      衝突設定（mob {k.mobCollision}・プレイヤー {k.playerCollision}）
+                    </summary>
+                    <p className="field-hint">
+                      mob やプレイヤーにぶつかったときの動き。KT式では
+                      cancel（止まらずに通り抜ける）が標準です。
+                    </p>
+                    <div className={styles.grid2}>
+                      <TextField
+                        label="mob 衝突"
+                        mono
+                        value={k.mobCollision}
+                        onChange={(v) => kmut(k.kindId, (x) => void (x.mobCollision = v))}
+                      />
+                      <TextField
+                        label="プレイヤー衝突"
+                        mono
+                        value={k.playerCollision}
+                        onChange={(v) => kmut(k.kindId, (x) => void (x.playerCollision = v))}
+                      />
+                    </div>
+                  </details>
+                </>
+              )}
               <RemoveButton
                 describe={`${kind?.name ?? '種別'}をこの系統から外す`}
                 onRemove={() =>
@@ -420,7 +536,10 @@ function StopMatrix({ service }: { service: Service }) {
     return `${st?.name ?? '?'} ${e?.platform === null ? '未定' : `${e?.platform}番`}`;
   };
   return (
-    <Section title="停車駅" lead="○＝停車、×＝通過。始発と終点は停車で固定です。">
+    <Section
+      title="止まる駅"
+      lead="列車の種類ごとに、止まる駅は ○、通過する駅は × にします。押すと切り替わります。始発と終点は必ず止まります。"
+    >
       <Matrix
         caption={`${service.name} の停車駅`}
         rows={service.entries.map((e, i) => {

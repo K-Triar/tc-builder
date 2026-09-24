@@ -3,6 +3,7 @@ import { derive, type Derived } from '../../domain/derive';
 import type { Project } from '../../domain/model';
 import { listWorkItems, summarizeProgress, type WorkItem } from '../../domain/progress';
 import { useProjectStore } from '../../store/projectStore';
+import { journey, type Journey } from '../journey';
 
 /** 開いているプロジェクト（ProjectRoute の中でだけ使う） */
 export function useProject(): Project {
@@ -42,4 +43,11 @@ export function useDerived(): DerivedView {
     [project.progress, base.workItems],
   );
   return { ...base, progress };
+}
+
+/** 路線ができるまでの道のり（どこまで済んだか・次にやること） */
+export function useJourney(): Journey {
+  const project = useProject();
+  const { derived, workItems } = useDerived();
+  return useMemo(() => journey(project, derived, workItems), [project, derived, workItems]);
 }

@@ -1,0 +1,18 @@
+/* 詳しく編集：情報を詰めて見せる（ワークシートの余白を小さく） */
+.page :global(.card) {
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  border-top-width: 2px;
+}
+
+.page :global(.section) {
+  margin-bottom: var(--space-4);
+}
+
+.head h1 {
+  margin-bottom: var(--space-1);
+}
+
+.lead {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}

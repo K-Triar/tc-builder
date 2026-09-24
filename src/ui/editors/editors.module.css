@@ -169,12 +169,36 @@
 }
 
 .entry {
+  position: relative;
   display: grid;
   grid-template-columns: 2.5em minmax(0, 2fr) minmax(0, 1fr) auto;
   align-items: end;
   gap: var(--space-2);
-  padding: var(--space-2) 0;
-  border-bottom: 1px dashed var(--border);
+  padding: var(--space-1) 0;
+}
+
+/* 経由リストは縦の路線図：番号の丸が駅、あいだの線が線路 */
+.entry::before {
+  content: '';
+  position: absolute;
+  left: calc(1.25em - 2px);
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--border-strong);
+}
+
+.entry:first-child::before {
+  top: auto;
+  height: 30px;
+}
+
+.entry:last-child::before {
+  bottom: 30px;
+}
+
+.entry:only-child::before {
+  display: none;
 }
 
 .entry > :global(.field) {
@@ -182,10 +206,28 @@
 }
 
 .entryNum {
-  align-self: center;
+  position: relative;
+  z-index: 1;
+  justify-self: center;
+  align-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 8px;
+  border: 3px solid var(--rail);
+  border-radius: 50%;
+  background: var(--surface);
+  font-size: var(--fs-xs);
   font-weight: 700;
   color: var(--text-muted);
-  text-align: right;
+}
+
+.entry:first-child .entryNum,
+.entry:last-child .entryNum {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .entryActions {
@@ -267,4 +309,148 @@
   text-align: left;
   font-weight: 700;
   padding-bottom: var(--space-2);
+}
+
+/* ---- ウィザード（質問に答える画面） ---- */
+
+/* 駅を登録する：縦の路線図の上に駅名の欄を並べる */
+.guidedStation {
+  padding-bottom: var(--space-3);
+}
+
+.guidedHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.stationNameInput {
+  flex: 1 1 240px;
+  max-width: 420px;
+  font-size: var(--fs-lg);
+  font-weight: 500;
+}
+
+.codeTags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.addStation {
+  margin: var(--space-3) 0 var(--space-5) 34px;
+}
+
+/* のりばを設定する */
+.platformTitle {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: var(--fs-lg);
+  margin: 0 0 var(--space-3);
+}
+
+.platformLabel {
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+/* 路線について：団体の設定の要約 */
+.summaryList {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4);
+  margin: 0 0 var(--space-3);
+}
+
+.summaryList dt {
+  font-weight: 700;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  padding-top: 2px;
+}
+
+.summaryList dd {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+
+.summaryItem {
+  white-space: nowrap;
+}
+
+/* 列車の走り方：系統の一覧 */
+.serviceList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+
+.serviceItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: var(--touch);
+  padding: var(--space-2) var(--space-2);
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.serviceItem:hover {
+  background: var(--surface-2);
+}
+
+.serviceItemOn {
+  background: var(--accent-soft);
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
+.serviceItemOn:hover {
+  background: var(--accent-soft);
+}
+
+.serviceNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--rail);
+  border-radius: 50%;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+}
+
+.serviceItemOn .serviceNum {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.serviceText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.kindFields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.kindFields > :global(.field) {
+  flex: 1 1 160px;
+  margin-bottom: 0;
 }

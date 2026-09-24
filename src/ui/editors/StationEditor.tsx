@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 import { useSearchParams } from 'react-router';
 import type { Platform, Project, Station, StationCode } from '../../domain/model';
 import { useProjectStore } from '../../store/projectStore';
 import { Button } from '../components/Button';
+import { Disclosure } from '../components/Disclosure';
+import line from '../components/StationLine.module.css';
 import { CheckField, NumberField, Section, SelectField, TextField } from '../components/Field';
 import { RemoveButton } from '../components/RemoveButton';
 import { useProject } from '../hooks/useDerived';
@@ -13,7 +15,205 @@ import styles from './editors.module.css';
 
 export type StationPart = 'basic' | 'platforms' | 'all';
 
-/** ウィザード 4〜5・編集「駅とのりば」 */
+/** 駅を最後に足す（番号つきの駅コードは続きの番号を自動で付ける） */
+function addStationTo(p: Project) {
+  const codeId = newId();
+  const line = p.lines.find((l) => l.orgId === p.selfOrgId);
+  const numbers = p.stations.flatMap((s) =>
+    s.codes.flatMap((c) =>
+      c.code.kind === 'numbered' && c.code.lineId === line?.id ? [c.code.number] : [],
+    ),
+  );
+  p.stations.push({
+    id: newId(),
+    name: '',
+    managerOrgId: p.selfOrgId,
+    signsBySelf: true,
+    codes: [
+      {
+        id: codeId,
+        code: line
+          ? {
+              kind: 'numbered',
+              orgId: p.selfOrgId,
+              lineId: line.id,
+              number: Math.max(0, ...numbers) + 1,
+            }
+          : { kind: 'free', value: '' },
+      },
+    ],
+    platforms: [{ number: 1, codeId, deadEnd: false }],
+  });
+}
+
+/** ウィザード「駅を登録する」：駅名だけを路線図の上に並べて入れる。コードや管理団体は詳しい設定へ */
+export function GuidedStations() {
+  const project = useProject();
+  const update = useProjectStore((s) => s.update);
+  const [params] = useSearchParams();
+  const focusStation = params.get('station');
+  const lastInput = useRef<HTMLInputElement>(null);
+  const focusAdded = useRef(false);
+
+  // 駅を足したら、その駅の名前の欄へ
+  useEffect(() => {
+    if (!focusAdded.current) return;
+    focusAdded.current = false;
+    lastInput.current?.focus();
+  }, [project.stations.length]);
+
+  const add = () => {
+    focusAdded.current = true;
+    update(addStationTo, { checkpoint: true });
+  };
+
+  return (
+    <>
+      {project.stations.length === 0 ? (
+        <p className="muted">まだ駅がありません。路線の端の駅から足していきましょう。</p>
+      ) : (
+        <ol className={line.line} aria-label="登録した駅">
+          {project.stations.map((s, i) => (
+            <GuidedStationRow
+              key={s.id}
+              station={s}
+              index={i}
+              highlight={focusStation === s.id}
+              inputRef={i === project.stations.length - 1 ? lastInput : undefined}
+            />
+          ))}
+        </ol>
+      )}
+      <div className={styles.addStation}>
+        <Button variant={project.stations.length < 2 ? 'primary' : 'secondary'} onClick={add}>
+          ＋ {project.stations.length === 0 ? '最初の駅を足す' : '次の駅を足す'}
+        </Button>
+      </div>
+      <PasteStations />
+    </>
+  );
+}
+
+function GuidedStationRow({
+  station: s,
+  index,
+  highlight,
+  inputRef,
+}: {
+  station: Station;
+  index: number;
+  highlight: boolean;
+  inputRef?: RefObject<HTMLInputElement | null>;
+}) {
+  const project = useProject();
+  const update = useProjectStore((st) => st.update);
+  const ref = useRef<HTMLLIElement>(null);
+  const self = isSelfStation(project, s);
+  const used = project.services.some((v) => v.entries.some((e) => e.stationId === s.id));
+  const mut = (fn: (st: Station, p: Project) => void) =>
+    update((p) => fn(must(p.stations.find((x) => x.id === s.id)), p));
+  const nameId = `station-name-${s.id}`;
+
+  useEffect(() => {
+    if (highlight) ref.current?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
+  }, [highlight]);
+
+  return (
+    <li
+      ref={ref}
+      id={`station-${s.id}`}
+      className={`${line.stop} ${highlight ? styles.highlight : ''}`}
+    >
+      <span className={`${line.dot} ${s.name ? line.doneDot : ''}`} aria-hidden="true" />
+      <div className={`${line.body} ${styles.guidedStation}`}>
+        <div className={styles.guidedHead}>
+          <label htmlFor={nameId} className="visually-hidden">
+            {index + 1}番目の駅の名前
+          </label>
+          <input
+            id={nameId}
+            ref={inputRef}
+            type="text"
+            value={s.name}
+            placeholder="駅の名前（例：瑠璃中央）"
+            autoComplete="off"
+            className={styles.stationNameInput}
+            onChange={(e) => mut((st) => void (st.name = e.target.value))}
+          />
+          <span className={styles.codeTags} title="駅コード（自動）">
+            {stationCodesText(project, s)
+              .split('・')
+              .filter(Boolean)
+              .map((c) => (
+                <span key={c} className="code-tag">
+                  {c}
+                </span>
+              ))}
+            {!self && <span className={styles.badge}>他団体</span>}
+          </span>
+        </div>
+        <Disclosure summary="詳しい設定（駅コード・管理団体・並べ替え）" open={highlight}>
+          <StationBasic station={s} mut={mut} hideName />
+          <div className="row">
+            <Button
+              size="sm"
+              aria-label={`${s.name}を上へ`}
+              disabled={index === 0}
+              onClick={() =>
+                update(
+                  (p) => void p.stations.splice(index - 1, 0, ...p.stations.splice(index, 1)),
+                  { checkpoint: true },
+                )
+              }
+            >
+              上へ
+            </Button>
+            <Button
+              size="sm"
+              aria-label={`${s.name}を下へ`}
+              disabled={index === project.stations.length - 1}
+              onClick={() =>
+                update(
+                  (p) => void p.stations.splice(index + 1, 0, ...p.stations.splice(index, 1)),
+                  { checkpoint: true },
+                )
+              }
+            >
+              下へ
+            </Button>
+            <RemoveButton
+              describe={`${s.name || '駅'}を消す`}
+              blocked={used && '系統で使用中'}
+              onRemove={() =>
+                removeWithUndo(
+                  `駅「${s.name || '駅名なし'}」を消しました`,
+                  (p) => void (p.stations = p.stations.filter((x) => x.id !== s.id)),
+                )
+              }
+            >
+              この駅を消す
+            </RemoveButton>
+          </div>
+        </Disclosure>
+      </div>
+    </li>
+  );
+}
+
+/** ウィザード「のりばを設定する」：1つの駅ののりば */
+export function StationPlatforms({ stationId }: { stationId: string }) {
+  const project = useProject();
+  const update = useProjectStore((st) => st.update);
+  const [params] = useSearchParams();
+  const s = project.stations.find((x) => x.id === stationId);
+  if (!s) return null;
+  const mut = (fn: (st: Station, p: Project) => void) =>
+    update((p) => fn(must(p.stations.find((x) => x.id === stationId)), p));
+  const fp = params.get('station') === stationId ? Number(params.get('platform')) : undefined;
+  return <PlatformList station={s} mut={mut} focusPlatform={fp} guided />;
+}
+
+/** 編集「駅とのりば」（すべての項目を出す） */
 export function StationEditor({ part = 'all' }: { part?: StationPart }) {
   const project = useProject();
   const update = useProjectStore((s) => s.update);
@@ -21,34 +221,7 @@ export function StationEditor({ part = 'all' }: { part?: StationPart }) {
   const focusStation = params.get('station');
   const focusPlatform = params.get('platform');
 
-  const addStation = () =>
-    update(
-      (p) => {
-        const codeId = newId();
-        const line = p.lines.find((l) => l.orgId === p.selfOrgId);
-        p.stations.push({
-          id: newId(),
-          name: '',
-          managerOrgId: p.selfOrgId,
-          signsBySelf: true,
-          codes: [
-            {
-              id: codeId,
-              code: line
-                ? {
-                    kind: 'numbered',
-                    orgId: p.selfOrgId,
-                    lineId: line.id,
-                    number: p.stations.length + 1,
-                  }
-                : { kind: 'free', value: '' },
-            },
-          ],
-          platforms: [{ number: 1, codeId, deadEnd: false }],
-        });
-      },
-      { checkpoint: true },
-    );
+  const addStation = () => update(addStationTo, { checkpoint: true });
 
   return (
     <>
@@ -175,9 +348,11 @@ function StationCard({
 function StationBasic({
   station: s,
   mut,
+  hideName,
 }: {
   station: Station;
   mut: (fn: (st: Station, p: Project) => void) => void;
+  hideName?: boolean;
 }) {
   const project = useProject();
   const update = useProjectStore((st) => st.update);
@@ -187,7 +362,13 @@ function StationBasic({
   return (
     <>
       <div className={styles.grid2}>
-        <TextField label="駅名" value={s.name} onChange={(v) => mut((st) => void (st.name = v))} />
+        {!hideName && (
+          <TextField
+            label="駅名"
+            value={s.name}
+            onChange={(v) => mut((st) => void (st.name = v))}
+          />
+        )}
         <SelectField
           label="管理団体"
           help="manager"
@@ -318,10 +499,13 @@ function PlatformList({
   station: s,
   mut,
   focusPlatform,
+  guided,
 }: {
   station: Station;
   mut: (fn: (st: Station, p: Project) => void) => void;
   focusPlatform?: number;
+  /** ウィザード：向きと行き止まりを先に出し、番号・コード・数値は詳しい設定へ */
+  guided?: boolean;
 }) {
   const project = useProject();
   const renumber = useProjectStore((st) => st.renumberPlatform);
@@ -341,9 +525,102 @@ function PlatformList({
   const pmut = (n: number, fn: (pf: Platform) => void) =>
     mut((st) => fn(must(st.platforms.find((x) => x.number === n))));
 
+  const basicFields = (pf: Platform) => (
+    <>
+      <div className={styles.grid3}>
+        <NumberField
+          label="のりば番号"
+          value={pf.number}
+          min={1}
+          integer
+          required
+          error={renumberError?.platform === pf.number ? renumberError.message : null}
+          onChange={(v) => {
+            if (v === undefined || v === pf.number) return;
+            try {
+              setRenumberError(null);
+              renumber(s.id, pf.number, v);
+            } catch (e) {
+              setRenumberError({ platform: pf.number, message: (e as Error).message });
+            }
+          }}
+        />
+        <SelectField
+          label="行先に使う駅コード"
+          help="platformCode"
+          value={pf.codeId}
+          options={s.codes.map((c) => ({ value: c.id, label: codeText(project, s, c.id) }))}
+          onChange={(v) => pmut(pf.number, (x) => void (x.codeId = v))}
+        />
+        <TextField
+          label="表示名（任意）"
+          value={pf.label ?? ''}
+          placeholder="下り・瑠璃線赤石方面"
+          onChange={(v) =>
+            pmut(pf.number, (x) => {
+              if (v) x.label = v;
+              else delete x.label;
+            })
+          }
+        />
+      </div>
+      <p className={styles.destLine}>
+        行先コード（TrainCarts の destination）{' '}
+        <span className="code-tag">
+          {codeText(project, s, pf.codeId)}-{pf.number}
+        </span>
+      </p>
+    </>
+  );
+
+  const paramFields = (pf: Platform) => (
+    <div className={styles.grid3}>
+      {(
+        [
+          ['spawnSpeed', 'spawn の初速'],
+          ['stationLaunchDistance', 'station の加速距離'],
+          ['stationDwellSeconds', '停車秒数'],
+        ] as const
+      ).map(([key, label]) => (
+        <NumberField
+          key={key}
+          label={label}
+          value={pf.params?.[key]}
+          min={0}
+          hint={`空欄はプロジェクトの設定（${project.settings[key]}）`}
+          onChange={(v) =>
+            pmut(pf.number, (x) => {
+              const params = Object.fromEntries(
+                Object.entries({ ...x.params, [key]: v }).filter(([, n]) => n !== undefined),
+              );
+              if (Object.keys(params).length > 0) x.params = params;
+              else delete x.params;
+            })
+          }
+        />
+      ))}
+    </div>
+  );
+
+  const signFields = (pf: Platform) => (
+    <>
+      <DirPicker
+        name={`dir-${s.id}-${pf.number}`}
+        value={pf.dir}
+        onChange={(d) => pmut(pf.number, (x) => void (x.dir = d))}
+      />
+      <CheckField
+        label="行き止まり（同じ線路で着いて、折り返して出る）"
+        help="deadEnd"
+        checked={pf.deadEnd}
+        onChange={(v) => pmut(pf.number, (x) => void (x.deadEnd = v))}
+      />
+    </>
+  );
+
   return (
     <>
-      <h3 className={styles.subhead}>のりば</h3>
+      {!guided && <h3 className={styles.subhead}>のりば</h3>}
       {!needsSigns && (
         <p className="muted">
           看板は相手団体の設定に従います。行先コードに使うので、番号と駅コードだけ入れてください。
@@ -354,93 +631,36 @@ function PlatformList({
           key={pf.number}
           className={`${styles.platform} ${focusPlatform === pf.number ? styles.highlight : ''}`}
         >
-          <div className={styles.grid3}>
-            <NumberField
-              label="のりば番号"
-              value={pf.number}
-              min={1}
-              integer
-              required
-              error={renumberError?.platform === pf.number ? renumberError.message : null}
-              onChange={(v) => {
-                if (v === undefined || v === pf.number) return;
-                try {
-                  setRenumberError(null);
-                  renumber(s.id, pf.number, v);
-                } catch (e) {
-                  setRenumberError({ platform: pf.number, message: (e as Error).message });
-                }
-              }}
-            />
-            <SelectField
-              label="行先に使う駅コード"
-              help="platformCode"
-              value={pf.codeId}
-              options={s.codes.map((c) => ({ value: c.id, label: codeText(project, s, c.id) }))}
-              onChange={(v) => pmut(pf.number, (x) => void (x.codeId = v))}
-            />
-            <TextField
-              label="表示名（任意）"
-              value={pf.label ?? ''}
-              placeholder="下り・瑠璃線赤石方面"
-              onChange={(v) =>
-                pmut(pf.number, (x) => {
-                  if (v) x.label = v;
-                  else delete x.label;
-                })
-              }
-            />
-          </div>
-          <p className={styles.destLine}>
-            行先コード{' '}
-            <span className={styles.tag}>
-              {codeText(project, s, pf.codeId)}-{pf.number}
-            </span>
-          </p>
-          {needsSigns && (
+          {guided ? (
             <>
-              <DirPicker
-                name={`dir-${s.id}-${pf.number}`}
-                value={pf.dir}
-                onChange={(d) => pmut(pf.number, (x) => void (x.dir = d))}
-              />
-              <CheckField
-                label="行き止まり（同じ線路で着いて出る）"
-                help="deadEnd"
-                checked={pf.deadEnd}
-                onChange={(v) => pmut(pf.number, (x) => void (x.deadEnd = v))}
-              />
-              <details>
-                <summary>このりばだけ看板の数値を変える</summary>
-                <div className={styles.grid3}>
-                  {(
-                    [
-                      ['spawnSpeed', 'spawn の初速'],
-                      ['stationLaunchDistance', 'station の加速距離'],
-                      ['stationDwellSeconds', '停車秒数'],
-                    ] as const
-                  ).map(([key, label]) => (
-                    <NumberField
-                      key={key}
-                      label={label}
-                      value={pf.params?.[key]}
-                      min={0}
-                      hint={`空欄はプロジェクトの設定（${project.settings[key]}）`}
-                      onChange={(v) =>
-                        pmut(pf.number, (x) => {
-                          const params = Object.fromEntries(
-                            Object.entries({ ...x.params, [key]: v }).filter(
-                              ([, n]) => n !== undefined,
-                            ),
-                          );
-                          if (Object.keys(params).length > 0) x.params = params;
-                          else delete x.params;
-                        })
-                      }
-                    />
-                  ))}
-                </div>
-              </details>
+              <h3 className={styles.platformTitle}>
+                {pf.number}番のりば
+                {pf.label && <span className={styles.platformLabel}>{pf.label}</span>}
+              </h3>
+              {needsSigns ? (
+                <>
+                  {signFields(pf)}
+                  <Disclosure summary="詳しい設定（のりば番号・行先コード・看板の数値）">
+                    {basicFields(pf)}
+                    {paramFields(pf)}
+                  </Disclosure>
+                </>
+              ) : (
+                basicFields(pf)
+              )}
+            </>
+          ) : (
+            <>
+              {basicFields(pf)}
+              {needsSigns && (
+                <>
+                  {signFields(pf)}
+                  <details>
+                    <summary>このりばだけ看板の数値を変える</summary>
+                    {paramFields(pf)}
+                  </details>
+                </>
+              )}
             </>
           )}
           <div className={styles.platformFoot}>

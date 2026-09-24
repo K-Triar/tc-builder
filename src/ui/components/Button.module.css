@@ -6,11 +6,11 @@
   min-height: var(--touch);
   min-width: var(--touch);
   padding: 0 var(--space-4);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-input);
   background: var(--surface);
   color: var(--text);
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   text-decoration: none;
   transition:
@@ -37,6 +37,7 @@
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-contrast);
+  font-weight: 700;
 }
 
 .primary:hover:not(:disabled) {
@@ -92,4 +93,19 @@
     min-height: var(--touch);
     min-width: var(--touch);
   }
+}
+
+/* 画面でいちばん大事な「次へ」 */
+.lg {
+  min-height: 52px;
+  padding: 0 var(--space-5);
+  font-size: var(--fs-lg);
+}
+
+a.button {
+  text-decoration: none;
+}
+
+a.primary:hover {
+  color: var(--accent-contrast);
 }

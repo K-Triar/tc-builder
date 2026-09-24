@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, Outlet, useLocation } from 'react-router';
+import { Link, Outlet, useLocation } from 'react-router';
 import { useSaveStatus } from '../../storage/autosave';
 import {
   prepareExport,
@@ -10,31 +10,29 @@ import {
 import { now, useProjectStore } from '../../store/projectStore';
 import { Button } from '../components/Button';
 import { ToastHost } from '../components/ToastHost';
-import { useDerived, useProject } from '../hooks/useDerived';
-import { useMediaQuery } from '../hooks/useMediaQuery';
+import { useDerived, useJourney, useProject } from '../hooks/useDerived';
 import { nextTheme, THEME_LABELS, useTheme } from '../hooks/useTheme';
-import { issueCounts, SEVERITY_MARK } from '../issues';
+import { issueCounts } from '../issues';
+import { SETUP_STAGE_COUNT, STAGES } from '../journey';
 import { redoWithToast, undoWithToast } from '../toast';
 import { IssuesPanel } from './IssuesPanel';
-import { ProgressBar } from './ProgressBar';
 import styles from './ProjectLayout.module.css';
 
+/** 画面（利用者の言葉で。docs/redesign.md §4 B） */
 const NAV = [
-  { to: 'setup/0', match: 'setup', label: 'ウィザード', icon: '①' },
-  { to: 'edit/org', match: 'edit', label: '編集', icon: '✎' },
-  { to: 'work/signs', match: 'work', label: '作業', icon: '⚒' },
-  { to: 'docs/routes', match: 'docs', label: '資料', icon: '☰' },
+  { key: 'overview', match: null, label: 'いまここ', icon: '◉' },
+  { key: 'setup', match: 'setup', label: '質問に答える', icon: '？' },
+  { key: 'work', match: 'work', label: '設置する', icon: '⚒' },
+  { key: 'edit', match: 'edit', label: '詳しく編集', icon: '☷' },
+  { key: 'docs', match: 'docs', label: '資料', icon: '☰' },
 ] as const;
 
 /** 書き出しを促す帯を、最後の書き出しからこれだけたったら出す */
 export const EXPORT_REMIND_MS = 24 * 60 * 60 * 1000;
 
-/** 検証パネルが横に常に出ている幅（ProjectLayout.module.css の 1100px と合わせる） */
-const WIDE = '(min-width: 1101px)';
-
 const SAVE_TEXT = {
-  idle: '✓ このブラウザに保存済み',
-  saved: '✓ このブラウザに保存済み',
+  idle: '✓ 自動で保存済み',
+  saved: '✓ 自動で保存済み',
   pending: '保存中…',
   error: '⚠ このブラウザに保存できません。ファイルに書き出してください',
 } as const;
@@ -49,12 +47,12 @@ const isTextInput = (el: EventTarget | null) =>
 /** プロジェクト内の共通レイアウト（design §6.1）。PC は左ナビ＋右検証、スマホは下タブ＋下部シート */
 export function ProjectLayout() {
   const project = useProject();
-  const { derived, progress } = useDerived();
+  const { derived } = useDerived();
+  const j = useJourney();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [dismissedFor, setDismissedFor] = useState<string | null>(null);
   const [theme, setTheme] = useTheme();
   const { pathname, search } = useLocation();
-  const wide = useMediaQuery(WIDE);
   const saveStatus = useSaveStatus((s) => s.status);
   const canUndo = useProjectStore((s) => s.past.length > 0);
   const canRedo = useProjectStore((s) => s.future.length > 0);
@@ -124,7 +122,7 @@ export function ProjectLayout() {
     badgeRef.current?.focus();
   };
   useEffect(() => {
-    if (!sheetOpen || wide) return;
+    if (!sheetOpen) return;
     document.getElementById('issues-title')?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
@@ -133,15 +131,23 @@ export function ProjectLayout() {
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [sheetOpen, wide]);
+  }, [sheetOpen]);
 
-  const onBadge = () => {
-    if (wide) {
-      // 広い画面では検証パネルは常に出ているので、そこへ移る
-      const title = document.getElementById('issues-title');
-      title?.scrollIntoView?.({ block: 'nearest' });
-      title?.focus();
-    } else setSheetOpen((v) => !v);
+  const onBadge = () => setSheetOpen((v) => !v);
+
+  // 開いた段へのリンク：入力が終わっていなければ次の質問、作業中なら次の作業
+  const setupPath =
+    j.current < SETUP_STAGE_COUNT ? (STAGES[j.current]?.path ?? 'setup/0') : 'setup/0';
+  const workPath =
+    j.current >= SETUP_STAGE_COUNT && j.stages[j.current]?.key !== 'done'
+      ? (STAGES[j.current]?.path ?? 'setup/0')
+      : 'work/commands';
+  const navTo = {
+    overview: '',
+    setup: setupPath,
+    work: workPath,
+    edit: 'edit/org',
+    docs: 'docs/routes',
   };
 
   const base = `/p/${project.id}`;
@@ -152,16 +158,15 @@ export function ProjectLayout() {
           ←
         </Link>
         <div className={styles.titleBox}>
-          <span className={styles.projectName}>{project.name || '（名前なし）'}</span>
-          <div className={styles.statusRow}>
-            <ProgressBar progress={progress} />
-            <span
-              className={`${styles.saveStatus} ${saveStatus === 'error' ? styles.saveError : ''}`}
-              role={saveStatus === 'error' ? 'alert' : undefined}
-            >
-              {SAVE_TEXT[saveStatus]}
-            </span>
-          </div>
+          <Link to={base} className={styles.projectName}>
+            {project.name || '（名前なし）'}
+          </Link>
+          <span
+            className={`${styles.saveStatus} ${saveStatus === 'error' ? styles.saveError : ''}`}
+            role={saveStatus === 'error' ? 'alert' : undefined}
+          >
+            {SAVE_TEXT[saveStatus]}
+          </span>
         </div>
         <div className={styles.historyButtons}>
           <Button
@@ -188,17 +193,18 @@ export function ProjectLayout() {
         <button
           ref={badgeRef}
           type="button"
-          className={`${styles.badge} ${counts.error > 0 ? styles.badgeError : ''}`}
+          className={`${styles.badge} ${counts.error > 0 ? styles.badgeError : counts.warning > 0 ? styles.badgeWarn : styles.badgeOk}`}
           onClick={onBadge}
-          aria-expanded={wide ? undefined : sheetOpen}
+          aria-expanded={sheetOpen}
           aria-controls="issues-sheet"
-          aria-label={`検証：エラー ${counts.error} 件、警告 ${counts.warning} 件`}
+          aria-label={`入力のチェック：直すところ ${counts.error} 件、確認 ${counts.warning} 件`}
         >
           <span aria-hidden="true">
-            {SEVERITY_MARK.error.mark} {counts.error}
-          </span>
-          <span aria-hidden="true" className={styles.badgeWarn}>
-            {SEVERITY_MARK.warning.mark} {counts.warning}
+            {counts.error > 0
+              ? `✖ 直すところ ${counts.error}`
+              : counts.warning > 0
+                ? `⚠ 確認 ${counts.warning}`
+                : '✓ 問題なし'}
           </span>
         </button>
         <Button
@@ -240,21 +246,25 @@ export function ProjectLayout() {
 
       <nav className={`${styles.nav} no-print`} aria-label="画面">
         <ul>
-          {NAV.map((n) => (
-            <li key={n.to}>
-              <NavLink
-                to={`${base}/${n.to}`}
-                className={({ isActive }) =>
-                  `${styles.navLink} ${isActive || pathname.includes(`/${n.match}/`) ? styles.active : ''}`
-                }
-              >
-                <span aria-hidden="true" className={styles.navIcon}>
-                  {n.icon}
-                </span>
-                {n.label}
-              </NavLink>
-            </li>
-          ))}
+          {NAV.map((n) => {
+            const active = n.match
+              ? pathname.includes(`/${n.match}/`)
+              : pathname.replace(/\/$/, '') === base;
+            return (
+              <li key={n.key}>
+                <Link
+                  to={`${base}/${navTo[n.key]}`}
+                  className={`${styles.navLink} ${active ? styles.active : ''}`}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  <span aria-hidden="true" className={styles.navIcon}>
+                    {n.icon}
+                  </span>
+                  <span className={styles.navLabel}>{n.label}</span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
@@ -277,11 +287,11 @@ export function ProjectLayout() {
       <aside
         id="issues-sheet"
         className={`${styles.aside} ${sheetOpen ? styles.sheetOpen : ''} no-print`}
-        aria-label="検証結果"
+        aria-label="入力のチェック"
       >
         <div className={styles.sheetHandle}>
           <Button variant="ghost" size="sm" onClick={closeSheet}>
-            閉じる
+            閉じる ✕
           </Button>
         </div>
         <IssuesPanel

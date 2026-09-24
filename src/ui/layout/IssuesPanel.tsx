@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import type { Issue } from '../../domain/validate';
-import { issueCounts, issueLink, SEVERITY_MARK } from '../issues';
+import { ISSUE_HINTS, issueCounts, issueLink, SEVERITY_MARK } from '../issues';
 import styles from './IssuesPanel.module.css';
 
 export interface IssuesPanelProps {
@@ -9,49 +9,69 @@ export interface IssuesPanelProps {
   onNavigate?: () => void;
 }
 
-/** 検証の一覧（R9）。クリックで該当する入力へ */
+const ORDER = ['error', 'warning', 'info'] as const;
+
+const GROUP_TITLE = {
+  error: '直すところ（直すまで看板とコマンドは出ません）',
+  warning: '確かめてほしいこと（このままでも出力はできます）',
+  info: 'お知らせ',
+} as const;
+
+/** 検証の一覧（R9）。何が問題か・どう直すか・直しに行くリンク */
 export function IssuesPanel({ projectId, issues, onNavigate }: IssuesPanelProps) {
   const counts = issueCounts(issues);
   return (
     <section className={styles.panel} aria-labelledby="issues-title">
       <h2 id="issues-title" className={styles.title} tabIndex={-1}>
-        検証
+        入力のチェック
       </h2>
-      <p className={styles.summary}>
-        {(['error', 'warning', 'info'] as const).map((s) => (
-          <span key={s} className={`${styles.count} ${styles[s]}`}>
-            <span aria-hidden="true">{SEVERITY_MARK[s].mark}</span> {SEVERITY_MARK[s].label}{' '}
-            {counts[s]}
-          </span>
-        ))}
-      </p>
-      {issues.length === 0 ? (
-        <p className="muted">問題は見つかっていません。</p>
-      ) : (
-        <ul className={styles.list}>
-          {issues.map((issue, i) => (
-            <li
-              key={`${issue.code}-${i}`}
-              className={`${styles.item} ${styles[issue.severity]}`}
-              title={`検証コード：${issue.code}`}
-            >
-              <Link
-                to={issueLink(projectId, issue.target)}
-                className={styles.link}
-                onClick={onNavigate}
-              >
+      {counts.error + counts.warning === 0 ? (
+        <p className={styles.ok}>
+          <span aria-hidden="true">✓</span> 設定に問題はありません
+        </p>
+      ) : null}
+      {ORDER.map((sev) => {
+        const list = issues.filter((i) => i.severity === sev);
+        if (list.length === 0) return null;
+        const body = (
+          <ul className={styles.list}>
+            {list.map((issue, i) => (
+              <li key={`${issue.code}-${i}`} className={`${styles.item} ${styles[issue.severity]}`}>
                 <span className={styles.mark} aria-hidden="true">
                   {SEVERITY_MARK[issue.severity].mark}
                 </span>
-                <span>
+                <div className={styles.text}>
                   <span className="visually-hidden">{SEVERITY_MARK[issue.severity].label}：</span>
-                  {issue.message}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+                  <span className={styles.message}>{issue.message}</span>
+                  <span className={styles.hint}>{ISSUE_HINTS[issue.code]}</span>
+                  <Link
+                    to={issueLink(projectId, issue.target)}
+                    className={styles.link}
+                    onClick={onNavigate}
+                  >
+                    直しに行く<span aria-hidden="true"> →</span>
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        );
+        return sev === 'info' ? (
+          <details key={sev} className={styles.group}>
+            <summary className={styles.groupTitle}>
+              {GROUP_TITLE[sev]}（{list.length}）
+            </summary>
+            {body}
+          </details>
+        ) : (
+          <div key={sev} className={styles.group}>
+            <h3 className={styles.groupTitle}>
+              {GROUP_TITLE[sev]}（{list.length}）
+            </h3>
+            {body}
+          </div>
+        );
+      })}
     </section>
   );
 }

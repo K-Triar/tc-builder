@@ -16,7 +16,7 @@ body {
   color: var(--text);
   font-family: var(--font);
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.7;
   overflow-wrap: anywhere;
 }
 
@@ -30,8 +30,8 @@ h4 {
 
 h1 {
   font-size: var(--fs-2xl);
-  font-weight: 800;
-  letter-spacing: 0.01em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 h2 {
@@ -88,8 +88,8 @@ select,
 textarea {
   min-height: var(--touch);
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-input);
   background: var(--surface);
   width: 100%;
   transition:
@@ -149,11 +149,19 @@ table {
   align-items: center;
 }
 
+/* ワークシート：紙の上の1枚。上の太い罫で「ひとまとまり」を示し、影は付けない */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--space-4);
+  border-top: 3px solid var(--text);
+  border-radius: var(--radius-sheet);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: var(--space-3) var(--space-3) var(--space-4);
+  }
 }
 
 .field {
@@ -229,11 +237,79 @@ table {
 
 .section-head > h2 {
   margin: 0;
+  font-size: var(--fs-lg);
 }
 
 .section-lead {
   color: var(--text-muted);
   margin: 0;
+  max-width: 44em;
+}
+
+/* 「詳しい設定」の開閉（Progressive Disclosure の3段目） */
+.disclosure {
+  border-top: 1px dashed var(--border-strong);
+  padding-top: var(--space-2);
+}
+
+.disclosure > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch);
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 500;
+  list-style: none;
+}
+
+.disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure > summary::before {
+  content: '▸';
+  display: inline-block;
+  width: 1em;
+  transition: transform var(--ease);
+}
+
+.disclosure[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.disclosure > summary:hover {
+  color: var(--text);
+}
+
+.disclosure-body {
+  padding: var(--space-2) 0 var(--space-2) var(--space-4);
+  border-left: 2px solid var(--surface-3);
+  margin-left: 0.4em;
+}
+
+/* 自動で決まる短いコード（KL04 など）。枠ではなく等幅の札で示す */
+.code-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: var(--fs-sm);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sign);
+  background: var(--surface-2);
+  color: var(--text);
+  white-space: nowrap;
+  line-height: 1.6;
+}
+
+/* 見出しの上の小さな札（「いま」「次」など） */
+.eyebrow {
+  display: block;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-1);
 }
 
 /* 消すボタンと、押せないときの理由 */

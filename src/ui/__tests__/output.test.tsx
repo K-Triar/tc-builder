@@ -119,10 +119,17 @@ describe('検証パネル（8.6）', () => {
     delete p.stations[2]!.platforms[0]!.dir;
     await saveProject(p);
     await openAt('/p/broken2/work/signs');
-    const panel = screen.getByRole('complementary', { name: '検証結果' });
-    const link = within(panel).getByRole('link', { name: /オット 1番 の進む向きが未入力/ });
-    expect(link).toHaveAttribute('href', '/p/broken2/edit/stations?station=st-KL02&platform=1');
+    const panel = screen.getByRole('complementary', { name: '入力のチェック' });
+    const item = within(panel)
+      .getByText(/オット 1番 の進む向きが未入力/)
+      .closest('li')!;
+    // 何が問題かに加えて、どう直すかを出す
+    expect(within(item).getByText(/左右どちらへ出ていくか/)).toBeInTheDocument();
+    const link = within(item).getByRole('link', { name: /直しに行く/ });
+    expect(link).toHaveAttribute('href', '/p/broken2/setup/2?station=st-KL02&platform=1');
     fireEvent.click(link);
-    expect(await screen.findByRole('heading', { level: 1, name: '編集' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'のりばを設定する' }),
+    ).toBeInTheDocument();
   });
 });

@@ -65,8 +65,7 @@ export function Home() {
     await navigate(`/p/${p.id}/${path}`);
   };
 
-  const openNewSample = () =>
-    void openAndGo(createSampleProject(newId(), now.current()), 'work/signs');
+  const openNewSample = () => void openAndGo(createSampleProject(newId(), now.current()), '');
   /** サンプルがもうあれば、それを開くか新しく作るか聞く（押すたびに増えないように） */
   const onSample = () => {
     const name = createSampleProject('probe', now.current()).name;
@@ -82,7 +81,7 @@ export function Home() {
       return;
     }
     if (await projectExists(r.project.id)) setConflict(r.project);
-    else await openAndGo(r.project, 'work/signs');
+    else await openAndGo(r.project, '');
     // openAndGo は描画ごとに変わらない処理だけを使う
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -146,11 +145,11 @@ export function Home() {
                 <div className={styles.itemMain}>
                   {/* 名前のリンクをカード全体に広げて、どこを押しても開けるようにする */}
                   <a
-                    href={`#/p/${m.id}/work/signs`}
+                    href={`#/p/${m.id}`}
                     className={styles.itemName}
                     onClick={(e) => {
                       e.preventDefault();
-                      void navigate(`/p/${m.id}/work/signs`);
+                      void navigate(`/p/${m.id}`);
                     }}
                   >
                     {m.name || '（名前なし）'}
@@ -260,7 +259,7 @@ export function Home() {
               onClick={() => {
                 const m = sampleExists;
                 setSampleExists(null);
-                if (m) void navigate(`/p/${m.id}/work/signs`);
+                if (m) void navigate(`/p/${m.id}`);
               }}
             >
               今あるサンプルを開く
@@ -286,7 +285,7 @@ export function Home() {
               onClick={() => {
                 const p = conflict;
                 setConflict(null);
-                if (p) void openAndGo(asCopy(p, newId(), now.current()), 'work/signs');
+                if (p) void openAndGo(asCopy(p, newId(), now.current()), '');
               }}
             >
               別名で開く
@@ -296,7 +295,7 @@ export function Home() {
               onClick={() => {
                 const p = conflict;
                 setConflict(null);
-                if (p) void openAndGo(p, 'work/signs');
+                if (p) void openAndGo(p, '');
               }}
             >
               上書きする

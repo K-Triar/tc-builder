@@ -1,0 +1,169 @@
+/* 路線図の進み具合。線路（線）の上に駅（丸）が並ぶ */
+
+.wrap {
+  margin: 0 0 var(--space-5);
+}
+
+.caption {
+  display: none;
+  justify-content: space-between;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  margin: 0 0 var(--space-1);
+}
+
+.captionHere {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.line {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.stop {
+  position: relative;
+  text-align: center;
+}
+
+/* 前の駅からの線路。前の駅が済んでいれば青 */
+.stop:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  right: 50%;
+  width: 100%;
+  height: 4px;
+  background: var(--border-strong);
+}
+
+.stop.reached::before {
+  background: var(--accent);
+}
+
+/* 入力と作業の境目は二重線（ここから Minecraft での作業） */
+.stop.workFrom::before {
+  top: 18px;
+  height: 8px;
+  background: transparent;
+  border-top: 2px solid var(--border-strong);
+  border-bottom: 2px solid var(--border-strong);
+}
+
+.stop.workFrom.reached::before {
+  background: transparent;
+  border-color: var(--accent);
+}
+
+.link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: var(--touch);
+  padding-top: 10px;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--text);
+}
+
+.link:hover .dot {
+  border-color: var(--accent);
+}
+
+.dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 4px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--accent-contrast);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.done .dot {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+/* 次にやる駅：黄色の輪 */
+.next .dot {
+  border-color: var(--amber);
+}
+
+.next .label {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* 今いる画面：二重丸 */
+.here .dot {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.here .label {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* 終点：四角い駅名標 */
+.terminal .dot {
+  border-radius: var(--radius-sign);
+}
+
+.terminal.done .dot {
+  border-color: var(--ok);
+  background: var(--ok);
+}
+
+.label {
+  font-size: var(--fs-xs);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .caption {
+    display: flex;
+  }
+
+  /* 狭い画面では駅名を隠す（読み上げには残す）。上に今の段の名前を出す */
+  .label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .dot {
+    width: 20px;
+    height: 20px;
+    border-width: 3px;
+  }
+
+  .stop:not(:first-child)::before {
+    top: 18px;
+    height: 3px;
+  }
+
+  .stop.workFrom::before {
+    top: 16px;
+    height: 7px;
+  }
+}

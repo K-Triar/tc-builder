@@ -16,15 +16,16 @@ async function openAt(path: string) {
       <AppRoutes />
     </MemoryRouter>,
   );
-  await screen.findByRole('heading', { level: 1, name: /ウィザード|編集/ });
+  await screen.findByRole('heading', { level: 1 });
 }
 
-describe('ウィザードで小さな架空路線を作る（3駅・2種別）', () => {
+describe('質問に答えて小さな架空路線を作る（3駅・2種別）', () => {
   it('駅 → のりば → 系統 → 停車駅 で、看板とコマンドの元が出る', async () => {
     const p = createProject(K_PRESET, '試験線');
     await saveProject(p);
     useProjectStore.getState().close();
-    await openAt(`/p/${p.id}/setup/3`);
+    await openAt(`/p/${p.id}/setup/1`);
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('駅を登録する');
 
     // 駅：一覧を貼り付けてまとめて足す
     fireEvent.change(screen.getByLabelText('駅の一覧'), {
@@ -34,16 +35,21 @@ describe('ウィザードで小さな架空路線を作る（3駅・2種別）',
     expect(state().stations.map((s) => s.name)).toEqual(['A駅', 'B駅', 'C駅']);
     expect(state().stations[1]!.codes[0]!.code).toMatchObject({ kind: 'numbered', number: 2 });
 
-    // のりば：進む向きを選ぶ
-    fireEvent.click(screen.getByRole('button', { name: '次へ →' }));
-    await screen.findByRole('heading', { level: 1, name: 'ウィザード：のりば' });
-    for (const radio of screen.getAllByRole('radio', { name: /左から右へ/ }))
-      fireEvent.click(radio);
+    // 駅名は路線図の上の欄で直せる
+    fireEvent.change(screen.getByLabelText('2番目の駅の名前'), { target: { value: 'B駅' } });
+
+    // のりば：1駅ずつ進む向きを選ぶ。次へは次の駅へ、最後の駅から次の段へ
+    fireEvent.click(screen.getByRole('button', { name: '次へ：のりば →' }));
+    await screen.findByRole('heading', { level: 1, name: 'のりばを設定する' });
+    for (const next of ['次の駅：B駅 →', '次の駅：C駅 →', null]) {
+      fireEvent.click(screen.getByRole('radio', { name: /左から右へ/ }));
+      if (next) fireEvent.click(screen.getByRole('button', { name: next }));
+    }
     expect(state().stations.every((s) => s.platforms[0]!.dir === 'right')).toBe(true);
 
-    // 系統：駅を順に足し、種別を載せる
-    fireEvent.click(screen.getByRole('button', { name: '次へ →' }));
-    await screen.findByRole('heading', { level: 1, name: 'ウィザード：系統' });
+    // 列車の走り方：駅を順に足し、種別を載せる
+    fireEvent.click(screen.getByRole('button', { name: '次へ：列車 →' }));
+    await screen.findByRole('heading', { level: 1, name: '列車の走り方を決める' });
     fireEvent.click(screen.getByRole('button', { name: '＋ 系統を足す' }));
     fireEvent.change(screen.getByLabelText('系統名'), { target: { value: '下り C駅行' } });
     for (const name of ['A駅', 'B駅', 'C駅']) {
@@ -79,7 +85,7 @@ describe('ウィザードで小さな架空路線を作る（3駅・2種別）',
     expect(up.entries.every((e) => e.platform === null)).toBe(true);
   });
 
-  it('確認のステップで「経路に入れる駅」を上書きできる', async () => {
+  it('自動生成の段で「経路に入れる駅」を上書きできる', async () => {
     const p = createProject(K_PRESET, '試験線');
     p.stations = [0, 1].map((i) => ({
       id: `s${i}`,
@@ -108,7 +114,8 @@ describe('ウィザードで小さな架空路線を作る（3駅・2種別）',
     ];
     await saveProject(p);
     useProjectStore.getState().close();
-    await openAt(`/p/${p.id}/setup/6`);
+    await openAt(`/p/${p.id}/setup/4`);
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('設定を自動でつくる');
     const select = screen.getByLabelText('駅1 1番を経路に');
     expect(select).toHaveValue('auto');
     fireEvent.change(select, { target: { value: 'exclude' } });

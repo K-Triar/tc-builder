@@ -63,7 +63,7 @@ describe('消す → 元に戻す', () => {
         <AppRoutes />
       </MemoryRouter>,
     );
-    await screen.findByRole('heading', { level: 1, name: '編集' });
+    await screen.findByRole('heading', { level: 1, name: '詳しく編集' });
     const kinds = () => useProjectStore.getState().project!.kinds;
     const before = kinds().length;
     const first = kinds()[0]!;
