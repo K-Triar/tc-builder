@@ -34,9 +34,10 @@ describe('Kトライアを選んだとき', () => {
     expect(p.lines.every((l) => l.orgId === self.id)).toBe(true);
   });
 
-  it('種別は Lo/Ra/SR/EX を最初から選んでおく（臨時 ET・試運転 Te は入れない）', () => {
+  it('種別は Lo/Ra/SR/EX を最初から選んでおく（貨物 Fg・路面電車 Tm・試運転 Te は入れない。臨時はない）', () => {
     expect(p.kinds.map((k) => k.typeCode)).toEqual(['Lo', 'Ra', 'SR', 'EX']);
-    expect(KT_KINDS.map((k) => k.typeCode)).toEqual(['Lo', 'Ra', 'SR', 'EX', 'ET', 'Te']);
+    expect(KT_KINDS.map((k) => k.typeCode)).toEqual(['Lo', 'Ra', 'SR', 'EX', 'Fg', 'Tm', 'Te']);
+    expect(KT_KINDS.find((k) => k.typeCode === 'SR')?.name).toBe('特別快速');
   });
 
   it('用途番号と標準最高速度（rules §2.5）', () => {
@@ -45,7 +46,7 @@ describe('Kトライアを選んだとき', () => {
       ['2', 1.5],
       ['3', 1.0],
       ['6', 1.5],
-      ['7', 2.0],
+      ['8', 2.0],
       ['9', 0.5],
     ]);
   });

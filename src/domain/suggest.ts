@@ -2,6 +2,7 @@
 
 import { formParity, pairedFormCode } from './codes';
 import type { Direction, Project, Service, ServiceEntry, ServiceKind } from './model';
+import { KIND_DEFAULTS, KIND_FALLBACK } from './presets';
 
 /**
  * 系統の経由リストに駅を足すときののりばの提案。
@@ -47,11 +48,15 @@ export function reverseService(service: Service, newId: string): Service {
   };
 }
 
-/** 種別コードから用途番号を推す（特急 7、新快速 2、それ以外 3）。プロジェクトにない用途なら最初の用途 */
+/**
+ * 種別コードから用途番号を推す（KIND_DEFAULTS）。プロジェクトにない用途なら最初の用途。
+ * 特急は 8。用途番号 8 がなく 7 を特急にしている以前のプロジェクトでは 7
+ */
 function guessUsage(project: Project, typeCode: string): string | undefined {
-  const guess = typeCode === 'EX' ? '7' : typeCode === 'SR' ? '2' : '3';
+  const guess = (KIND_DEFAULTS[typeCode] ?? KIND_FALLBACK).usage;
   const usages = project.settings.usages;
-  return (usages.find((u) => u.digit === guess) ?? usages[0])?.digit;
+  const legacy = typeCode === 'EX' ? usages.find((u) => u.digit === '7') : undefined;
+  return (usages.find((u) => u.digit === guess) ?? legacy ?? usages[0])?.digit;
 }
 
 /** 系統に種別を載せるときの初期値 */
@@ -71,6 +76,7 @@ export function defaultServiceKind(
     maxSpeed: speed,
     mobCollision: 'cancel',
     playerCollision: 'cancel',
+    cars: (KIND_DEFAULTS[kind?.typeCode ?? ''] ?? KIND_FALLBACK).cars,
     stops: Array.from({ length: entryCount }, () => true),
   };
 }

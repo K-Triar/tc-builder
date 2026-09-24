@@ -82,16 +82,60 @@ describe('系統に種別を載せるときの初期値', () => {
     const lo = p.kinds.find((k) => k.typeCode === 'Lo')!;
     const sr = p.kinds.find((k) => k.typeCode === 'SR')!;
     expect(defaultServiceKind(p, ex.id, 'down', 3)).toMatchObject({
-      formation: 'K700',
+      formation: 'K800',
       maxSpeed: 2,
       mobCollision: 'cancel',
       playerCollision: 'cancel',
+      cars: 'mmmmmm',
       stops: [true, true, true],
     });
-    expect(defaultServiceKind(p, lo.id, 'up', 2)).toMatchObject({ formation: 'K301', maxSpeed: 1 });
+    expect(defaultServiceKind(p, lo.id, 'up', 2)).toMatchObject({
+      formation: 'K301',
+      maxSpeed: 1,
+      cars: 'mmmm',
+    });
     expect(defaultServiceKind(p, sr.id, 'up', 2)).toMatchObject({
       formation: 'K201',
       maxSpeed: 1.5,
+      cars: 'mmmmmm',
+    });
+  });
+
+  it('種別ごとの用途番号と両数（貨物・路面電車・試運転・自分で足した種別）', () => {
+    const p = createProject(companyByCode('K'), 'x');
+    const add = (typeCode: string) => {
+      const id = `kind-${typeCode}`;
+      p.kinds.push({ id, typeCode, name: typeCode });
+      return id;
+    };
+    expect(defaultServiceKind(p, add('Fg'), 'down', 2)).toMatchObject({
+      formation: 'K600',
+      maxSpeed: 1.5,
+      cars: 'msssss',
+    });
+    expect(defaultServiceKind(p, add('Tm'), 'down', 2)).toMatchObject({
+      formation: 'K100',
+      maxSpeed: 0.75,
+      cars: 'mm',
+    });
+    expect(defaultServiceKind(p, add('Te'), 'down', 2)).toMatchObject({
+      formation: 'K900',
+      maxSpeed: 0.5,
+      cars: 'mmmm',
+    });
+    expect(defaultServiceKind(p, add('SL'), 'down', 2)).toMatchObject({
+      formation: 'K300',
+      cars: 'mmmm',
+    });
+  });
+
+  it('用途番号 7 を特急にしている以前のプロジェクトでは 7', () => {
+    const p = createProject(companyByCode('K'), 'x');
+    p.settings.usages = p.settings.usages.map((u) => (u.digit === '8' ? { ...u, digit: '7' } : u));
+    const ex = p.kinds.find((k) => k.typeCode === 'EX')!;
+    expect(defaultServiceKind(p, ex.id, 'down', 2)).toMatchObject({
+      formation: 'K700',
+      maxSpeed: 2,
     });
   });
 });

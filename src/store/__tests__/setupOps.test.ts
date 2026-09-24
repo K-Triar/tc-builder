@@ -73,9 +73,9 @@ describe('種別のチェック', () => {
     let p = fresh();
     p = apply(p, (d) => toggleKind(d, { typeCode: 'Te', name: '試運転' }, true));
     p = apply(p, (d) => toggleKind(d, { typeCode: 'Ra', name: '快速' }, false));
-    p = apply(p, (d) => toggleKind(d, { typeCode: 'ET', name: '臨時' }, true));
+    p = apply(p, (d) => toggleKind(d, { typeCode: 'Fg', name: '貨物' }, true));
     p = apply(p, (d) => toggleKind(d, { typeCode: 'Ra', name: '快速' }, true));
-    expect(p.kinds.map((k) => k.typeCode)).toEqual(['Lo', 'Ra', 'SR', 'EX', 'ET', 'Te']);
+    expect(p.kinds.map((k) => k.typeCode)).toEqual(['Lo', 'Ra', 'SR', 'EX', 'Fg', 'Te']);
   });
 
   it('列車の走り方で使っている種別は外さない', () => {

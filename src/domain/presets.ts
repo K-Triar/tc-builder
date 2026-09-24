@@ -60,13 +60,14 @@ export function customCompany(name = '', code = ''): Company {
 export const KT_KINDS: readonly { typeCode: string; name: string }[] = [
   { typeCode: 'Lo', name: '普通' },
   { typeCode: 'Ra', name: '快速' },
-  { typeCode: 'SR', name: '特別快速（新快速）' },
+  { typeCode: 'SR', name: '特別快速' },
   { typeCode: 'EX', name: '特急' },
-  { typeCode: 'ET', name: '臨時' },
+  { typeCode: 'Fg', name: '貨物' },
+  { typeCode: 'Tm', name: '路面電車' },
   { typeCode: 'Te', name: '試運転' },
 ];
 
-/** 新しいプロジェクトで最初から選んでおく種別（redesign2 §6 Q4）。臨時・試運転は「ほかの種別」から足す */
+/** 新しいプロジェクトで最初から選んでおく種別（redesign2 §6 Q4）。貨物・路面電車・試運転は「ほかの種別」から足す */
 export const DEFAULT_KIND_CODES: readonly string[] = ['Lo', 'Ra', 'SR', 'EX'];
 
 /** KT式の用途番号と標準最高速度（rules §2.5）。どの会社でも同じ */
@@ -75,9 +76,24 @@ export const KT_USAGES: readonly Usage[] = [
   { digit: '2', label: '在来線標準型・新快速', defaultMaxSpeed: 1.5 },
   { digit: '3', label: '在来線標準型・普通快速', defaultMaxSpeed: 1.0 },
   { digit: '6', label: '貨物', defaultMaxSpeed: 1.5 },
-  { digit: '7', label: '特急', defaultMaxSpeed: 2.0 },
+  { digit: '8', label: '特急', defaultMaxSpeed: 2.0 },
   { digit: '9', label: '試験・事業用', defaultMaxSpeed: 0.5 },
 ];
+
+/**
+ * 種別コードごとの用途番号と両数の初期値（rules §2.7）。
+ * 一覧にない種別（自分で足した種別・以前の臨時 ET など）は KIND_FALLBACK
+ */
+export const KIND_DEFAULTS: Readonly<Record<string, { usage: string; cars: string }>> = {
+  Lo: { usage: '3', cars: 'mmmm' },
+  Ra: { usage: '3', cars: 'mmmm' },
+  SR: { usage: '2', cars: 'mmmmmm' },
+  EX: { usage: '8', cars: 'mmmmmm' },
+  Fg: { usage: '6', cars: 'msssss' },
+  Tm: { usage: '1', cars: 'mm' },
+  Te: { usage: '9', cars: 'mmmm' },
+};
+export const KIND_FALLBACK = { usage: '3', cars: 'mmmm' } as const;
 
 export const DEFAULT_SETTINGS = {
   spawnSpeed: 1,

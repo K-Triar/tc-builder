@@ -36,7 +36,7 @@ export interface ProjectSettings {
   spawnSpeed: number; // 既定 1
   stationLaunchDistance: number; // 既定 5
   stationDwellSeconds: number; // 既定 5
-  usages: Usage[]; // 用途番号（KT式 共通：1,2,3,6,7,9）
+  usages: Usage[]; // 用途番号（KT式 共通：1,2,3,6,8,9）
 }
 
 export interface Usage {
@@ -60,7 +60,7 @@ export interface Line {
 
 export interface Kind {
   id: string;
-  typeCode: string; // Lo, Ra, SR, EX, ET, Te
+  typeCode: string; // Lo, Ra, SR, EX, Fg, Tm, Te（以前の ET も読める）
   trainNameCode?: string; // LSR, MKR
   name: string; // 表示名（新快速、特急みかり）
 }

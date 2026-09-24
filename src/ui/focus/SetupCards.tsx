@@ -573,6 +573,7 @@ function KindsCard() {
     <SetupFrame
       q="kinds"
       title="どの種別の列車が走りますか？"
+      lead="列車名がついた種別は次の画面で追加します。ここでは列車名のない種別のみ選択してください。"
       onNext={() => {
         if (!baseKinds(project).some((k) => k.typeCode.trim())) {
           setError(true);
@@ -581,7 +582,7 @@ function KindsCard() {
       }}
     >
       <ul className={styles.choices}>{main.map(check)}</ul>
-      <Disclosure summary="ほかの種別（臨時・試運転・自分で足す）" open={moreOpen}>
+      <Disclosure summary="ほかの種別（貨物・路面電車・試運転・自分で足す）" open={moreOpen}>
         <ul className={styles.choices}>{more.map(check)}</ul>
         {custom.length > 0 && (
           <ul className={styles.addedRows} aria-label="自分で足した種別">

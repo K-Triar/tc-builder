@@ -57,7 +57,7 @@ export function KindEditor() {
             <TextField
               label="表示名"
               value={k.name}
-              placeholder="新快速"
+              placeholder="特別快速"
               onChange={(v) => update((p) => void (must(p.kinds[i]).name = v))}
             />
             <div className={styles.tagBox}>

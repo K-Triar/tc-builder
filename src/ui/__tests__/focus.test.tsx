@@ -61,7 +61,9 @@ describe('はじめての質問（集中モード）で、新しい路線網を�
 
     await h1('どの種別の列車が走りますか？');
     expect(screen.getByRole('checkbox', { name: '普通' })).toBeChecked();
-    expect(screen.getByRole('checkbox', { name: '臨時' })).not.toBeChecked();
+    expect(screen.getByRole('checkbox', { name: '貨物' })).not.toBeChecked();
+    expect(screen.queryByRole('checkbox', { name: '臨時' })).toBeNull();
+    screen.getByText(/列車名がついた種別は次の画面で追加します/);
     fireEvent.click(screen.getByRole('checkbox', { name: '特急' }));
     next();
 
