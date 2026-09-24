@@ -13,7 +13,7 @@ import {
 import { asCopy, hasUnexportedChanges, readProjectFile } from '../../storage/file';
 import { createSampleProject } from '../../storage/sample';
 import { now, useProjectStore } from '../../store/projectStore';
-import { GUIDE_URL } from '../../content/help';
+import { GUIDE_URL, SOURCE_URL } from '../../content/help';
 import { Button } from '../components/Button';
 import { ConfirmDialog, Dialog } from '../components/Dialog';
 import { useFileDrop } from '../hooks/useFileDrop';
@@ -234,6 +234,15 @@ export function Home() {
           入門ガイド（KT式 経路コード方式）
         </a>
         <span className="muted">データはこのブラウザの中だけに保存され、外部へ送られません。</span>
+        <span className="muted">
+          <a href={SOURCE_URL} target="_blank" rel="noreferrer">
+            ソースコード
+          </a>
+          （AGPL-3.0-or-later）・
+          <a href={`${import.meta.env.BASE_URL}licenses.txt`} target="_blank" rel="noreferrer">
+            ライブラリのライセンス
+          </a>
+        </span>
       </footer>
 
       <ConfirmDialog

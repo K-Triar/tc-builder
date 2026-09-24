@@ -73,3 +73,11 @@ python scripts/build-ruri-project.py      # → src/fixtures/ruri/project.ktc.js
 ### デプロイ
 
 `main` に push すると GitHub Actions（`.github/workflows/deploy.yml`）が lint・テスト・ビルドをして GitHub Pages に公開します。リポジトリの Settings → Pages の Source を「GitHub Actions」にしておきます。別の場所に置くときは、ビルド時に環境変数 `BASE_PATH` でパスを変えられます。
+
+## ライセンス
+
+このソフトウェアは [GNU Affero General Public License v3.0 以降（AGPL-3.0-or-later）](LICENSE) で公開しています。改変したものを配布したり、ネットワーク越しに使わせたりするときは、同じライセンスでソースコードを公開してください。
+
+- **このツールで作った看板・コマンド・資料は、自由に使ってかまいません。** AGPL の条件はつきません。
+- **Kトライア瑠璃のロゴは AGPL の対象外です。** アイコン（`public/favicon.svg` と、そこから作った PNG・ICO）の看板部分に入っているロゴは、Kトライア瑠璃の許可なく使うことはできません。改変版を公開するときは、アイコンを差し替えてください。
+- アプリに含まれるライブラリのライセンスは、本番ビルドで作られる `licenses.txt`（公開版ではホーム画面の下のリンク）にまとめています。

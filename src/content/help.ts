@@ -2,6 +2,9 @@
 
 export const GUIDE_URL = 'https://claude.ai/code/artifact/ccbddc5b-be7f-440b-81a8-67191ce8c6bb';
 
+/** ソースコード（AGPL-3.0-or-later） */
+export const SOURCE_URL = 'https://github.com/K-Triar/tc-builder';
+
 export interface HelpEntry {
   title: string;
   body: string;

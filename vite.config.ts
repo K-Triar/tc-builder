@@ -1,15 +1,67 @@
 /// <reference types="vitest/config" />
+import { readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // GitHub Pages のサブパス。別の場所に置くときは環境変数 BASE_PATH で上書きする
 const base = process.env.BASE_PATH ?? '/tc-builder/';
 
+// Service Worker（workbox の別ビルド）に入るパッケージ。バンドルの中身からは拾えないので手で並べる
+const SW_PACKAGES = [
+  'workbox-core',
+  'workbox-routing',
+  'workbox-strategies',
+  'workbox-precaching',
+  'workbox-expiration',
+  'workbox-cacheable-response',
+];
+
+/** 本番ビルドに入ったライブラリの著作権表示とライセンス文を dist/licenses.txt に書き出す */
+function thirdPartyLicenses(): Plugin {
+  return {
+    name: 'third-party-licenses',
+    apply: 'build',
+    generateBundle(_options, bundle) {
+      const names = new Set(SW_PACKAGES);
+      for (const output of Object.values(bundle)) {
+        if (output.type !== 'chunk') continue;
+        for (const id of output.moduleIds) {
+          const m = /.*node_modules[\\/]((?:@[^\\/]+[\\/])?[^\\/]+)/.exec(id);
+          if (m) names.add(m[1].replace('\\', '/'));
+        }
+      }
+      const sections = [...names].sort().map((name) => {
+        const dir = join('node_modules', name);
+        const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as {
+          version: string;
+          license?: string;
+        };
+        const file = readdirSync(dir).find((f) => /^(licen[cs]e|copying)/i.test(f));
+        const text = file ? readFileSync(join(dir, file), 'utf8').trim() : '';
+        return `${name}@${pkg.version} (${pkg.license ?? 'ライセンス不明'})\n\n${text}`;
+      });
+      const header = [
+        'KT式 TC ビルダーは GNU Affero General Public License v3.0 以降（AGPL-3.0-or-later）で公開しています。',
+        'ソースコード：https://github.com/K-Triar/tc-builder',
+        '',
+        '以下は、このアプリに含まれるライブラリの著作権表示とライセンスです。',
+      ].join('\n');
+      this.emitFile({
+        type: 'asset',
+        fileName: 'licenses.txt',
+        source: [header, ...sections].join(`\n\n${'-'.repeat(72)}\n\n`) + '\n',
+      });
+    },
+  };
+}
+
 export default defineConfig({
   base,
   plugins: [
     react(),
+    thirdPartyLicenses(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon-180x180.png'],
