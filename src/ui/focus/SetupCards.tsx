@@ -573,7 +573,6 @@ function KindsCard() {
     <SetupFrame
       q="kinds"
       title="どの種別の列車が走りますか？"
-      lead="列車名がついた種別は次の画面で追加します。ここでは列車名のない種別のみ選択してください。"
       onNext={() => {
         if (!baseKinds(project).some((k) => k.typeCode.trim())) {
           setError(true);

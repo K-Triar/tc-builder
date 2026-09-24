@@ -139,6 +139,18 @@ export type Migrations = Record<number, (raw: RawProject) => RawProject>;
 const MIGRATIONS: Migrations = {
   // 版 2 で集中モードの状態（guide）を足した。古いプロジェクトは答え終わったものとして扱う
   1: (raw) => ({ ...raw, schemaVersion: 2 }),
+  // 版 3 で種別の表示名「特別快速（新快速）」を「特別快速」にした。以前の初期値のまま残っている名前だけ直す
+  2: (raw) => ({
+    ...raw,
+    schemaVersion: 3,
+    kinds: Array.isArray(raw.kinds)
+      ? raw.kinds.map((k: unknown) =>
+          typeof k === 'object' && k !== null && (k as RawProject).name === '特別快速（新快速）'
+            ? { ...k, name: '特別快速' }
+            : k,
+        )
+      : raw.kinds,
+  }),
 };
 
 /** raw.schemaVersion から target まで順に変換する。変換が足りなければ例外 */

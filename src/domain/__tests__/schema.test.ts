@@ -177,7 +177,7 @@ describe('版 1 → 版 2（集中モードの状態 guide）', () => {
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.migratedFrom).toBe(1);
-    expect(r.project.schemaVersion).toBe(2);
+    expect(r.project.schemaVersion).toBe(SCHEMA_VERSION);
     expect(r.project.guide).toBeUndefined();
   });
 
@@ -185,5 +185,25 @@ describe('版 1 → 版 2（集中モードの状態 guide）', () => {
     const p = { ...smallProject(), guide: { at: 'lines', through: 'no' as const } };
     const r = parseProject(serializeProject(p));
     expect(r.ok && r.project.guide).toEqual({ at: 'lines', through: 'no' });
+  });
+});
+
+describe('版 2 → 版 3（種別名「特別快速（新快速）」→「特別快速」）', () => {
+  it('以前の初期値の名前だけ「特別快速」に直し、ほかの名前はそのまま', () => {
+    const p = smallProject();
+    const raw = {
+      ...p,
+      schemaVersion: 2,
+      kinds: [
+        ...p.kinds,
+        { id: 'k-sr', typeCode: 'SR', name: '特別快速（新快速）' },
+        { id: 'k-lsr', typeCode: 'SR', trainNameCode: 'LSR', name: '新快速' },
+      ],
+    };
+    const r = parseProject(raw);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.migratedFrom).toBe(2);
+    expect(r.project.kinds.map((k) => k.name)).toEqual(['普通', '特別快速', '新快速']);
   });
 });

@@ -1,6 +1,6 @@
 // 入力データの型（design §4）。保存するのは Project だけで、出力は毎回 derive で計算する。
 
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 export interface Project {
   schemaVersion: typeof SCHEMA_VERSION;

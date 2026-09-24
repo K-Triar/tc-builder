@@ -63,7 +63,8 @@ describe('はじめての質問（集中モード）で、新しい路線網を�
     expect(screen.getByRole('checkbox', { name: '普通' })).toBeChecked();
     expect(screen.getByRole('checkbox', { name: '貨物' })).not.toBeChecked();
     expect(screen.queryByRole('checkbox', { name: '臨時' })).toBeNull();
-    screen.getByText(/列車名がついた種別は次の画面で追加します/);
+    expect(screen.queryByText(/列車名がついた種別は次の画面で追加します/)).toBeNull();
+    expect(screen.getByRole('checkbox', { name: '特別快速' })).toBeChecked();
     fireEvent.click(screen.getByRole('checkbox', { name: '特急' }));
     next();
 
