@@ -46,10 +46,12 @@ test('サンプル → 作業 → コピー → チェック → リロードで
   await page.getByRole('link', { name: /① コマンドを打つ/ }).click();
   await page.getByRole('button', { name: '▶ 次の行をコピー（1行ずつモード）' }).click();
   const bar = page.getByRole('region', { name: '1行ずつコピー' });
-  await expect(bar).toContainText('/train route set');
+  // サンプルは両数が入っているので、最初の行は準備の /train chest
+  await expect(bar).toContainText('1/');
+  await expect(bar).toContainText('/train chest ');
   await bar.getByRole('button', { name: 'コピーして次へ' }).click();
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/^\/train route set /);
-  await expect(bar).toContainText('/train route save');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/^\/train chest /);
+  await expect(bar).toContainText('2/');
 
   // リロードしても自動保存したチェックが残る（500ms デバウンスを待つ）
   await page.waitForTimeout(800);
