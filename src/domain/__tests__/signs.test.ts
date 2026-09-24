@@ -338,6 +338,8 @@ describe('駅ごとの C と switcher（rules §4.5）', () => {
     expect(st('KL04').switcher!.sign.lines).toEqual(['[+train]', 'switcher', '', '']);
     // オット：1番だけを通る
     expect(st('KL02').switcher).toBeUndefined();
+    // のりばが1本の終点（エメラルド城は瑠順要塞から 2番だけ）には出さない
+    expect(st('KL13').switcher).toBeUndefined();
   });
 
   it('他団体の駅は看板の指示を出さない', () => {

@@ -89,6 +89,27 @@ describe('のりば単位の上書き', () => {
     });
   });
 
+  it('終点は「入れない」を付けても必ず入る（途中駅としては外れる）', () => {
+    // 瑠順中央 1番：普通・快速の途中駅。区間便を足してここを終点にする
+    const b = ruriDown().exclude('KL10', 1);
+    b.service(
+      '区間便 瑠順中央行',
+      'down',
+      [
+        ['KL09', 1],
+        ['KL10', 1],
+      ],
+      [{ tag: 'Lo', formation: 'K300' }],
+    );
+    const p = b.build();
+    const short = choicesOf(p, p.services.length - 1);
+    expect(short[1]).toMatchObject({ chosen: true, auto: true, reason: '終点' });
+    expect(choicesOf(p, 0).find((c) => c.station === '瑠順中央')).toMatchObject({
+      chosen: false,
+      override: 'exclude',
+    });
+  });
+
   it('自動と同じ上書きでも印は付く', () => {
     const p = ruriDown().include('KL04', 2).build();
     expect(choicesOf(p, 0).find((c) => c.station === '瑠璃中央')).toMatchObject({

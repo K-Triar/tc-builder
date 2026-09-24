@@ -25,8 +25,9 @@ export function computeChoices(project: Project): ChoiceInfo[][] {
         const used = platformsFrom.get(pairKey(prev, e.stationId)) ?? [];
         return { prevName: names.get(prev) ?? '?', used };
       });
+      // 終点は上書きに関係なく必ず入る（rules §3.2）
       const override =
-        e.platform === null
+        i === last || e.platform === null
           ? undefined
           : project.overrides.choice[platformKey(e.stationId, e.platform)];
       if (!override) return { chosen: auto.chosen, auto: true, reason: auto.reason };
