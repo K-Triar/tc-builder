@@ -50,18 +50,18 @@
     },
     {
       "id": "org-HRA",
-      "name": "HRA",
+      "name": "ヘルヴェティア鉄道局",
       "code": "H"
     },
     {
       "id": "org-CR",
-      "name": "CR",
-      "code": ""
+      "name": "ころりん鉄道",
+      "code": "C"
     },
     {
       "id": "org-SUI",
-      "name": "翠鉄",
-      "code": ""
+      "name": "翠鉄（翠玉急行電気鉄道）",
+      "code": "SU"
     }
   ],
   "lines": [
@@ -1081,6 +1081,7 @@
           "maxSpeed": 1.0,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmm",
           "stops": [
             true,
             true,
@@ -1104,6 +1105,7 @@
           "maxSpeed": 1.0,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmm",
           "stops": [
             true,
             true,
@@ -1192,6 +1194,7 @@
           "maxSpeed": 1.0,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmm",
           "stops": [
             true,
             true,
@@ -1215,6 +1218,7 @@
           "maxSpeed": 1.0,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmm",
           "stops": [
             true,
             true,
@@ -1307,6 +1311,7 @@
           "maxSpeed": 1.0,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmm",
           "stops": [
             true,
             true,
@@ -1400,6 +1405,7 @@
           "maxSpeed": 1.0,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmm",
           "stops": [
             true,
             true,
@@ -1457,6 +1463,7 @@
           "maxSpeed": 1.0,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmm",
           "stops": [true, true, true, true, true, true]
         }
       ]
@@ -1498,6 +1505,7 @@
           "maxSpeed": 1.0,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmm",
           "stops": [true, true, true, true, true, true]
         }
       ]
@@ -1579,6 +1587,7 @@
           "maxSpeed": 1.5,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmmmm",
           "stops": [
             true,
             false,
@@ -1677,6 +1686,7 @@
           "maxSpeed": 1.5,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmmmm",
           "stops": [
             true,
             true,
@@ -1779,6 +1789,7 @@
           "maxSpeed": 1.5,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmmmm",
           "stops": [
             true,
             true,
@@ -1838,6 +1849,7 @@
           "maxSpeed": 1.0,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmm",
           "stops": [true, true, true, true, true, true]
         }
       ]
@@ -1923,6 +1935,7 @@
           "maxSpeed": 1.0,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmm",
           "stops": [
             true,
             true,
@@ -1949,6 +1962,7 @@
           "maxSpeed": 1.5,
           "mobCollision": "cancel",
           "playerCollision": "cancel",
+          "cars": "mmmmmm",
           "stops": [
             true,
             true,

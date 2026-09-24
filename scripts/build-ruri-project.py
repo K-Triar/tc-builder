@@ -19,9 +19,10 @@ OUT = ROOT / "src" / "fixtures" / "ruri" / "project.ktc.json"
 SELF = "org-K"
 ORGS = [
     {"id": SELF, "name": "Kトライア", "code": "K"},
-    {"id": "org-HRA", "name": "HRA", "code": "H"},  # 形式 H3004・H2006 より
-    {"id": "org-CR", "name": "CR", "code": ""},  # 団体コードは未確認（駅コードに使わない）
-    {"id": "org-SUI", "name": "翠鉄", "code": ""},  # 同上
+    # 名前とコードは Wiki の KT式 団体コード表（src/domain/presets.ts の COMPANIES）どおり
+    {"id": "org-HRA", "name": "ヘルヴェティア鉄道局", "code": "H"},
+    {"id": "org-CR", "name": "ころりん鉄道", "code": "C"},
+    {"id": "org-SUI", "name": "翠鉄（翠玉急行電気鉄道）", "code": "SU"},
 ]
 LINES = [("L", "瑠璃本線"), ("B", "貿易港線"), ("Q", "地下鉄交易所線"), ("U", "地下鉄中央線"), ("Y", "富士有徳線")]
 USAGES = [
@@ -39,6 +40,8 @@ KINDS = [
     ("SR", "LSR", "新快速"),
     ("EX", "MKR", "特急みかり"),
 ]
+# 両数は種別コードごとの初期値（rules §2.7）。他団体の車両（H3004・H2006）も同じにする
+CARS = {"Lo": "mmmm", "Ra": "mmmm", "SR": "mmmmmm", "EX": "mmmmmm"}
 
 R, L = "right", "left"
 
@@ -267,6 +270,7 @@ def build() -> dict:
                 "maxSpeed": speed,
                 "mobCollision": "cancel",
                 "playerCollision": "cancel",
+                "cars": CARS[tag.split("-")[0]],
                 "stops": stops,
             })
         services.append({

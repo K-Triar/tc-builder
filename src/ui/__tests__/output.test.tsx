@@ -76,16 +76,19 @@ describe('駅の看板カード（8.1・8.2）', () => {
 describe('コマンド（8.3）', () => {
   it('1行ずつモードで順にコピーする', async () => {
     await openAt('/p/out/work/commands');
-    const first = derive(useProjectStore.getState().project!).commandPlan.groups[1]!.blocks[0]!;
+    // サンプルは両数が入っているので、最初の行は準備の /train chest
+    const lines = derive(useProjectStore.getState().project!).commandPlan.groups.flatMap((g) =>
+      g.blocks.flatMap((b) => b.lines),
+    );
     fireEvent.click(screen.getByRole('button', { name: '▶ 次の行をコピー（1行ずつモード）' }));
     const bar = screen.getByRole('region', { name: '1行ずつコピー' });
     expect(bar).toHaveTextContent(`1/`);
-    expect(bar).toHaveTextContent(first.lines[0]!);
+    expect(bar).toHaveTextContent(lines[0]!);
     await act(async () => {
       fireEvent.click(within(bar).getByRole('button', { name: 'コピーして次へ' }));
     });
-    expect(writeText).toHaveBeenCalledWith(first.lines[0]);
-    expect(bar).toHaveTextContent(first.lines[1]!);
+    expect(writeText).toHaveBeenCalledWith(lines[0]);
+    expect(bar).toHaveTextContent(lines[1]!);
   });
 
   it('ブロックごとに「実行した」を付けられる', async () => {
