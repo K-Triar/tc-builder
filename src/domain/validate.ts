@@ -112,8 +112,11 @@ export function validate(
       );
     }
   };
-  for (const o of project.orgs)
+  for (const o of project.orgs) {
+    // 他団体の団体コードは、番号つきの駅コードに使わない限り空でもよい
+    if (o.code === '' && o.id !== project.selfOrgId) continue;
     checkCode(o.code, `団体「${o.name}」の団体コード`, { kind: 'org', orgId: o.id });
+  }
   for (const l of project.lines)
     checkCode(l.code, `路線「${l.name}」の路線コード`, { kind: 'line', lineId: l.id });
   for (const k of project.kinds) {

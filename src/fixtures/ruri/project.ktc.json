@@ -1,0 +1,2067 @@
+{
+  "schemaVersion": 1,
+  "id": "sample-ruri",
+  "name": "瑠璃線系統（サンプル）",
+  "createdAt": "2026-09-24T00:00:00.000Z",
+  "updatedAt": "2026-09-24T00:00:00.000Z",
+  "selfOrgId": "org-K",
+  "settings": {
+    "spawnSpeed": 1,
+    "stationLaunchDistance": 5,
+    "stationDwellSeconds": 5,
+    "usages": [
+      {
+        "digit": "1",
+        "label": "路面電車型",
+        "defaultMaxSpeed": 0.75
+      },
+      {
+        "digit": "2",
+        "label": "在来線標準型・新快速",
+        "defaultMaxSpeed": 1.5
+      },
+      {
+        "digit": "3",
+        "label": "在来線標準型・普通快速",
+        "defaultMaxSpeed": 1.0
+      },
+      {
+        "digit": "6",
+        "label": "貨物",
+        "defaultMaxSpeed": 1.5
+      },
+      {
+        "digit": "7",
+        "label": "特急",
+        "defaultMaxSpeed": 2.0
+      },
+      {
+        "digit": "9",
+        "label": "試験・事業用",
+        "defaultMaxSpeed": 0.5
+      }
+    ]
+  },
+  "orgs": [
+    {
+      "id": "org-K",
+      "name": "Kトライア",
+      "code": "K"
+    },
+    {
+      "id": "org-HRA",
+      "name": "HRA",
+      "code": "H"
+    },
+    {
+      "id": "org-CR",
+      "name": "CR",
+      "code": ""
+    },
+    {
+      "id": "org-SUI",
+      "name": "翠鉄",
+      "code": ""
+    }
+  ],
+  "lines": [
+    {
+      "id": "line-L",
+      "orgId": "org-K",
+      "code": "L",
+      "name": "瑠璃本線"
+    },
+    {
+      "id": "line-B",
+      "orgId": "org-K",
+      "code": "B",
+      "name": "貿易港線"
+    },
+    {
+      "id": "line-Q",
+      "orgId": "org-K",
+      "code": "Q",
+      "name": "地下鉄交易所線"
+    },
+    {
+      "id": "line-U",
+      "orgId": "org-K",
+      "code": "U",
+      "name": "地下鉄中央線"
+    },
+    {
+      "id": "line-Y",
+      "orgId": "org-K",
+      "code": "Y",
+      "name": "富士有徳線"
+    }
+  ],
+  "kinds": [
+    {
+      "id": "kind-Lo",
+      "typeCode": "Lo",
+      "name": "普通"
+    },
+    {
+      "id": "kind-Ra",
+      "typeCode": "Ra",
+      "name": "快速"
+    },
+    {
+      "id": "kind-SR-LSR",
+      "typeCode": "SR",
+      "trainNameCode": "LSR",
+      "name": "新快速"
+    },
+    {
+      "id": "kind-EX-MKR",
+      "typeCode": "EX",
+      "trainNameCode": "MKR",
+      "name": "特急みかり"
+    }
+  ],
+  "stations": [
+    {
+      "id": "st-IIA",
+      "name": "イアリーオ国際空港",
+      "managerOrgId": "org-CR",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-IIA",
+          "code": {
+            "kind": "free",
+            "value": "IIA"
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-IIA",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-IIA",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL01",
+      "name": "アカシア島",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL01",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 1
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KL01",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KL01",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 3,
+          "codeId": "code-KL01",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL02",
+      "name": "オット",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL02",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 2
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KL02",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KL02",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL03",
+      "name": "瑠前TT",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL03",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 3
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KL03",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KL03",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL04",
+      "name": "瑠璃中央",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL04",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 4
+          }
+        },
+        {
+          "id": "code-KU01",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-U",
+            "number": 1
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KU01",
+          "dir": "right",
+          "deadEnd": true
+        },
+        {
+          "number": 2,
+          "codeId": "code-KL04",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 3,
+          "codeId": "code-KL04",
+          "dir": "left",
+          "deadEnd": false
+        },
+        {
+          "number": 4,
+          "codeId": "code-KL04",
+          "dir": "left",
+          "deadEnd": false
+        },
+        {
+          "number": 5,
+          "codeId": "code-KL04",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL05",
+      "name": "セナポンタウン",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL05",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 5
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 3,
+          "codeId": "code-KL05",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 4,
+          "codeId": "code-KL05",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 5,
+          "codeId": "code-KL05",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 6,
+          "codeId": "code-KL05",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL06",
+      "name": "南セナポン",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL06",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 6
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KL06",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KL06",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL07",
+      "name": "クォーツ",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL07",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 7
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 2,
+          "codeId": "code-KL07",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 3,
+          "codeId": "code-KL07",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL08",
+      "name": "クォーツ南口",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL08",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 8
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KL08",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KL08",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL09",
+      "name": "瑠交研前",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL09",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 9
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KL09",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KL09",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL10",
+      "name": "瑠順中央",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL10",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 10
+          }
+        },
+        {
+          "id": "code-KB01",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-B",
+            "number": 1
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KL10",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KL10",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 3,
+          "codeId": "code-KB01",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 4,
+          "codeId": "code-KB01",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL11",
+      "name": "瑠順農園",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL11",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 11
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KL11",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KL11",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL12",
+      "name": "瑠順要塞",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL12",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 12
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KL12",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KL12",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KL13",
+      "name": "エメラルド城",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KL13",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-L",
+            "number": 13
+          }
+        },
+        {
+          "id": "code-LM-1",
+          "code": {
+            "kind": "free",
+            "value": "LM-1"
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KL13",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KL13",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KB02",
+      "name": "南瑠順",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KB02",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-B",
+            "number": 2
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KB02",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KB02",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 3,
+          "codeId": "code-KB02",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 4,
+          "codeId": "code-KB02",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KB03",
+      "name": "瑠順採掘場",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KB03",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-B",
+            "number": 3
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KB03",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KB03",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KB04",
+      "name": "貿易港",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KB04",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-B",
+            "number": 4
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KB04",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KB04",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KB05",
+      "name": "東ヘルべチア",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KB05",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-B",
+            "number": 5
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KB05",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KB05",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KB06",
+      "name": "ラピスTT",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KB06",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-B",
+            "number": 6
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KB06",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KB06",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KU06",
+      "name": "二労",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KU06",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-U",
+            "number": 6
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KU06",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KU06",
+          "dir": "left",
+          "deadEnd": true
+        }
+      ]
+    },
+    {
+      "id": "st-KU05",
+      "name": "羊ノ森",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KU05",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-U",
+            "number": 5
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KU05",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KU05",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KU04",
+      "name": "鍛冶ヶ淵",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KU04",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-U",
+            "number": 4
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KU04",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KU04",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KU03",
+      "name": "クロアチア",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KU03",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-U",
+            "number": 3
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KU03",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KU03",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-KU02",
+      "name": "瑠璃要塞",
+      "managerOrgId": "org-K",
+      "signsBySelf": true,
+      "codes": [
+        {
+          "id": "code-KU02",
+          "code": {
+            "kind": "numbered",
+            "orgId": "org-K",
+            "lineId": "line-U",
+            "number": 2
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-KU02",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-KU02",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    },
+    {
+      "id": "st-QUL",
+      "name": "クォーツ湖",
+      "managerOrgId": "org-HRA",
+      "signsBySelf": false,
+      "codes": [
+        {
+          "id": "code-QUL",
+          "code": {
+            "kind": "free",
+            "value": "QUL"
+          }
+        }
+      ],
+      "platforms": []
+    },
+    {
+      "id": "st-GSK",
+      "name": "学園新樫樺",
+      "managerOrgId": "org-HRA",
+      "signsBySelf": false,
+      "codes": [
+        {
+          "id": "code-GSK",
+          "code": {
+            "kind": "free",
+            "value": "GSK"
+          }
+        }
+      ],
+      "platforms": []
+    },
+    {
+      "id": "st-NSC",
+      "name": "西水中央",
+      "managerOrgId": "org-HRA",
+      "signsBySelf": false,
+      "codes": [
+        {
+          "id": "code-NSC",
+          "code": {
+            "kind": "free",
+            "value": "NSC"
+          }
+        }
+      ],
+      "platforms": [
+        {
+          "number": 1,
+          "codeId": "code-NSC",
+          "dir": "right",
+          "deadEnd": false
+        },
+        {
+          "number": 2,
+          "codeId": "code-NSC",
+          "dir": "right",
+          "deadEnd": false
+        }
+      ]
+    }
+  ],
+  "services": [
+    {
+      "id": "sv-L-down",
+      "name": "CRアカシア線→瑠璃線→翠鉄城東線 トクテルダム中央行",
+      "direction": "down",
+      "throughNote": "翠鉄城東線 トクテルダム中央行",
+      "entries": [
+        {
+          "stationId": "st-IIA",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL01",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL02",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL03",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL04",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL05",
+          "platform": 6
+        },
+        {
+          "stationId": "st-KL06",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL07",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL08",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL09",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL10",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL11",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL12",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL13",
+          "platform": 2
+        }
+      ],
+      "kinds": [
+        {
+          "kindId": "kind-Lo",
+          "formation": "K300",
+          "maxSpeed": 1.0,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "kindId": "kind-Ra",
+          "formation": "K302",
+          "maxSpeed": 1.0,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [
+            true,
+            true,
+            false,
+            false,
+            true,
+            true,
+            false,
+            true,
+            false,
+            true,
+            true,
+            false,
+            true,
+            true
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sv-L-up",
+      "name": "翠鉄城東線→瑠璃線→CRアカシア線 イアリーオ国際空港行",
+      "direction": "up",
+      "entries": [
+        {
+          "stationId": "st-KL13",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL12",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL11",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL10",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL09",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL08",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL07",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KL06",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL05",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KL04",
+          "platform": 5
+        },
+        {
+          "stationId": "st-KL03",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL02",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL01",
+          "platform": 2
+        },
+        {
+          "stationId": "st-IIA",
+          "platform": 2
+        }
+      ],
+      "kinds": [
+        {
+          "kindId": "kind-Lo",
+          "formation": "K301",
+          "maxSpeed": 1.0,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "kindId": "kind-Ra",
+          "formation": "K303",
+          "maxSpeed": 1.0,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [
+            true,
+            true,
+            false,
+            true,
+            true,
+            false,
+            true,
+            false,
+            true,
+            true,
+            false,
+            false,
+            true,
+            true
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sv-direct-down",
+      "name": "CRアカシア線→瑠璃線→HRA赤石線 直通快速 西水中央行",
+      "direction": "down",
+      "entries": [
+        {
+          "stationId": "st-IIA",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL01",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KL02",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL03",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL04",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KL05",
+          "platform": 5
+        },
+        {
+          "stationId": "st-KL06",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL07",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL08",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL09",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL10",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KB02",
+          "platform": 3
+        },
+        {
+          "stationId": "st-QUL",
+          "platform": null
+        },
+        {
+          "stationId": "st-GSK",
+          "platform": null
+        },
+        {
+          "stationId": "st-NSC",
+          "platform": 2
+        }
+      ],
+      "kinds": [
+        {
+          "kindId": "kind-Ra",
+          "formation": "K302",
+          "maxSpeed": 1.0,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [
+            true,
+            true,
+            false,
+            false,
+            true,
+            true,
+            false,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sv-direct-up",
+      "name": "HRA赤石線→瑠璃線→CRアカシア線 普通(瑠璃線内直通快速) イアリーオ国際空港行",
+      "direction": "up",
+      "entries": [
+        {
+          "stationId": "st-NSC",
+          "platform": 1
+        },
+        {
+          "stationId": "st-GSK",
+          "platform": null
+        },
+        {
+          "stationId": "st-QUL",
+          "platform": null
+        },
+        {
+          "stationId": "st-KB02",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL10",
+          "platform": 4
+        },
+        {
+          "stationId": "st-KL09",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL08",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL07",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KL06",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL05",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KL04",
+          "platform": 5
+        },
+        {
+          "stationId": "st-KL03",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL02",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL01",
+          "platform": 2
+        },
+        {
+          "stationId": "st-IIA",
+          "platform": 2
+        }
+      ],
+      "kinds": [
+        {
+          "kindId": "kind-Ra",
+          "formation": "K303",
+          "maxSpeed": 1.0,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            false,
+            true,
+            true,
+            false,
+            false,
+            true,
+            true
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sv-U-up",
+      "name": "中央線 各駅停車 瑠璃中央行",
+      "direction": "up",
+      "entries": [
+        {
+          "stationId": "st-KU06",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KU05",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KU04",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KU03",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KU02",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL04",
+          "platform": 1
+        }
+      ],
+      "kinds": [
+        {
+          "kindId": "kind-Lo",
+          "formation": "K301",
+          "maxSpeed": 1.0,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [true, true, true, true, true, true]
+        }
+      ]
+    },
+    {
+      "id": "sv-U-down",
+      "name": "中央線 各駅停車 二労行",
+      "direction": "down",
+      "entries": [
+        {
+          "stationId": "st-KL04",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KU02",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU03",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU04",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU05",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU06",
+          "platform": 2
+        }
+      ],
+      "kinds": [
+        {
+          "kindId": "kind-Lo",
+          "formation": "K300",
+          "maxSpeed": 1.0,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [true, true, true, true, true, true]
+        }
+      ]
+    },
+    {
+      "id": "sv-SR-down",
+      "name": "中央線→瑠璃線→HRA赤石線 新快速 西水中央行",
+      "direction": "down",
+      "entries": [
+        {
+          "stationId": "st-KU06",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU05",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KU04",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KU03",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KU02",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL04",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KL05",
+          "platform": 5
+        },
+        {
+          "stationId": "st-KL06",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL07",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL08",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL09",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL10",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KB02",
+          "platform": 3
+        },
+        {
+          "stationId": "st-QUL",
+          "platform": null
+        },
+        {
+          "stationId": "st-GSK",
+          "platform": null
+        },
+        {
+          "stationId": "st-NSC",
+          "platform": 2
+        }
+      ],
+      "kinds": [
+        {
+          "kindId": "kind-SR-LSR",
+          "formation": "K200",
+          "maxSpeed": 1.5,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [
+            true,
+            false,
+            false,
+            true,
+            false,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            true,
+            true
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sv-SR-up",
+      "name": "HRA赤石線→瑠璃線→中央線 新快速 二労行",
+      "direction": "up",
+      "entries": [
+        {
+          "stationId": "st-NSC",
+          "platform": 2
+        },
+        {
+          "stationId": "st-GSK",
+          "platform": null
+        },
+        {
+          "stationId": "st-QUL",
+          "platform": null
+        },
+        {
+          "stationId": "st-KB02",
+          "platform": 4
+        },
+        {
+          "stationId": "st-KL10",
+          "platform": 4
+        },
+        {
+          "stationId": "st-KL09",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL08",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL07",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KL06",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL05",
+          "platform": 4
+        },
+        {
+          "stationId": "st-KL04",
+          "platform": 4
+        },
+        {
+          "stationId": "st-KU02",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU03",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU04",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU05",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU06",
+          "platform": 2
+        }
+      ],
+      "kinds": [
+        {
+          "kindId": "kind-SR-LSR",
+          "formation": "K201",
+          "maxSpeed": 1.5,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [
+            true,
+            true,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            true,
+            true,
+            false,
+            true,
+            false,
+            false,
+            true
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sv-EX-down",
+      "name": "中央線→瑠璃線→貿易港線 特急みかり ラピスTT行",
+      "direction": "down",
+      "entries": [
+        {
+          "stationId": "st-KU06",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU05",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KU04",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KU03",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KU02",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL04",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KL05",
+          "platform": 5
+        },
+        {
+          "stationId": "st-KL06",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL07",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL08",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL09",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL10",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KB02",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KB03",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KB04",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KB05",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KB06",
+          "platform": 1
+        }
+      ],
+      "kinds": [
+        {
+          "kindId": "kind-EX-MKR",
+          "formation": "K700",
+          "maxSpeed": 1.5,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sv-B-down",
+      "name": "貿易港線 普通 ラピスTT行",
+      "direction": "down",
+      "entries": [
+        {
+          "stationId": "st-KL10",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KB02",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KB03",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KB04",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KB05",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KB06",
+          "platform": 1
+        }
+      ],
+      "kinds": [
+        {
+          "kindId": "kind-Lo",
+          "formation": "K300",
+          "maxSpeed": 1.0,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [true, true, true, true, true, true]
+        }
+      ]
+    },
+    {
+      "id": "sv-B-up",
+      "name": "貿易港線→瑠璃線→中央線 二労行",
+      "direction": "up",
+      "entries": [
+        {
+          "stationId": "st-KB06",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KB05",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KB04",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KB03",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KB02",
+          "platform": 4
+        },
+        {
+          "stationId": "st-KL10",
+          "platform": 4
+        },
+        {
+          "stationId": "st-KL09",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL08",
+          "platform": 1
+        },
+        {
+          "stationId": "st-KL07",
+          "platform": 3
+        },
+        {
+          "stationId": "st-KL06",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KL05",
+          "platform": 4
+        },
+        {
+          "stationId": "st-KL04",
+          "platform": 4
+        },
+        {
+          "stationId": "st-KU02",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU03",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU04",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU05",
+          "platform": 2
+        },
+        {
+          "stationId": "st-KU06",
+          "platform": 2
+        }
+      ],
+      "kinds": [
+        {
+          "kindId": "kind-Lo",
+          "formation": "K301",
+          "maxSpeed": 1.0,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "kindId": "kind-EX-MKR",
+          "formation": "K701",
+          "maxSpeed": 1.5,
+          "mobCollision": "cancel",
+          "playerCollision": "cancel",
+          "stops": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        }
+      ]
+    }
+  ],
+  "overrides": {
+    "choice": {
+      "st-KL10#2": "include",
+      "st-KL01#2": "include",
+      "st-KL10#4": "include",
+      "st-KB02#4": "include"
+    },
+    "departure": {
+      "sv-direct-down#kind-Ra#10": {
+        "formation": "H3004"
+      },
+      "sv-direct-down#kind-Ra#11": {
+        "formation": "H3004"
+      },
+      "sv-SR-down#kind-SR-LSR#11": {
+        "formation": "H2006"
+      },
+      "sv-direct-up#kind-Ra#3": {
+        "formation": "H3004"
+      },
+      "sv-direct-up#kind-Ra#0": {
+        "foreignName": "H3004_KB2IIA_Ra"
+      },
+      "sv-SR-up#kind-SR-LSR#0": {
+        "foreignName": "H2006_KB2U6_SR-LSR"
+      },
+      "sv-L-up#kind-Ra#12": {
+        "enabled": false
+      },
+      "sv-direct-up#kind-Ra#13": {
+        "enabled": false
+      },
+      "sv-direct-up#kind-Ra#4": {
+        "enabled": false
+      },
+      "sv-EX-down#kind-EX-MKR#11": {
+        "enabled": false
+      },
+      "sv-EX-down#kind-EX-MKR#13": {
+        "enabled": false
+      },
+      "sv-EX-down#kind-EX-MKR#14": {
+        "enabled": false
+      },
+      "sv-EX-down#kind-EX-MKR#15": {
+        "enabled": false
+      },
+      "sv-B-up#kind-Lo#5": {
+        "enabled": false
+      },
+      "sv-B-up#kind-Lo#6": {
+        "enabled": false
+      },
+      "sv-B-up#kind-Lo#10": {
+        "enabled": false
+      },
+      "sv-B-up#kind-Lo#11": {
+        "enabled": false
+      },
+      "sv-B-up#kind-Lo#12": {
+        "enabled": false
+      },
+      "sv-B-up#kind-Lo#13": {
+        "enabled": false
+      },
+      "sv-B-up#kind-Lo#14": {
+        "enabled": false
+      },
+      "sv-B-up#kind-Lo#15": {
+        "enabled": false
+      },
+      "sv-B-up#kind-EX-MKR#11": {
+        "enabled": false
+      },
+      "sv-B-up#kind-EX-MKR#12": {
+        "enabled": false
+      },
+      "sv-B-up#kind-EX-MKR#13": {
+        "enabled": false
+      },
+      "sv-B-up#kind-EX-MKR#14": {
+        "enabled": false
+      },
+      "sv-B-up#kind-EX-MKR#15": {
+        "enabled": false
+      }
+    },
+    "skipCondition": {}
+  },
+  "progress": {
+    "items": {}
+  }
+}

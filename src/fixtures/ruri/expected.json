@@ -1,0 +1,2434 @@
+{
+  "source": "Kトライア瑠璃 瑠璃線系統TC看板表.xlsx",
+  "note": "scripts/extract-ruri-expected.py で生成。手で直さない（確認済みの差分は src/fixtures/ruri/confirmed.json に書く）",
+  "routes": [
+    {
+      "code": "KL1L13",
+      "dests": ["KL01-1", "KL04-2", "KL05-6", "KL10-1", "KL13-2"],
+      "name": "アカシア島→瑠璃中央→セナポン→瑠順中央→エメラルド城",
+      "via": "CRアカシア線、瑠璃本線",
+      "kinds": "普通、快速",
+      "section": "CR管内"
+    },
+    {
+      "code": "KL4L13",
+      "dests": ["KL04-2", "KL05-6", "KL10-1", "KL13-2"],
+      "name": "瑠璃中央→セナポン→瑠順中央→エメラルド城",
+      "via": "瑠璃本線",
+      "kinds": "普通、快速",
+      "section": "アカシア島-瑠前TT"
+    },
+    {
+      "code": "KL5L13",
+      "dests": ["KL05-6", "KL10-1", "KL13-2"],
+      "name": "セナポン→瑠順中央→エメラルド城",
+      "via": "瑠璃本線",
+      "kinds": "普通、快速",
+      "section": "瑠璃中央"
+    },
+    {
+      "code": "KL10L13",
+      "dests": ["KL10-1", "KL13-2"],
+      "name": "瑠順中央→エメラルド城",
+      "via": "瑠璃本線",
+      "kinds": "普通、快速",
+      "section": "セナポン-沿海"
+    },
+    {
+      "code": "KL13",
+      "dests": ["KL13-2"],
+      "name": "エメラルド城",
+      "via": "瑠璃本線",
+      "kinds": "普通、快速",
+      "section": "瑠順中央-瑠順要塞"
+    },
+    {
+      "code": "KL10IIA",
+      "dests": ["KL10-2", "KL05-3", "KL04-5", "KL01-2", "IIA-2"],
+      "name": "瑠順中央(2番のりば)→セナポン→瑠璃中央→アカシア島→IIA",
+      "via": "瑠璃本線、CRアカシア線",
+      "kinds": "普通、快速",
+      "section": "エメラルド城-瑠順農園"
+    },
+    {
+      "code": "KL5IIA",
+      "dests": ["KL05-3", "KL04-5", "KL01-2", "IIA-2"],
+      "name": "セナポン→瑠璃中央→アカシア島→IIA",
+      "via": "瑠璃本線、CRアカシア線",
+      "kinds": "普通、快速",
+      "section": "瑠順中央-クォーツ"
+    },
+    {
+      "code": "KL4IIA",
+      "dests": ["KL04-5", "KL01-2", "IIA-2"],
+      "name": "瑠璃中央→アカシア島→IIA",
+      "via": "瑠璃本線、CRアカシア線",
+      "kinds": "普通、快速",
+      "section": "セナポン"
+    },
+    {
+      "code": "KL1IIA",
+      "dests": ["KL01-2", "IIA-2"],
+      "name": "アカシア島→IIA",
+      "via": "瑠璃本線、CRアカシア線",
+      "kinds": "普通、快速",
+      "section": "瑠璃中央‐オット"
+    },
+    {
+      "code": "IIA",
+      "dests": ["IIA-2"],
+      "name": "IIA",
+      "via": "CRアカシア線",
+      "kinds": "普通、快速",
+      "section": "アカシア島"
+    },
+    {
+      "code": "KL4NSC",
+      "dests": ["KL04-3", "KL05-5", "KB01-3", "KB02-3", "NSC-2"],
+      "name": "瑠璃中央→セナポン→瑠順中央→南瑠順→西水中央",
+      "via": "中央線、瑠璃本線、HRA赤石線",
+      "kinds": "快速、新快速",
+      "section": "アカシア島-瑠前TT / 二労-クロアチア"
+    },
+    {
+      "code": "KL5NSC",
+      "dests": ["KL05-5", "KB01-3", "KB02-3", "NSC-2"],
+      "name": "セナポン→瑠順中央→南瑠順→西水中央",
+      "via": "瑠璃本線、HRA赤石線",
+      "kinds": "快速、新快速",
+      "section": "瑠璃中央"
+    },
+    {
+      "code": "KB1NSC",
+      "dests": ["KB01-3", "KB02-3", "NSC-2"],
+      "name": "瑠順中央→南瑠順→西水中央",
+      "via": "瑠璃本線、HRA赤石線",
+      "kinds": "快速、新快速",
+      "section": "セナポン-沿海"
+    },
+    {
+      "code": "KB2NSC",
+      "dests": ["KB02-3", "NSC-2"],
+      "name": "南瑠順→西水中央",
+      "via": "HRA赤石線",
+      "kinds": "普通、快速、新快速",
+      "section": "瑠順中央"
+    },
+    {
+      "code": "NSC",
+      "dests": ["NSC-2"],
+      "name": "西水中央",
+      "via": "HRA赤石線",
+      "kinds": "普通、快速、新快速",
+      "section": "南瑠順-HRA管内"
+    },
+    {
+      "code": "KB2IIA",
+      "dests": ["KB02-4", "KB01-4", "KL05-3", "KL04-5", "KL01-2", "IIA-2"],
+      "name": "南瑠順→瑠順中央→セナポン→瑠璃中央→アカシア島→IIA",
+      "via": "HRA赤石線、瑠璃本線、CRアカシア線",
+      "kinds": "快速",
+      "section": "HRA管内"
+    },
+    {
+      "code": "KB1IIA",
+      "dests": ["KB01-4", "KL05-3", "KL04-5", "KL01-2", "IIA-2"],
+      "name": "瑠順中央(4番のりば)→セナポン→瑠璃中央→アカシア島→IIA",
+      "via": "HRA赤石線、瑠璃本線、CRアカシア線",
+      "kinds": "快速",
+      "section": "南瑠順"
+    },
+    {
+      "code": "KB2U6",
+      "dests": ["KB02-4", "KB01-4", "KL05-4", "KL04-4", "KU06-2"],
+      "name": "南瑠順→瑠順中央→セナポン→瑠璃中央→二労",
+      "via": "貿易港線、HRA赤石線、瑠璃本線、地下鉄中央線",
+      "kinds": "普通、新快速、特急",
+      "section": "HRA管内 / ラピスTT-瑠順採掘場"
+    },
+    {
+      "code": "KB1U6",
+      "dests": ["KB01-4", "KL05-4", "KL04-4", "KU06-2"],
+      "name": "瑠順中央→セナポン→瑠璃中央→二労",
+      "via": "HRA赤石線、瑠璃本線、地下鉄中央線",
+      "kinds": "普通",
+      "section": "南瑠順"
+    },
+    {
+      "code": "KL5U6",
+      "dests": ["KL05-4", "KL04-4", "KU06-2"],
+      "name": "セナポン→瑠璃中央→二労",
+      "via": "瑠璃本線、地下鉄中央線",
+      "kinds": "新快速、特急",
+      "section": "瑠順中央-クォーツ"
+    },
+    {
+      "code": "KL4U6",
+      "dests": ["KL04-4", "KU06-2"],
+      "name": "瑠璃中央→二労",
+      "via": "瑠璃本線、地下鉄中央線",
+      "kinds": "新快速",
+      "section": "セナポン"
+    },
+    {
+      "code": "KU6",
+      "dests": ["KU06-2"],
+      "name": "二労",
+      "via": "地下鉄中央線",
+      "kinds": "各停、新快速",
+      "section": "瑠璃中央-羊ノ森"
+    },
+    {
+      "code": "KU1",
+      "dests": ["KU01-1"],
+      "name": "瑠璃中央(1番のりば)",
+      "via": "地下鉄中央線",
+      "kinds": "各停",
+      "section": "二労-瑠璃要塞"
+    },
+    {
+      "code": "KL4B6",
+      "dests": ["KL04-3", "KL05-5", "KB01-3", "KB02-1", "KB06-1"],
+      "name": "瑠璃中央→セナポン→瑠順中央→南瑠順→ラピスTT",
+      "via": "中央線、瑠璃本線、HRA赤石線、貿易港線",
+      "kinds": "特急",
+      "section": "二労-瑠璃要塞"
+    },
+    {
+      "code": "KL5B6",
+      "dests": ["KL05-5", "KB01-3", "KB02-1", "KB06-1"],
+      "name": "セナポン→瑠順中央→南瑠順→ラピスTT",
+      "via": "瑠璃本線、HRA赤石線、貿易港線",
+      "kinds": "特急",
+      "section": "瑠璃中央"
+    },
+    {
+      "code": "KB1B6",
+      "dests": ["KB01-3", "KB02-1", "KB06-1"],
+      "name": "瑠順中央→南瑠順→ラピスTT",
+      "via": "瑠璃本線、HRA赤石線、貿易港線",
+      "kinds": "特急",
+      "section": "沿海"
+    },
+    {
+      "code": "KB2B6",
+      "dests": ["KB02-1", "KB06-1"],
+      "name": "南瑠順→ラピスTT",
+      "via": "HRA赤石線、貿易港線",
+      "kinds": "普通",
+      "section": "瑠順中央"
+    },
+    {
+      "code": "KB6",
+      "dests": ["KB06-1"],
+      "name": "ラピスTT",
+      "via": "貿易港線",
+      "kinds": "普通",
+      "section": "南瑠順‐東ヘルべチア"
+    }
+  ],
+  "formations": [
+    {
+      "code": "K200_KL4NSC_SR-LSR",
+      "description": "中央線新快速 西水中央行(二労-クロアチア)",
+      "formation": "K200",
+      "tag": "SR-LSR",
+      "routeCode": "KL4NSC",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K200_KL5NSC_SR-LSR",
+      "description": "瑠璃線新快速 西水中央行(瑠璃中央)",
+      "formation": "K200",
+      "tag": "SR-LSR",
+      "routeCode": "KL5NSC",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K200_KB1NSC_SR-LSR",
+      "description": "瑠璃線新快速 西水中央行(セナポン)",
+      "formation": "K200",
+      "tag": "SR-LSR",
+      "routeCode": "KB1NSC",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "H2006_KB2NSC_SR-LSR",
+      "description": "HRA赤石線新快速 西水中央行(瑠順中央-学園新樫樺)",
+      "formation": "H2006",
+      "tag": "SR-LSR",
+      "routeCode": "KB2NSC",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "H2006_KB2U6_SR-LSR",
+      "description": "HRA赤石線新快速 二労行(西水中央-学園新樫樺)",
+      "formation": "H2006",
+      "tag": "SR-LSR",
+      "routeCode": "KB2U6",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K201_KL5U6_SR-LSR",
+      "description": "瑠璃線新快速 二労行(瑠順中央)",
+      "formation": "K201",
+      "tag": "SR-LSR",
+      "routeCode": "KL5U6",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K201_KL4U6_SR-LSR",
+      "description": "瑠璃線新快速 二労行(セナポン)",
+      "formation": "K201",
+      "tag": "SR-LSR",
+      "routeCode": "KL4U6",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K201_KU6_SR-LSR",
+      "description": "中央線新快速 二労行(瑠璃中央-クロアチア)",
+      "formation": "K201",
+      "tag": "SR-LSR",
+      "routeCode": "KU6",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K302_KL4NSC_Ra",
+      "description": "瑠璃線直通快速 西水中央行(IIA-アカシア島)",
+      "formation": "K302",
+      "tag": "Ra",
+      "routeCode": "KL4NSC",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K302_KL5NSC_Ra",
+      "description": "瑠璃線直通快速 西水中央行(瑠璃中央)",
+      "formation": "K302",
+      "tag": "Ra",
+      "routeCode": "KL5NSC",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K302_KB1NSC_Ra",
+      "description": "瑠璃線直通快速 西水中央行(セナポン-沿海)",
+      "formation": "K302",
+      "tag": "Ra",
+      "routeCode": "KB1NSC",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "H3004_KB2NSC_Ra",
+      "description": "HRA赤石線普通 西水中央行(瑠順中央)",
+      "formation": "H3004",
+      "tag": "Ra",
+      "routeCode": "KB2NSC",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "H3004_NSC_Ra",
+      "description": "HRA赤石線普通 西水中央行(南瑠順-学園新樫樺)",
+      "formation": "H3004",
+      "tag": "Ra",
+      "routeCode": "NSC",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "H3004_KB2IIA_Ra",
+      "description": "HRA赤石線快速 IIA行(西水中央-クォーツ湖)",
+      "formation": "H3004",
+      "tag": "Ra",
+      "routeCode": "KB2IIA",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "H3004_KB1IIA_Ra",
+      "description": "HRA赤石線快速 IIA行(南瑠順)",
+      "formation": "H3004",
+      "tag": "Ra",
+      "routeCode": "KB1IIA",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K302_KL1L13_Ra",
+      "description": "CRアカシア線快速 トクテルダム中央行(IIA)",
+      "formation": "K302",
+      "tag": "Ra",
+      "routeCode": "KL1L13",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K302_KL4L13_Ra",
+      "description": "瑠璃線快速 トクテルダム中央行(アカシア島)",
+      "formation": "K302",
+      "tag": "Ra",
+      "routeCode": "KL4L13",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K302_KL5L13_Ra",
+      "description": "瑠璃線快速 トクテルダム中央行(瑠璃中央)",
+      "formation": "K302",
+      "tag": "Ra",
+      "routeCode": "KL5L13",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K302_KL10L13_Ra",
+      "description": "瑠璃線快速 トクテルダム中央行(セナポン-沿海)",
+      "formation": "K302",
+      "tag": "Ra",
+      "routeCode": "KL10L13",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K302_KL13_Ra",
+      "description": "瑠璃線快速 トクテルダム中央行(瑠順中央-瑠順要塞)",
+      "formation": "K302",
+      "tag": "Ra",
+      "routeCode": "KL13",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K303_KL10IIA_Ra",
+      "description": "瑠璃線快速 IIA行(エメラルド城-瑠順要塞)",
+      "formation": "K303",
+      "tag": "Ra",
+      "routeCode": "KL10IIA",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K303_KL5IIA_Ra",
+      "description": "瑠璃線快速 IIA行(瑠順中央-クォーツ)",
+      "formation": "K303",
+      "tag": "Ra",
+      "routeCode": "KL5IIA",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K303_KL4IIA_Ra",
+      "description": "瑠璃線快速 IIA行(セナポン)",
+      "formation": "K303",
+      "tag": "Ra",
+      "routeCode": "KL4IIA",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K303_KL1IIA_Ra",
+      "description": "瑠璃線快速 IIA行(瑠璃中央)",
+      "formation": "K303",
+      "tag": "Ra",
+      "routeCode": "KL1IIA",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K300_KL1L13_Lo",
+      "description": "CRアカシア線普通 トクテルダム中央行(IIA)",
+      "formation": "K300",
+      "tag": "Lo",
+      "routeCode": "KL1L13",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K300_KL4L13_Lo",
+      "description": "瑠璃線普通 トクテルダム中央行(アカシア島-瑠前TT)",
+      "formation": "K300",
+      "tag": "Lo",
+      "routeCode": "KL4L13",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K300_KL5L13_Lo",
+      "description": "瑠璃線普通 トクテルダム中央行(瑠璃中央)",
+      "formation": "K300",
+      "tag": "Lo",
+      "routeCode": "KL5L13",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K300_KL10L13_Lo",
+      "description": "瑠璃線普通 トクテルダム中央行(セナポン-沿海)",
+      "formation": "K300",
+      "tag": "Lo",
+      "routeCode": "KL10L13",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K300_KL13_Lo",
+      "description": "瑠璃線普通 トクテルダム中央行(瑠順中央-瑠順要塞)",
+      "formation": "K300",
+      "tag": "Lo",
+      "routeCode": "KL13",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K301_KL10IIA_Lo",
+      "description": "瑠璃線普通 IIA行(エメラルド城-瑠順農園)",
+      "formation": "K301",
+      "tag": "Lo",
+      "routeCode": "KL10IIA",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K301_KL5IIA_Lo",
+      "description": "瑠璃線普通 IIA行(瑠順中央-南セナポン)",
+      "formation": "K301",
+      "tag": "Lo",
+      "routeCode": "KL5IIA",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K301_KL4IIA_Lo",
+      "description": "瑠璃線普通 IIA行(セナポン)",
+      "formation": "K301",
+      "tag": "Lo",
+      "routeCode": "KL4IIA",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K301_KL1IIA_Lo",
+      "description": "瑠璃線普通 IIA行(瑠璃中央-オット)",
+      "formation": "K301",
+      "tag": "Lo",
+      "routeCode": "KL1IIA",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K301_IIA_Lo",
+      "description": "CRアカシア線普通 IIA行(アカシア島)",
+      "formation": "K301",
+      "tag": "Lo",
+      "routeCode": "IIA",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K300_KU6_Lo",
+      "description": "中央線各駅停車 二労行(瑠璃中央-羊ノ森)",
+      "formation": "K300",
+      "tag": "Lo",
+      "routeCode": "KU6",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K301_KU1_Lo",
+      "description": "中央線各駅停車 瑠璃中央行(二労-瑠璃要塞)",
+      "formation": "K301",
+      "tag": "Lo",
+      "routeCode": "KU1",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K300_KB2B6_Lo",
+      "description": "貿易港線普通 ラピスTT行(瑠順中央)",
+      "formation": "K300",
+      "tag": "Lo",
+      "routeCode": "KB2B6",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K300_KB6_Lo",
+      "description": "貿易港線普通 ラピスTT行(南瑠順-東ヘルべチア)",
+      "formation": "K300",
+      "tag": "Lo",
+      "routeCode": "KB6",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K301_KB2U6_Lo",
+      "description": "貿易港線普通 二労行(ラピスTT-瑠順採掘場)",
+      "formation": "K301",
+      "tag": "Lo",
+      "routeCode": "KB2U6",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K301_KB1U6_Lo",
+      "description": "貿易港線普通 二労行(南瑠順)",
+      "formation": "K301",
+      "tag": "Lo",
+      "routeCode": "KB1U6",
+      "maxSpeed": 1.0,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K700_KL4B6_EX-MKR",
+      "description": "中央線特急みかり ラピスTT行(二労-瑠璃要塞)",
+      "formation": "K700",
+      "tag": "EX-MKR",
+      "routeCode": "KL4B6",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K700_KL5B6_EX-MKR",
+      "description": "瑠璃線特急みかり ラピスTT行(瑠璃中央)",
+      "formation": "K700",
+      "tag": "EX-MKR",
+      "routeCode": "KL5B6",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K700_KB1B6_EX-MKR",
+      "description": "瑠璃線特急みかり ラピスTT行(沿海)",
+      "formation": "K700",
+      "tag": "EX-MKR",
+      "routeCode": "KB1B6",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K701_KB2U6_EX-MKR",
+      "description": "瑠璃線特急みかり 二労行(ラピスTT-瑠順採掘場)",
+      "formation": "K701",
+      "tag": "EX-MKR",
+      "routeCode": "KB2U6",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    },
+    {
+      "code": "K701_KL5U6_EX-MKR",
+      "description": "瑠璃線特急みかり 二労行(瑠順中央-沿海)",
+      "formation": "K701",
+      "tag": "EX-MKR",
+      "routeCode": "KL5U6",
+      "maxSpeed": 1.5,
+      "mobCollision": "cancel",
+      "playerCollision": "cancel"
+    }
+  ],
+  "departures": [
+    {
+      "section": "瑠璃線下り",
+      "station": "イアリーオ国際空港",
+      "stationCode": "IIA",
+      "description": "普通・エメラルド方面トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K300_KL1L13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "イアリーオ国際空港",
+      "stationCode": "IIA",
+      "description": "快速・エメラルド方面トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K302_KL1L13_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "イアリーオ国際空港",
+      "stationCode": "IIA",
+      "description": "直通快速・赤石方面西水中央行",
+      "platform": 1,
+      "formationCode": "K302_KL4NSC_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "アカシア島",
+      "stationCode": "KL01",
+      "description": "普通・エメラルド方面トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K300_KL4L13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "アカシア島",
+      "stationCode": "KL01",
+      "description": "快速・エメラルド方面トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K302_KL4L13_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "アカシア島",
+      "stationCode": "KL01",
+      "description": "直通快速・赤石方面西水中央行",
+      "platform": 1,
+      "formationCode": "K302_KL4NSC_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "オット",
+      "stationCode": "KL02",
+      "description": "普通・エメラルド方面トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K300_KL4L13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠前TT",
+      "stationCode": "KL03",
+      "description": "普通・エメラルド方面トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K300_KL4L13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠璃中央",
+      "stationCode": "KL04",
+      "description": "普通・エメラルド方面トクテルダム中央行",
+      "platform": 2,
+      "formationCode": "K300_KL5L13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠璃中央",
+      "stationCode": "KL04",
+      "description": "快速・エメラルド方面トクテルダム中央行",
+      "platform": 2,
+      "formationCode": "K302_KL5L13_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠璃中央",
+      "stationCode": "KL04",
+      "description": "直通快速・赤石方面西水中央行",
+      "platform": 3,
+      "formationCode": "K302_KL5NSC_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠璃中央",
+      "stationCode": "KL04",
+      "description": "新快速・赤石方面西水中央行",
+      "platform": 3,
+      "formationCode": "K200_KL5NSC_SR-LSR"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠璃中央",
+      "stationCode": "KL04",
+      "description": "特急みかり・ラピスTT行",
+      "platform": 3,
+      "formationCode": "K700_KL5B6_EX-MKR"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "セナポンタウン",
+      "stationCode": "KL05",
+      "description": "普通・エメラルド方面トクテルダム中央行",
+      "platform": 6,
+      "formationCode": "K300_KL10L13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "セナポンタウン",
+      "stationCode": "KL05",
+      "description": "快速・エメラルド方面トクテルダム中央行",
+      "platform": 6,
+      "formationCode": "K302_KL10L13_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "セナポンタウン",
+      "stationCode": "KL05",
+      "description": "直通快速・赤石方面西水中央行",
+      "platform": 5,
+      "formationCode": "K302_KB1NSC_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "セナポンタウン",
+      "stationCode": "KL05",
+      "description": "新快速・赤石方面西水中央行",
+      "platform": 5,
+      "formationCode": "K200_KB1NSC_SR-LSR"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "南セナポン",
+      "stationCode": "KL06",
+      "description": "普通・エメラルド方面トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K300_KL10L13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "クォーツ",
+      "stationCode": "KL07",
+      "description": "普通・エメラルド方面トクテルダム中央行",
+      "platform": 2,
+      "formationCode": "K300_KL10L13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "クォーツ",
+      "stationCode": "KL07",
+      "description": "快速・エメラルド方面トクテルダム中央行",
+      "platform": 2,
+      "formationCode": "K302_KL10L13_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "クォーツ",
+      "stationCode": "KL07",
+      "description": "直通快速・赤石方面西水中央行",
+      "platform": 2,
+      "formationCode": "K302_KB1NSC_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "クォーツ南口",
+      "stationCode": "KL08",
+      "description": "普通・エメラルド方面トクテルダム中央行",
+      "platform": 2,
+      "formationCode": "K300_KL10L13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠交研前",
+      "stationCode": "KL09",
+      "description": "普通・エメラルド方面トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K300_KL10L13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠交研前",
+      "stationCode": "KL09",
+      "description": "快速・エメラルド方面トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K302_KL10L13_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠交研前",
+      "stationCode": "KL09",
+      "description": "直通快速・赤石方面西水中央行",
+      "platform": 1,
+      "formationCode": "K302_KB1NSC_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠交研前",
+      "stationCode": "KL09",
+      "description": "特急みかり・ラピスTT行",
+      "platform": 1,
+      "formationCode": "K700_KB1B6_EX-MKR"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠順中央",
+      "stationCode": "KL10",
+      "description": "普通・エメラルド方面トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K300_KL13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠順中央",
+      "stationCode": "KL10",
+      "description": "快速・エメラルド方面トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K302_KL13_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠順農園",
+      "stationCode": "KL11",
+      "description": "普通・トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K300_KL13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠順要塞",
+      "stationCode": "KL12",
+      "description": "普通・トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K300_KL13_Lo"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "瑠順要塞",
+      "stationCode": "KL12",
+      "description": "快速・トクテルダム中央行",
+      "platform": 1,
+      "formationCode": "K302_KL13_Ra"
+    },
+    {
+      "section": "瑠璃線下り",
+      "station": "エメラルド城",
+      "stationCode": "KL13",
+      "description": "(翠鉄設定)",
+      "platform": 2,
+      "formationCode": "(翠鉄設定)"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "エメラルド城",
+      "stationCode": "KL13",
+      "description": "普通・アカシア方面イアリーオ国際空港行",
+      "platform": 1,
+      "formationCode": "K301_KL10IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "エメラルド城",
+      "stationCode": "KL13",
+      "description": "快速・アカシア方面イアリーオ国際空港行",
+      "platform": 1,
+      "formationCode": "K303_KL10IIA_Ra"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠順要塞",
+      "stationCode": "KL12",
+      "description": "普通・アカシア方面イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "K301_KL10IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠順要塞",
+      "stationCode": "KL12",
+      "description": "快速・アカシア方面イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "K303_KL10IIA_Ra"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠順農園",
+      "stationCode": "KL11",
+      "description": "普通・アカシア方面イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "K301_KL10IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠順中央",
+      "stationCode": "KL10",
+      "description": "普通・アカシア方面イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "K301_KL5IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠順中央",
+      "stationCode": "KL10",
+      "description": "快速・アカシア方面イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "K303_KL5IIA_Ra"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠交研前",
+      "stationCode": "KL09",
+      "description": "普通・アカシア方面イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "K301_KL5IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠交研前",
+      "stationCode": "KL09",
+      "description": "快速・アカシア方面イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "K303_KL5IIA_Ra"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠交研前",
+      "stationCode": "KL09",
+      "description": "特急みかり・二労行",
+      "platform": 2,
+      "formationCode": "K701_KL5U6_EX-MKR"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "クォーツ南口",
+      "stationCode": "KL08",
+      "description": "普通・アカシア方面イアリーオ国際空港行",
+      "platform": 1,
+      "formationCode": "K301_KL5IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "クォーツ",
+      "stationCode": "KL07",
+      "description": "普通・アカシア方面イアリーオ国際空港行",
+      "platform": 3,
+      "formationCode": "K301_KL5IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "クォーツ",
+      "stationCode": "KL07",
+      "description": "快速・アカシア方面イアリーオ国際空港行",
+      "platform": 3,
+      "formationCode": "K303_KL5IIA_Ra"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "南セナポン",
+      "stationCode": "KL06",
+      "description": "普通・アカシア方面イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "K301_KL5IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "セナポンタウン",
+      "stationCode": "KL05",
+      "description": "普通・アカシア方面イアリーオ国際空港行",
+      "platform": 3,
+      "formationCode": "K301_KL4IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "セナポンタウン",
+      "stationCode": "KL05",
+      "description": "快速・アカシア方面イアリーオ国際空港行",
+      "platform": 3,
+      "formationCode": "K303_KL4IIA_Ra"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "セナポンタウン",
+      "stationCode": "KL05",
+      "description": "新快速・クロアチア方面二労行",
+      "platform": 4,
+      "formationCode": "K201_KL4U6_SR-LSR"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠璃中央",
+      "stationCode": "KL04",
+      "description": "普通・アカシア方面イアリーオ国際空港行",
+      "platform": 5,
+      "formationCode": "K301_KL1IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠璃中央",
+      "stationCode": "KL04",
+      "description": "快速・アカシア方面イアリーオ国際空港行",
+      "platform": 5,
+      "formationCode": "K303_KL1IIA_Ra"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠璃中央",
+      "stationCode": "KL04",
+      "description": "新快速・クロアチア方面二労行",
+      "platform": 4,
+      "formationCode": "K201_KU6_SR-LSR"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "瑠前TT",
+      "stationCode": "KL03",
+      "description": "普通・イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "K301_KL1IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "オット",
+      "stationCode": "KL02",
+      "description": "普通・イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "K301_KL1IIA_Lo"
+    },
+    {
+      "section": "瑠璃線上り",
+      "station": "アカシア島",
+      "stationCode": "KL01",
+      "description": "普通・イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "K301_IIA_Lo"
+    },
+    {
+      "section": "中央線上り",
+      "station": "二労",
+      "stationCode": "KU06",
+      "description": "各駅停車・瑠璃中央行",
+      "platform": 1,
+      "formationCode": "K301_KU1_Lo"
+    },
+    {
+      "section": "中央線上り",
+      "station": "二労",
+      "stationCode": "KU06",
+      "description": "新快速・赤石方面西水中央行",
+      "platform": 2,
+      "formationCode": "K200_KL4NSC_SR-LSR"
+    },
+    {
+      "section": "中央線上り",
+      "station": "二労",
+      "stationCode": "KU06",
+      "description": "特急みかり・ラピスTT行",
+      "platform": 2,
+      "formationCode": "K700_KL4B6_EX-MKR"
+    },
+    {
+      "section": "中央線上り",
+      "station": "羊ノ森",
+      "stationCode": "KU05",
+      "description": "各駅停車・瑠璃中央行",
+      "platform": 1,
+      "formationCode": "K301_KU1_Lo"
+    },
+    {
+      "section": "中央線上り",
+      "station": "羊ノ森",
+      "stationCode": "KU05",
+      "description": "特急みかり・ラピスTT行",
+      "platform": 1,
+      "formationCode": "K700_KL4B6_EX-MKR"
+    },
+    {
+      "section": "中央線上り",
+      "station": "鍛冶ヶ淵",
+      "stationCode": "KU04",
+      "description": "各駅停車・瑠璃中央行",
+      "platform": 1,
+      "formationCode": "K301_KU1_Lo"
+    },
+    {
+      "section": "中央線上り",
+      "station": "鍛冶ヶ淵",
+      "stationCode": "KU04",
+      "description": "特急みかり・ラピスTT行",
+      "platform": 1,
+      "formationCode": "K700_KL4B6_EX-MKR"
+    },
+    {
+      "section": "中央線上り",
+      "station": "クロアチア",
+      "stationCode": "KU03",
+      "description": "各駅停車・瑠璃中央行",
+      "platform": 1,
+      "formationCode": "K301_KU1_Lo"
+    },
+    {
+      "section": "中央線上り",
+      "station": "クロアチア",
+      "stationCode": "KU03",
+      "description": "新快速・赤石方面西水中央行",
+      "platform": 1,
+      "formationCode": "K200_KL4NSC_SR-LSR"
+    },
+    {
+      "section": "中央線上り",
+      "station": "クロアチア",
+      "stationCode": "KU03",
+      "description": "特急みかり・ラピスTT行",
+      "platform": 1,
+      "formationCode": "K700_KL4B6_EX-MKR"
+    },
+    {
+      "section": "中央線上り",
+      "station": "瑠璃要塞",
+      "stationCode": "KU02",
+      "description": "各駅停車・瑠璃中央行",
+      "platform": 1,
+      "formationCode": "K301_KU1_Lo"
+    },
+    {
+      "section": "中央線上り",
+      "station": "瑠璃要塞",
+      "stationCode": "KU02",
+      "description": "特急みかり・ラピスTT行",
+      "platform": 1,
+      "formationCode": "K700_KL4B6_EX-MKR"
+    },
+    {
+      "section": "中央線下り",
+      "station": "瑠璃中央",
+      "stationCode": "KU01",
+      "description": "各駅停車・二労行",
+      "platform": 1,
+      "formationCode": "K300_KU6_Lo"
+    },
+    {
+      "section": "中央線下り",
+      "station": "瑠璃要塞",
+      "stationCode": "KU02",
+      "description": "各駅停車・二労行",
+      "platform": 2,
+      "formationCode": "K300_KU6_Lo"
+    },
+    {
+      "section": "中央線下り",
+      "station": "クロアチア",
+      "stationCode": "KU03",
+      "description": "各駅停車・二労行",
+      "platform": 2,
+      "formationCode": "K300_KU6_Lo"
+    },
+    {
+      "section": "中央線下り",
+      "station": "クロアチア",
+      "stationCode": "KU03",
+      "description": "新快速・二労行",
+      "platform": 2,
+      "formationCode": "K201_KU6_SR-LSR"
+    },
+    {
+      "section": "中央線下り",
+      "station": "鍛冶ヶ淵",
+      "stationCode": "KU04",
+      "description": "各駅停車・二労行",
+      "platform": 2,
+      "formationCode": "K300_KU6_Lo"
+    },
+    {
+      "section": "中央線下り",
+      "station": "羊ノ森",
+      "stationCode": "KU05",
+      "description": "各駅停車・二労行",
+      "platform": 2,
+      "formationCode": "K300_KU6_Lo"
+    },
+    {
+      "section": "HRA赤石線西水方面・貿易港線下り",
+      "station": "瑠順中央",
+      "stationCode": "KB01",
+      "description": "普通・貿易港方面ラピスTT行",
+      "platform": 3,
+      "formationCode": "K300_KB2B6_Lo"
+    },
+    {
+      "section": "HRA赤石線西水方面・貿易港線下り",
+      "station": "瑠順中央",
+      "stationCode": "KB01",
+      "description": "普通・赤石方面西水中央行",
+      "platform": 3,
+      "formationCode": "[HRA設定]_KB2NSC_Ra"
+    },
+    {
+      "section": "HRA赤石線西水方面・貿易港線下り",
+      "station": "瑠順中央",
+      "stationCode": "KB01",
+      "description": "新快速・赤石方面西水中央行",
+      "platform": 3,
+      "formationCode": "[HRA設定]_KB2NSC_SR-LSR"
+    },
+    {
+      "section": "HRA赤石線西水方面・貿易港線下り",
+      "station": "南瑠順",
+      "stationCode": "KB02",
+      "description": "普通・貿易港方面ラピスTT行",
+      "platform": 1,
+      "formationCode": "K300_KB6_Lo"
+    },
+    {
+      "section": "HRA赤石線西水方面・貿易港線下り",
+      "station": "南瑠順",
+      "stationCode": "KB02",
+      "description": "普通・赤石方面西水中央行",
+      "platform": 3,
+      "formationCode": "[HRA設定]_NSC_Ra"
+    },
+    {
+      "section": "HRA赤石線西水方面・貿易港線下り",
+      "station": "瑠順採掘場",
+      "stationCode": "KB03",
+      "description": "普通・ラピスTT行",
+      "platform": 1,
+      "formationCode": "K300_KB6_Lo"
+    },
+    {
+      "section": "HRA赤石線西水方面・貿易港線下り",
+      "station": "貿易港",
+      "stationCode": "KB04",
+      "description": "普通・ラピスTT行",
+      "platform": 1,
+      "formationCode": "K300_KB6_Lo"
+    },
+    {
+      "section": "HRA赤石線西水方面・貿易港線下り",
+      "station": "東ヘルべチア",
+      "stationCode": "KB05",
+      "description": "普通・ラピスTT行",
+      "platform": 1,
+      "formationCode": "K300_KB6_Lo"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "ラピスTT",
+      "stationCode": "KB06",
+      "description": "普通・クロアチア方面二労行",
+      "platform": 2,
+      "formationCode": "K301_KB2U6_Lo"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "ラピスTT",
+      "stationCode": "KB06",
+      "description": "特急みかり・二労行",
+      "platform": 2,
+      "formationCode": "K701_KB2U6_EX-MKR"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "東ヘルべチア",
+      "stationCode": "KB05",
+      "description": "普通・クロアチア方面二労行",
+      "platform": 2,
+      "formationCode": "K301_KB2U6_Lo"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "東ヘルべチア",
+      "stationCode": "KB05",
+      "description": "特急みかり・二労行",
+      "platform": 2,
+      "formationCode": "K701_KB2U6_EX-MKR"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "貿易港",
+      "stationCode": "KB04",
+      "description": "普通・クロアチア方面二労行",
+      "platform": 2,
+      "formationCode": "K301_KB2U6_Lo"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "貿易港",
+      "stationCode": "KB04",
+      "description": "特急みかり・二労行",
+      "platform": 2,
+      "formationCode": "K701_KB2U6_EX-MKR"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "瑠順採掘場",
+      "stationCode": "KB03",
+      "description": "普通・クロアチア方面二労行",
+      "platform": 2,
+      "formationCode": "K301_KB2U6_Lo"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "瑠順採掘場",
+      "stationCode": "KB03",
+      "description": "特急みかり・二労行",
+      "platform": 2,
+      "formationCode": "K701_KB2U6_EX-MKR"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "南瑠順",
+      "stationCode": "KB02",
+      "description": "普通・クロアチア方面二労行",
+      "platform": 4,
+      "formationCode": "K301_KB1U6_Lo"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "南瑠順",
+      "stationCode": "KB02",
+      "description": "快速・アカシア方面イアリーオ国際空港行",
+      "platform": 2,
+      "formationCode": "[HRA設定]_KB2IIA_Ra"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "瑠順中央",
+      "stationCode": "KB01",
+      "description": "特急みかり・二労行",
+      "platform": 4,
+      "formationCode": "K701_KL5U6_EX-MKR"
+    },
+    {
+      "section": "貿易港線上り・HRA赤石線瑠順方面",
+      "station": "瑠順中央",
+      "stationCode": "KL10",
+      "description": "新快速・クロアチア方面二労行",
+      "platform": 4,
+      "formationCode": "K201_KL5U6_SR-LSR"
+    }
+  ],
+  "terminals": [
+    {
+      "section": "各列車終点",
+      "station": "西水中央",
+      "stationCode": "NSC",
+      "description": "直通快速・赤石方面西水中央行",
+      "platform": 1,
+      "line": "HRA赤石線"
+    },
+    {
+      "section": "各列車終点",
+      "station": "西水中央",
+      "stationCode": "NSC",
+      "description": "新快速・赤石方面西水中央行",
+      "platform": 2,
+      "line": "HRA赤石線"
+    },
+    {
+      "section": "各列車終点",
+      "station": "ラピスTT",
+      "stationCode": "KB06",
+      "description": "普通・貿易港方面ラピスTT行",
+      "platform": 1,
+      "line": "貿易港線"
+    },
+    {
+      "section": "各列車終点",
+      "station": "ラピスTT",
+      "stationCode": "KB06",
+      "description": "特急みかり・ラピスTT行",
+      "platform": 1,
+      "line": "貿易港線"
+    },
+    {
+      "section": "各列車終点",
+      "station": "イアリーオ国際空港",
+      "stationCode": "IIA",
+      "description": "普通・アカシア方面イアリーオ国際空港行",
+      "platform": 2,
+      "line": "CRアカシア線"
+    },
+    {
+      "section": "各列車終点",
+      "station": "イアリーオ国際空港",
+      "stationCode": "IIA",
+      "description": "快速・アカシア方面イアリーオ国際空港行",
+      "platform": 2,
+      "line": "CRアカシア線"
+    },
+    {
+      "section": "各列車終点",
+      "station": "二労",
+      "stationCode": "KU06",
+      "description": "各駅停車・二労行",
+      "platform": 2,
+      "line": "中央線"
+    },
+    {
+      "section": "各列車終点",
+      "station": "二労",
+      "stationCode": "KU06",
+      "description": "新快速・クロアチア方面二労行",
+      "platform": 2,
+      "line": "中央線"
+    },
+    {
+      "section": "各列車終点",
+      "station": "瑠璃中央",
+      "stationCode": "KU01",
+      "description": "各駅停車・瑠璃中央行",
+      "platform": 1,
+      "line": "中央線"
+    }
+  ],
+  "signs": [
+    {
+      "station": "二労",
+      "stationCodes": ["KU06"],
+      "title": "1番のりば(各停)",
+      "titleCell": "A5",
+      "platform": 1,
+      "destCode": "KU06-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K301_KU1_Lo", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KU06-1", ""]
+      ]
+    },
+    {
+      "station": "羊ノ森",
+      "stationCodes": ["KU05"],
+      "title": "1番のりば(上り)",
+      "titleCell": "M5",
+      "platform": 1,
+      "destCode": "KU05-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 3", "t@SR-LSR", ""],
+        ["[train]", "spawn 1", "K301_KU1_Lo", ""],
+        ["[train]", "spawn 1", "K700_KL4B6_EX-MKR", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KU05-1", ""]
+      ]
+    },
+    {
+      "station": "鍛冶ヶ淵",
+      "stationCodes": ["KU04"],
+      "title": "1番のりば(上り)",
+      "titleCell": "V5",
+      "platform": 1,
+      "destCode": "KU04-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 3", "t@SR-LSR", ""],
+        ["[train]", "spawn 1", "K301_KU1_Lo", ""],
+        ["[train]", "spawn 1", "K700_KL4B6_EX-MKR", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KU04-1", ""]
+      ]
+    },
+    {
+      "station": "クロアチア",
+      "stationCodes": ["KU03"],
+      "title": "1番のりば(上り)",
+      "titleCell": "AE5",
+      "platform": 1,
+      "destCode": "KU03-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K300_KU6_Lo", ""],
+        ["[train]", "spawn 1", "K200_KL4NSC_SR-LSR", ""],
+        ["[train]", "spawn 1", "K700_KL4B6_EX-MKR", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KU03-1", ""]
+      ]
+    },
+    {
+      "station": "瑠璃要塞",
+      "stationCodes": ["KU02"],
+      "title": "1番のりば(上り)",
+      "titleCell": "AN6",
+      "platform": 1,
+      "destCode": "KU02-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 3", "t@SR-LSR", ""],
+        ["[train]", "spawn 1", "K301_KU1_Lo", ""],
+        ["[train]", "spawn 1", "K700_KL4B6_EX-MKR", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KU02-1", ""]
+      ]
+    },
+    {
+      "station": "瑠璃中央",
+      "stationCodes": ["KL04", "KU01"],
+      "title": "1番のりば(中央線各停下り)",
+      "titleCell": "BL6",
+      "platform": 1,
+      "destCode": "KU01-1",
+      "foreign": null,
+      "order": null,
+      "signs": [
+        ["[+train]", "destroy", "", ""],
+        ["[+train]", "skip destroy 0 1", "!empty", ""],
+        ["[+train]", "destination", "KU01-1", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K300_KU6_Lo", ""]
+      ]
+    },
+    {
+      "station": "瑠順農園",
+      "stationCodes": ["KL11"],
+      "title": "1番のりば(下り)",
+      "titleCell": "ER6",
+      "platform": 1,
+      "destCode": "KL11-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 2", "!t@Lo", ""],
+        ["[train]", "spawn 1", "K300_KL13_Lo", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL11-1", ""]
+      ]
+    },
+    {
+      "station": "瑠順要塞",
+      "stationCodes": ["KL12"],
+      "title": "1番のりば(下り)",
+      "titleCell": "EZ6",
+      "platform": 1,
+      "destCode": "KL12-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K300_KL13_Lo", ""],
+        ["[train]", "spawn 1", "K302_KL13_Ra", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL12-1", ""]
+      ]
+    },
+    {
+      "station": "エメラルド城",
+      "stationCodes": ["KL13"],
+      "title": "2番のりば(翠鉄線直通)",
+      "titleCell": "FJ6",
+      "platform": 2,
+      "destCode": "KL13-2",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "mmmm", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL13-2", ""]
+      ]
+    },
+    {
+      "station": "二労",
+      "stationCodes": ["KU06"],
+      "title": "2番のりば(下り・新快速・特急)",
+      "titleCell": "A11",
+      "platform": 2,
+      "destCode": "KU06-2",
+      "foreign": null,
+      "order": null,
+      "signs": [
+        ["[train]", "spawn 1", "K200_KL4NSC_SR-LSR", ""],
+        ["[train]", "spawn 1", "K700_KL4B6_EX-MKR", ""],
+        ["[+train]", "destination", "KU06-2", ""],
+        ["[+train]", "station 5", "5", "left"],
+        ["[+train]", "skip destroy 0 1", "!empty", ""],
+        ["[+train]", "destroy", "", ""]
+      ]
+    },
+    {
+      "station": "羊ノ森",
+      "stationCodes": ["KU05"],
+      "title": "2番のりば(下り)",
+      "titleCell": "M11",
+      "platform": 2,
+      "destCode": "KU05-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KU05-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K300_KU6_Lo", ""],
+        ["[+train]", "skip 0 2", "t@SR-LSR", ""]
+      ]
+    },
+    {
+      "station": "鍛冶ヶ淵",
+      "stationCodes": ["KU04"],
+      "title": "2番のりば(下り)",
+      "titleCell": "V11",
+      "platform": 2,
+      "destCode": "KU04-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KU04-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K300_KU6_Lo", ""],
+        ["[+train]", "skip 0 2", "t@SR-LSR", ""]
+      ]
+    },
+    {
+      "station": "クロアチア",
+      "stationCodes": ["KU03"],
+      "title": "2番のりば(下り)",
+      "titleCell": "AE11",
+      "platform": 2,
+      "destCode": "KU03-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KU03-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K201_KU6_SR-LSR", ""],
+        ["[train]", "spawn 1", "K300_KU6_Lo", ""]
+      ]
+    },
+    {
+      "station": "瑠璃要塞",
+      "stationCodes": ["KU02"],
+      "title": "2番のりば(下り)",
+      "titleCell": "AN12",
+      "platform": 2,
+      "destCode": "KU02-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KU02-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K300_KU6_Lo", ""],
+        ["[+train]", "skip 0 2", "t@SR-LSR", ""]
+      ]
+    },
+    {
+      "station": "瑠璃中央",
+      "stationCodes": ["KL04", "KU01"],
+      "title": "2番のりば(瑠璃線エメラルド方面)",
+      "titleCell": "BL12",
+      "platform": 2,
+      "destCode": "KL04-2",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K300_KL5L13_Lo", ""],
+        ["[train]", "spawn 1", "K302_KL5L13_Ra", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL04-2", ""]
+      ]
+    },
+    {
+      "station": "セナポンタウン",
+      "stationCodes": ["KL05"],
+      "title": "6番のりば(瑠璃線エメラルド方面)",
+      "titleCell": "CB12",
+      "platform": 6,
+      "destCode": "KL05-6",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K300_KL10L13_Lo", ""],
+        ["[train]", "spawn 1", "K302_KL10L13_Ra", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL05-6", ""]
+      ]
+    },
+    {
+      "station": "瑠順中央",
+      "stationCodes": ["KL10", "KB01"],
+      "title": "1番のりば(瑠璃線エメラルド方面)",
+      "titleCell": "ED12",
+      "platform": 1,
+      "destCode": "KL10-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K300_KL13_Lo", ""],
+        ["[train]", "spawn 1", "K302_KL13_Ra", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL10-1", ""]
+      ]
+    },
+    {
+      "station": "瑠順農園",
+      "stationCodes": ["KL11"],
+      "title": "2番のりば(上り)",
+      "titleCell": "ER12",
+      "platform": 2,
+      "destCode": "KL11-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL11-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K301_KL10IIA_Lo", ""],
+        ["[+train]", "skip 0 2", "!t@Lo", ""]
+      ]
+    },
+    {
+      "station": "瑠順要塞",
+      "stationCodes": ["KL12"],
+      "title": "2番のりば(上り)",
+      "titleCell": "EZ12",
+      "platform": 2,
+      "destCode": "KL12-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL12-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K303_KL10IIA_Ra", ""],
+        ["[train]", "spawn 1", "K301_KL10IIA_Lo", ""]
+      ]
+    },
+    {
+      "station": "エメラルド城",
+      "stationCodes": ["KL13"],
+      "title": "1番のりば(上り)",
+      "titleCell": "FJ12",
+      "platform": 1,
+      "destCode": "KL13-1",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL13-1", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K303_KL10IIA_Ra", ""],
+        ["[train]", "spawn 1", "K301_KL10IIA_Lo", ""],
+        ["[+train]", "property", "route load", "KL10IIA"],
+        ["[+train]", "property", "addtag", "Lo"],
+        ["[+train]", "property", "maxspeed", "1"]
+      ]
+    },
+    {
+      "station": "瑠璃中央",
+      "stationCodes": ["KL04", "KU01"],
+      "title": "3番のりば(瑠璃線赤石方面)",
+      "titleCell": "BL18",
+      "platform": 3,
+      "destCode": "KL04-3",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K302_KL5NSC_Ra", ""],
+        ["[train]", "spawn 1", "K200_KL5NSC_SR-LSR", ""],
+        ["[train]", "spawn 1", "K700_KL5B6_EX-MKR", ""],
+        ["[+train]", "station 5", "5", "left"],
+        ["[+train]", "destination", "KL04-3", ""]
+      ]
+    },
+    {
+      "station": "セナポンタウン",
+      "stationCodes": ["KL05"],
+      "title": "5番のりば(瑠璃線赤石方面)",
+      "titleCell": "CB18",
+      "platform": 5,
+      "destCode": "KL05-5",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K302_KB1NSC_Ra", ""],
+        ["[train]", "spawn 1", "K200_KB1NSC_SR-LSR", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL05-5", ""]
+      ]
+    },
+    {
+      "station": "南セナポン",
+      "stationCodes": ["KL06"],
+      "title": "2番のりば(下り)",
+      "titleCell": "CM18",
+      "platform": 1,
+      "destCode": "KL06-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 2", "!t@Lo", ""],
+        ["[train]", "spawn 1", "K300_KL10L13_Lo", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL06-1", ""]
+      ]
+    },
+    {
+      "station": "クォーツ",
+      "stationCodes": ["KL07"],
+      "title": "2番のりば(下り)",
+      "titleCell": "CU18",
+      "platform": 2,
+      "destCode": "KL07-2",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 4", "t@SR-LSR", ""],
+        ["[train]", "spawn 1", "K300_KL10L13_Lo", ""],
+        ["[train]", "spawn 1", "K302_KL10L13_Ra", ""],
+        ["[train]", "spawn 1", "K302_KB1NSC_Ra", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL07-2", ""]
+      ]
+    },
+    {
+      "station": "クォーツ南口",
+      "stationCodes": ["KL08"],
+      "title": "2番のりば(下り)",
+      "titleCell": "DE18",
+      "platform": 2,
+      "destCode": "KL08-2",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 2", "!t@Lo", ""],
+        ["[train]", "spawn 1", "K300_KL10L13_Lo", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL08-2", ""]
+      ]
+    },
+    {
+      "station": "瑠交研前",
+      "stationCodes": ["KL09"],
+      "title": "1番のりば(下り)",
+      "titleCell": "DM18",
+      "platform": 1,
+      "destCode": "KL09-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 5", "t@SR-LSR", ""],
+        ["[train]", "spawn 1", "K300_KL10L13_Lo", ""],
+        ["[train]", "spawn 1", "K302_KL10L13_Ra", ""],
+        ["[train]", "spawn 1", "K302_KB1NSC_Ra", ""],
+        ["[train]", "spawn 1", "K700_KB1B6_EX-MKR", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL09-1", ""]
+      ]
+    },
+    {
+      "station": "瑠順中央",
+      "stationCodes": ["KL10", "KB01"],
+      "title": "1番のりば(瑠璃線アカシア方面)",
+      "titleCell": "ED18",
+      "platform": 2,
+      "destCode": "KL10-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL10-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K303_KL5IIA_Ra", ""],
+        ["[train]", "spawn 1", "K301_KL5IIA_Lo", ""]
+      ]
+    },
+    {
+      "station": "イアリーオ国際空港",
+      "stationCodes": ["IIA"],
+      "title": "1番のりば(アカシア島方面)",
+      "titleCell": "O24",
+      "platform": 1,
+      "destCode": "IIA-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K300_KL1L13_Lo", ""],
+        ["[train]", "spawn 1", "K302_KL1L13_Ra", ""],
+        ["[train]", "spawn 1", "K302_KL4NSC_Ra", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "IIA-1", ""]
+      ]
+    },
+    {
+      "station": "アカシア島",
+      "stationCodes": ["KL01"],
+      "title": "1番のりば(下り)",
+      "titleCell": "X24",
+      "platform": 1,
+      "destCode": "KL01-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K300_KL4L13_Lo", ""],
+        ["[train]", "spawn 1", "K302_KL4L13_Ra", ""],
+        ["[train]", "spawn 1", "K302_KL4NSC_Ra", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL01-1", ""]
+      ]
+    },
+    {
+      "station": "オット",
+      "stationCodes": ["KL02"],
+      "title": "1番のりば(下り)",
+      "titleCell": "AG24",
+      "platform": 1,
+      "destCode": "KL02-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 2", "!t@Lo", ""],
+        ["[train]", "spawn 1", "K300_KL4L13_Lo", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL02-1", ""]
+      ]
+    },
+    {
+      "station": "瑠前TT",
+      "stationCodes": ["KL03"],
+      "title": "1番のりば(下り)",
+      "titleCell": "AO24",
+      "platform": 1,
+      "destCode": "KL03-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 2", "!t@Lo", ""],
+        ["[train]", "spawn 1", "K300_KL4L13_Lo", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KL03-1", ""]
+      ]
+    },
+    {
+      "station": "瑠璃中央",
+      "stationCodes": ["KL04", "KU01"],
+      "title": "4番のりば(中央線新快速二労方面)",
+      "titleCell": "BL24",
+      "platform": 4,
+      "destCode": "KL04-4",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL04-4", ""],
+        ["[+train]", "station 5", "5", "left"],
+        ["[train]", "spawn 1", "K201_KU6_SR-LSR", ""]
+      ]
+    },
+    {
+      "station": "セナポンタウン",
+      "stationCodes": ["KL05"],
+      "title": "4番のりば(瑠璃線新快速二労方面)",
+      "titleCell": "CB24",
+      "platform": 4,
+      "destCode": "KL05-4",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL05-4", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K201_KL4U6_SR-LSR", ""]
+      ]
+    },
+    {
+      "station": "南セナポン",
+      "stationCodes": ["KL06"],
+      "title": "3番のりば(上り)",
+      "titleCell": "CM24",
+      "platform": 2,
+      "destCode": "KL06-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL06-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K301_KL5IIA_Lo", ""],
+        ["[+train]", "skip 0 2", "!t@Lo", ""]
+      ]
+    },
+    {
+      "station": "クォーツ",
+      "stationCodes": ["KL07"],
+      "title": "3番のりば(上り)",
+      "titleCell": "CU24",
+      "platform": 3,
+      "destCode": "KL07-3",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL07-3", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K303_KL5IIA_Ra", ""],
+        ["[train]", "spawn 1", "K301_KL5IIA_Lo", ""],
+        ["[+train]", "skip 0 3", "t@SR-LSR", ""]
+      ]
+    },
+    {
+      "station": "クォーツ南口",
+      "stationCodes": ["KL08"],
+      "title": "1番のりば(上り)",
+      "titleCell": "DE24",
+      "platform": 1,
+      "destCode": "KL08-1",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL08-1", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K301_KL5IIA_Lo", ""],
+        ["[+train]", "skip 0 2", "!t@Lo", ""]
+      ]
+    },
+    {
+      "station": "瑠交研前",
+      "stationCodes": ["KL09"],
+      "title": "2番のりば(上り)",
+      "titleCell": "DM24",
+      "platform": 2,
+      "destCode": "KL09-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL09-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K701_KL5U6_EX-MKR", ""],
+        ["[train]", "spawn 1", "K303_KL5IIA_Ra", ""],
+        ["[train]", "spawn 1", "K301_KL5IIA_Lo", ""],
+        ["[+train]", "skip 0 4", "t@SR-LSR", ""]
+      ]
+    },
+    {
+      "station": "瑠順中央",
+      "stationCodes": ["KL10", "KB01"],
+      "title": "3番のりば(赤石線西水方面・貿易港線下り)",
+      "titleCell": "ED24",
+      "platform": 3,
+      "destCode": "KB01-3",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K300_KB2B6_Lo", ""],
+        ["[train]", "spawn 1", "H3004_KB2NSC_Ra", ""],
+        ["[train]", "spawn 1", "H2006_KB2NSC_SR-LSR", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KB01-3", ""]
+      ]
+    },
+    {
+      "station": "南瑠順",
+      "stationCodes": ["KB02"],
+      "title": "1番のりば(貿易港線下り)",
+      "titleCell": "ET24",
+      "platform": 1,
+      "destCode": "KB02-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 2", "t@EX-MKR", ""],
+        ["[train]", "spawn 1", "K300_KB6_Lo", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KB02-1", ""]
+      ]
+    },
+    {
+      "station": "瑠順採掘場",
+      "stationCodes": ["KB03"],
+      "title": "1番のりば(下り)",
+      "titleCell": "FD24",
+      "platform": 1,
+      "destCode": "KB03-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K300_KB6_Lo", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KB03-1", ""]
+      ]
+    },
+    {
+      "station": "貿易港",
+      "stationCodes": ["KB04"],
+      "title": "1番のりば(下り)",
+      "titleCell": "FL24",
+      "platform": 1,
+      "destCode": "KB04-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K300_KB6_Lo", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KB04-1", ""]
+      ]
+    },
+    {
+      "station": "東ヘルべチア",
+      "stationCodes": ["KB05"],
+      "title": "1番のりば(下り)",
+      "titleCell": "FT24",
+      "platform": 1,
+      "destCode": "KB05-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[train]", "spawn 1", "K300_KB6_Lo", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KB05-1", ""]
+      ]
+    },
+    {
+      "station": "ラピスTT",
+      "stationCodes": ["KB06"],
+      "title": "1番のりば(下り)",
+      "titleCell": "GD24",
+      "platform": 1,
+      "destCode": "KB06-1",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "destroy", "", ""],
+        ["[+train]", "destination", "KB06-1", ""]
+      ]
+    },
+    {
+      "station": "イアリーオ国際空港",
+      "stationCodes": ["IIA"],
+      "title": "2番のりば(降車専用)",
+      "titleCell": "O30",
+      "platform": 2,
+      "destCode": "IIA-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "IIA-2", ""],
+        ["[+train]", "destroy", "", ""]
+      ]
+    },
+    {
+      "station": "アカシア島",
+      "stationCodes": ["KL01"],
+      "title": "2番のりば(CR線直通)",
+      "titleCell": "X30",
+      "platform": 2,
+      "destCode": "KL01-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL01-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K301_IIA_Lo", ""]
+      ]
+    },
+    {
+      "station": "オット",
+      "stationCodes": ["KL02"],
+      "title": "2番のりば(上り)",
+      "titleCell": "AG30",
+      "platform": 2,
+      "destCode": "KL02-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL02-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K301_KL1IIA_Lo", ""],
+        ["[+train]", "skip 0 2", "!t@Lo", ""]
+      ]
+    },
+    {
+      "station": "瑠前TT",
+      "stationCodes": ["KL03"],
+      "title": "2番のりば(上り)",
+      "titleCell": "AO30",
+      "platform": 2,
+      "destCode": "KL03-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL03-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K301_KL1IIA_Lo", ""],
+        ["[+train]", "skip 0 2", "!t@Lo", ""]
+      ]
+    },
+    {
+      "station": "瑠璃中央",
+      "stationCodes": ["KL04", "KU01"],
+      "title": "5番のりば(瑠璃線アカシア方面)",
+      "titleCell": "BL30",
+      "platform": 5,
+      "destCode": "KL04-5",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL04-5", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K303_KL1IIA_Ra", ""],
+        ["[train]", "spawn 1", "K301_KL1IIA_Lo", ""]
+      ]
+    },
+    {
+      "station": "セナポンタウン",
+      "stationCodes": ["KL05"],
+      "title": "3番のりば(瑠璃線アカシア方面)",
+      "titleCell": "CB30",
+      "platform": 3,
+      "destCode": "KL05-3",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KL05-3", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K303_KL4IIA_Ra", ""],
+        ["[train]", "spawn 1", "K301_KL4IIA_Lo", ""]
+      ]
+    },
+    {
+      "station": "瑠順中央",
+      "stationCodes": ["KL10", "KB01"],
+      "title": "4番のりば(赤石線・貿易港線瑠璃線直通)",
+      "titleCell": "ED30",
+      "platform": 4,
+      "destCode": "KB01-4",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KB01-4", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K201_KL5U6_SR-LSR", ""],
+        ["[train]", "spawn 1", "K701_KL5U6_EX-MKR", ""]
+      ]
+    },
+    {
+      "station": "南瑠順",
+      "stationCodes": ["KB02"],
+      "title": "2番のりば(赤石線西水方面)",
+      "titleCell": "ET30",
+      "platform": 3,
+      "destCode": "KB02-3",
+      "foreign": null,
+      "order": "ltr",
+      "signs": [
+        ["[+train]", "skip 0 2", "t@SR-LSR", ""],
+        ["[train]", "spawn 1", "H3004_NSC_Ra", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[+train]", "destination", "KB02-3", ""]
+      ]
+    },
+    {
+      "station": "瑠順採掘場",
+      "stationCodes": ["KB03"],
+      "title": "2番のりば(上り)",
+      "titleCell": "FD30",
+      "platform": 2,
+      "destCode": "KB03-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KB03-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K701_KB2U6_EX-MKR", ""],
+        ["[train]", "spawn 1", "K301_KB2U6_Lo", ""]
+      ]
+    },
+    {
+      "station": "貿易港",
+      "stationCodes": ["KB04"],
+      "title": "2番のりば(上り)",
+      "titleCell": "FL30",
+      "platform": 2,
+      "destCode": "KB04-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KB04-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K701_KB2U6_EX-MKR", ""],
+        ["[train]", "spawn 1", "K301_KB2U6_Lo", ""]
+      ]
+    },
+    {
+      "station": "東ヘルべチア",
+      "stationCodes": ["KB05"],
+      "title": "2番のりば(上り)",
+      "titleCell": "FT30",
+      "platform": 2,
+      "destCode": "KB05-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KB05-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K701_KB2U6_EX-MKR", ""],
+        ["[train]", "spawn 1", "K301_KB2U6_Lo", ""]
+      ]
+    },
+    {
+      "station": "ラピスTT",
+      "stationCodes": ["KB06"],
+      "title": "2番のりば(上り)",
+      "titleCell": "GB30",
+      "platform": 2,
+      "destCode": "KB06-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KB06-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K701_KB2U6_EX-MKR", ""],
+        ["[train]", "spawn 1", "K301_KB2U6_Lo", ""]
+      ]
+    },
+    {
+      "station": "南瑠順",
+      "stationCodes": ["KB02"],
+      "title": "3番のりば(赤石線瑠順方面)",
+      "titleCell": "ET36",
+      "platform": 2,
+      "destCode": "KB02-2",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KB02-2", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "H3004_KB2IIA_Ra", ""],
+        ["[+train]", "skip 0 2", "t@SR-LSR", ""]
+      ]
+    },
+    {
+      "station": "南瑠順",
+      "stationCodes": ["KB02"],
+      "title": "4番のりば(貿易港線上り)",
+      "titleCell": "ET42",
+      "platform": 4,
+      "destCode": "KB02-4",
+      "foreign": null,
+      "order": "rtl",
+      "signs": [
+        ["[+train]", "destination", "KB02-4", ""],
+        ["[+train]", "station 5", "5", "right"],
+        ["[train]", "spawn 1", "K301_KB1U6_Lo", ""],
+        ["[+train]", "skip 0 2", "t@EX-MKR", ""]
+      ]
+    }
+  ],
+  "corrections": [
+    "セナポンタウン 6番のりば(瑠璃線エメラルド方面)（CB12）：spawn の [] を K300_KL10L13_Lo に修正（rules §7）",
+    "瑠順中央 1番のりば(瑠璃線アカシア方面)（ED18）：見出しは「1番」だが行先 KL10-2 なので 2番として扱う（rules §7）"
+  ],
+  "manual": [
+    "瑠璃中央 1番のりば(中央線各停下り)（BL6）：進行方向の矢印が読めない（←→）",
+    "二労 2番のりば(下り・新快速・特急)（A11）：進行方向の矢印が読めない（←→）"
+  ]
+}
