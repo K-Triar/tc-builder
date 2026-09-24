@@ -77,8 +77,7 @@ describe('ウィザードで小さな架空路線を作る（3駅・2種別）',
     expect(up.direction).toBe('up');
     expect(up.kinds.map((k) => k.formation)).toEqual(['K301', 'K301']);
     expect(up.entries.every((e) => e.platform === null)).toBe(true);
-    // 画面操作が多いので、全体をまとめて走らせたときに備えて長めに待つ
-  }, 20_000);
+  });
 
   it('確認のステップで「経路に入れる駅」を上書きできる', async () => {
     const p = createProject(K_PRESET, '試験線');

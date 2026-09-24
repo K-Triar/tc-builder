@@ -65,8 +65,36 @@ export function listWorkItems(project: Project, derived: Derived): WorkItem[] {
       hash: contentHash(switcherStations),
     });
   }
+  const cleanups = derived.stationCards.flatMap((s) =>
+    s.cleanups.map((c) => [s.stationId, c.towardStationId]),
+  );
+  const foreign = derived.stationCards.filter((s) => s.foreign).map((s) => s.stationId);
+  for (const check of GENERAL_CHECKS) {
+    if (check.id === 'trial:cleanup' && cleanups.length === 0) continue;
+    if (check.id === 'trial:foreign' && foreign.length === 0) continue;
+    items.push({
+      id: check.id,
+      category: 'trial',
+      label: check.label,
+      hash: contentHash(
+        check.id === 'trial:cleanup' ? cleanups : check.id === 'trial:foreign' ? foreign : check.id,
+      ),
+    });
+  }
   return items;
 }
+
+/** 入門ガイドの作業チェックリストのうち、仕上げに確かめる項目 */
+export const GENERAL_CHECKS = [
+  {
+    id: 'trial:facing',
+    label:
+      '看板はすべてホームから文字面が見える向きに付け、station の right/left をホームから見た発車の向きに合わせた',
+  },
+  { id: 'trial:spawn-buttons', label: 'spawn 看板にボタンを付け、列車の出る向きを確かめた' },
+  { id: 'trial:cleanup', label: '駅の出口側に C（空車削除）を置いた' },
+  { id: 'trial:foreign', label: '直通先の団体と、行先コード・編成名・タグをすり合わせた' },
+] as const;
 
 /** 完了時のハッシュと今の内容が違えば「要更新」 */
 export function workStatus(progress: Progress, item: Pick<WorkItem, 'id' | 'hash'>): WorkStatus {

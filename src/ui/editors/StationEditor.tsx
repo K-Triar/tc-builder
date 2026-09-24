@@ -101,7 +101,7 @@ function StationCard({
   const used = project.services.some((v) => v.entries.some((e) => e.stationId === s.id));
 
   useEffect(() => {
-    if (highlight) ref.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    if (highlight) ref.current?.scrollIntoView?.({ block: 'start', behavior: 'smooth' });
   }, [highlight]);
 
   const mut = (fn: (st: Station, p: Project) => void) =>

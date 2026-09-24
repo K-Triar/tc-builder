@@ -1,0 +1,339 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: flex-end;
+  max-width: 480px;
+}
+
+.caution {
+  padding: var(--space-3);
+  border-left: 4px solid var(--warning);
+  background: var(--warning-soft);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+
+.station {
+  margin-bottom: var(--space-6);
+}
+
+.stationTitle {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 5;
+  padding: var(--space-2) 0;
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+}
+
+.pill {
+  display: inline-block;
+  margin-left: var(--space-2);
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.platformCard,
+.extra {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.platformHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.platformTitle {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.dest {
+  font-family: var(--mono);
+  margin-left: var(--space-2);
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  font-size: 0.95rem;
+}
+
+.pattern {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.order {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: var(--space-2) 0;
+}
+
+.signRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+.sign {
+  margin: 0;
+  min-width: 0;
+}
+
+.signCaption {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.signIndex {
+  font-weight: 700;
+  color: var(--text);
+  margin-right: var(--space-1);
+}
+
+.manual {
+  margin-left: var(--space-1);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-sm);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.signBoard {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-1);
+  background: var(--sign-bg);
+  border: 3px solid var(--sign-border);
+  border-radius: var(--radius-sm);
+  color: var(--sign-text);
+  font-family: var(--mono);
+}
+
+.signLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  min-height: 32px;
+  border-bottom: 1px dashed rgb(0 0 0 / 15%);
+}
+
+.signLine:last-child {
+  border-bottom: none;
+}
+
+.signText {
+  padding: 0 var(--space-1);
+  font-weight: 600;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lineCopy {
+  min-height: 32px !important;
+  min-width: 32px !important;
+  padding: 0 var(--space-2) !important;
+  color: var(--sign-text) !important;
+  font-size: 0.8rem;
+}
+
+.lineCopy:hover {
+  background: rgb(255 255 255 / 25%) !important;
+}
+
+.notes {
+  margin: var(--space-3) 0;
+  padding-left: 1.2em;
+  font-size: 0.9rem;
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-3);
+}
+
+.check {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch);
+}
+
+.check input {
+  width: 22px;
+  height: 22px;
+}
+
+.check label {
+  margin: 0;
+}
+
+.checkDone label {
+  color: var(--ok);
+}
+
+.checkDone label::before {
+  content: '✓ ';
+}
+
+.stale {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--warning);
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  background: var(--warning-soft);
+}
+
+/* コマンド */
+.group {
+  margin-bottom: var(--space-5);
+}
+
+.block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+.blockCurrent {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.blockHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.blockTitle {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 1rem;
+}
+
+.cmdList {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+}
+
+.cmd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 2px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+.cmd:last-child {
+  border-bottom: none;
+}
+
+.cmd code {
+  overflow-wrap: anywhere;
+}
+
+.cmdCurrent code {
+  background: var(--accent-soft);
+  outline: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+
+.stepper {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  margin: 0 calc(var(--space-5) * -1) var(--space-4);
+  background: var(--surface);
+  border-top: 2px solid var(--accent);
+  box-shadow: var(--shadow);
+}
+
+.stepperText {
+  flex: 1 1 240px;
+  min-width: 0;
+  font-family: var(--mono);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 768px) {
+  .signRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stepper {
+    bottom: calc(var(--touch) + 16px);
+    margin: 0 calc(var(--space-3) * -1) var(--space-4);
+  }
+
+  .stationTitle {
+    font-size: 1.1rem;
+  }
+}
+
+@media print {
+  .stationTitle {
+    position: static;
+  }
+
+  .platformCard,
+  .extra,
+  .block {
+    break-inside: avoid;
+  }
+
+  .lineCopy {
+    display: none !important;
+  }
+}
+
+.trouble {
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.trouble th,
+.trouble td {
+  border: 1px solid var(--border);
+  padding: var(--space-2);
+  text-align: left;
+  vertical-align: top;
+}
+
+.trouble thead th {
+  background: var(--surface-2);
+}

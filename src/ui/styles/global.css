@@ -160,3 +160,14 @@ table {
     animation: none !important;
   }
 }
+
+/* 印刷：プロジェクトのレイアウトはメイン部分だけにする */
+@media print {
+  #root main {
+    padding: 0 !important;
+  }
+
+  @page {
+    margin: 12mm;
+  }
+}

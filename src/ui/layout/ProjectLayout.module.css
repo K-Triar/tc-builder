@@ -255,3 +255,13 @@
     bottom: calc(var(--touch) + 16px);
   }
 }
+
+@media print {
+  .shell {
+    display: block;
+  }
+
+  .main {
+    padding: 0;
+  }
+}

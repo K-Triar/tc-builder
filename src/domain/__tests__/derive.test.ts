@@ -86,3 +86,18 @@ describe('進捗（R10）', () => {
     expect(s.trials.done).toBe(0);
   });
 });
+
+describe('仕上げのチェック項目', () => {
+  it('入門ガイドの仕上げの確認項目が作業項目に入る', () => {
+    const p = ruriDown().build();
+    const ids = listWorkItems(p, derive(p)).map((i) => i.id);
+    expect(ids).toEqual(
+      expect.arrayContaining([
+        'trial:facing',
+        'trial:spawn-buttons',
+        'trial:cleanup',
+        'trial:foreign',
+      ]),
+    );
+  });
+});

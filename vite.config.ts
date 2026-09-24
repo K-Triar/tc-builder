@@ -44,5 +44,7 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['src/**/*.test.{ts,tsx}'],
     setupFiles: ['src/test-setup.ts'],
+    // 画面のテストはサンプル全体を jsdom で描くので、並列で走らせると 5 秒を超えることがある
+    testTimeout: 30_000,
   },
 });
