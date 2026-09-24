@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router';
 import type { Project } from '../../domain/model';
-import { createProject, K_PRESET, PRESETS, type Preset } from '../../domain/presets';
+import { COMPANIES, createProject, customCompany, type Company } from '../../domain/presets';
 import {
   deleteProject,
   listProjects,
@@ -236,9 +236,9 @@ export function Home() {
       <NewProjectDialog
         open={creating}
         onCancel={() => setCreating(false)}
-        onCreate={(preset, name) => {
+        onCreate={(company, name) => {
           setCreating(false);
-          void openAndGo(createProject(preset, name), 'setup/0');
+          void openAndGo(createProject(company, name), 'setup/0');
         }}
       />
 
@@ -350,6 +350,9 @@ export function Home() {
   );
 }
 
+/** 一覧にない会社を選んだときの値 */
+const OTHER = 'other';
+
 function NewProjectDialog({
   open,
   onCancel,
@@ -357,12 +360,28 @@ function NewProjectDialog({
 }: {
   open: boolean;
   onCancel: () => void;
-  onCreate: (preset: Preset, name: string) => void;
+  onCreate: (company: Company, name: string) => void;
 }) {
   const [name, setName] = useState('');
-  const [presetId, setPresetId] = useState<Preset['id']>('K');
-  const preset = PRESETS.find((p) => p.id === presetId) ?? K_PRESET;
-  const create = () => onCreate(preset, name.trim() || '新しい路線');
+  // 決め打ちの初期値は置かず、自分の会社を選んでもらう
+  const [choice, setChoice] = useState('');
+  const [otherName, setOtherName] = useState('');
+  const [otherCode, setOtherCode] = useState('');
+  const [missing, setMissing] = useState(false);
+  const listed = COMPANIES.find((c) => c.code === choice);
+
+  const create = () => {
+    const company = choice === OTHER ? customCompany(otherName.trim(), otherCode.trim()) : listed;
+    if (!company) {
+      setMissing(true);
+      return;
+    }
+    onCreate(company, name.trim() || '新しい路線');
+  };
+  const onEnter = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) create();
+  };
+
   return (
     <Dialog
       open={open}
@@ -385,33 +404,79 @@ function NewProjectDialog({
           value={name}
           placeholder="例：瑠璃線系統"
           onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.nativeEvent.isComposing) create();
-          }}
+          onKeyDown={onEnter}
         />
       </div>
-      <fieldset className={styles.presets}>
-        <legend>どの団体の決まりで作りますか？</legend>
-        {PRESETS.map((p) => (
-          <label key={p.id} className={styles.presetOption}>
+      <div className="field">
+        <label htmlFor="new-company">どの鉄道会社の路線ですか？</label>
+        <select
+          id="new-company"
+          value={choice}
+          aria-invalid={missing && !choice ? true : undefined}
+          aria-describedby={
+            missing && !choice ? 'new-company-error new-company-hint' : 'new-company-hint'
+          }
+          onChange={(e) => {
+            setChoice(e.target.value);
+            setMissing(false);
+          }}
+        >
+          <option value="" disabled>
+            選んでください
+          </option>
+          {COMPANIES.map((c) => (
+            <option key={c.code} value={c.code}>
+              {c.name}（{c.code}）
+            </option>
+          ))}
+          <option value={OTHER}>一覧にない会社</option>
+        </select>
+        {missing && !choice && (
+          <div id="new-company-error" className="field-error" role="alert">
+            鉄道会社を選んでください。
+          </div>
+        )}
+        <div id="new-company-hint" className="field-hint">
+          {listed && listed.lines.length > 0
+            ? `会社のコード ${listed.code} と、路線（${listed.lines.map((l) => l.name).join('・')}）、列車の種類が入った状態から始めます。`
+            : listed
+              ? `会社のコード ${listed.code} と列車の種類が入った状態から始めます。路線はこのあと入れます。`
+              : choice === OTHER
+                ? '会社の名前とコードを下に入れます。列車の種類は入った状態から始めます。'
+                : 'サーバー Wiki の KT式 団体コード表にある会社です。会社のコードが駅コードや形式コードの先頭に付きます。'}
+        </div>
+      </div>
+      {choice === OTHER && (
+        <div className={styles.otherCompany}>
+          <div className="field">
+            <label htmlFor="new-org-name">会社の名前</label>
             <input
-              type="radio"
-              name="preset"
-              value={p.id}
-              checked={presetId === p.id}
-              onChange={() => setPresetId(p.id)}
+              id="new-org-name"
+              value={otherName}
+              placeholder="例：〇〇鉄道"
+              onChange={(e) => setOtherName(e.target.value)}
+              onKeyDown={onEnter}
             />
-            <span>
-              {p.label}
-              <span className="field-hint">
-                {p.id === 'K'
-                  ? '駅コードや列車の種類が入った状態から始めます（ふつうはこちら）'
-                  : '団体・路線・列車の種類のコードを自分で決めます'}
-              </span>
-            </span>
-          </label>
-        ))}
-      </fieldset>
+          </div>
+          <div className="field">
+            <label htmlFor="new-org-code">会社のコード</label>
+            <input
+              id="new-org-code"
+              className="mono"
+              value={otherCode}
+              placeholder="例：N"
+              aria-describedby="new-org-code-hint"
+              autoComplete="off"
+              spellCheck={false}
+              onChange={(e) => setOtherCode(e.target.value)}
+              onKeyDown={onEnter}
+            />
+            <div id="new-org-code-hint" className="field-hint">
+              半角の英字・数字だけ。あとからでも入れられます。
+            </div>
+          </div>
+        </div>
+      )}
     </Dialog>
   );
 }

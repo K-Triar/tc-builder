@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { defaultServiceKind, reverseService, suggestPlatform } from '../suggest';
-import { createProject, K_PRESET } from '../presets';
+import { companyByCode, createProject } from '../presets';
 import { ruriDown } from './builder';
 
 describe('のりばの提案（R4、design §6.2）', () => {
@@ -21,7 +21,7 @@ describe('のりばの提案（R4、design §6.2）', () => {
   it('前の駅からの例がなければ、その駅でいちばん使われているのりば、なければ最初ののりば', () => {
     expect(suggestPlatform(p, 'st-KU06', 'st-KL02')).toBe(1);
     expect(suggestPlatform(p, undefined, 'st-KL13')).toBe(2);
-    const empty = createProject(K_PRESET, 'x');
+    const empty = createProject(companyByCode('K'), 'x');
     empty.stations.push({
       id: 's',
       name: 's',
@@ -68,7 +68,7 @@ describe('反対方向を作る（R4.4）', () => {
 
 describe('系統に種別を載せるときの初期値', () => {
   it('用途番号の標準最高速度と、方向に合った形式番号', () => {
-    const p = createProject(K_PRESET, 'x');
+    const p = createProject(companyByCode('K'), 'x');
     const ex = p.kinds.find((k) => k.typeCode === 'EX')!;
     const lo = p.kinds.find((k) => k.typeCode === 'Lo')!;
     const sr = p.kinds.find((k) => k.typeCode === 'SR')!;

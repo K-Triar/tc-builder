@@ -228,40 +228,16 @@
   font-size: var(--fs-sm);
 }
 
-.presets {
-  border: none;
-  margin: 0;
-  padding: 0;
+.otherCompany {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-3);
 }
 
-.presets legend {
-  font-weight: 600;
-  margin-bottom: var(--space-2);
-}
-
-.presetOption {
-  display: flex;
-  gap: var(--space-2);
-  align-items: flex-start;
-  font-weight: 600;
-  padding: var(--space-2);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-}
-
-.presetOption :global(.field-hint) {
-  display: block;
-  font-weight: 400;
-}
-
-.presetOption input {
-  width: 20px;
-  height: 20px;
-  margin-top: 4px;
-}
-
-.presetOption:hover {
-  background: var(--surface-2);
+@media (max-width: 480px) {
+  .otherCompany {
+    grid-template-columns: 1fr;
+  }
 }
 
 .errors {

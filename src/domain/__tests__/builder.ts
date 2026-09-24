@@ -2,7 +2,7 @@
 // 駅は駅コードの文字列（'KL04'、'NSC'）で指す。'KL04' の形なら番号つき、それ以外は自由文字列。
 
 import type { Dir, Platform, Project, Service, Station, StationCode } from '../model';
-import { createProject, K_PRESET } from '../presets';
+import { companyByCode, createProject } from '../presets';
 
 let seq = 0;
 const env = { newId: () => `id${++seq}`, now: () => new Date('2026-09-24T00:00:00.000Z') };
@@ -36,7 +36,7 @@ export class ProjectBuilder {
   readonly project: Project;
 
   constructor() {
-    this.project = createProject(K_PRESET, 'テスト', env);
+    this.project = createProject(companyByCode('K'), 'テスト', env);
     this.project.lines.forEach((l) => (l.id = `line-${l.code}`));
     this.project.kinds = [];
   }

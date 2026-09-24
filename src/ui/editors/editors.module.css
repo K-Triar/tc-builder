@@ -456,3 +456,16 @@
   flex: 1 1 160px;
   margin-bottom: 0;
 }
+
+/* 他の団体を一覧から足す */
+.addOrg {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.addOrg :global(.field) {
+  margin: 0;
+}

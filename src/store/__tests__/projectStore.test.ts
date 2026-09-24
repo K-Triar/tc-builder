@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { createProject, K_PRESET } from '../../domain/presets';
+import { companyByCode, createProject } from '../../domain/presets';
 import { COALESCE_MS, HISTORY_LIMIT, now, useProjectStore } from '../projectStore';
 
 let t = Date.parse('2026-09-25T00:00:00.000Z');
@@ -10,7 +10,7 @@ const name = () => store().project!.name;
 
 beforeEach(() => {
   now.current = () => new Date(t);
-  store().open(createProject(K_PRESET, 'a'));
+  store().open(createProject(companyByCode('K'), 'a'));
 });
 
 afterEach(() => {
@@ -74,7 +74,7 @@ describe('元に戻す／やり直す', () => {
 
   it('開き直すと履歴は消える', () => {
     store().update((p) => void (p.name = 'b'), { checkpoint: true });
-    store().open(createProject(K_PRESET, 'z'));
+    store().open(createProject(companyByCode('K'), 'z'));
     expect(store().undo()).toBe(false);
   });
 });

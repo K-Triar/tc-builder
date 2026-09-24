@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createProject, K_PRESET } from '../../domain/presets';
+import { companyByCode, createProject } from '../../domain/presets';
 import { useProjectStore } from '../../store/projectStore';
 import { useFileDrop } from '../../ui/hooks/useFileDrop';
 import { startAutosave } from '../autosave';
@@ -13,7 +13,7 @@ describe('ストアの自動保存', () => {
     const save = vi.fn(async () => {});
     const stop = startAutosave(save, 500);
     const store = useProjectStore.getState();
-    store.open(createProject(K_PRESET, 'x'));
+    store.open(createProject(companyByCode('K'), 'x'));
     store.update((p) => void (p.name = 'y'));
     await vi.advanceTimersByTimeAsync(500);
     expect(save).toHaveBeenCalledTimes(1);

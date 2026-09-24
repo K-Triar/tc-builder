@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { derive } from '../../domain/derive';
-import { createProject, K_PRESET } from '../../domain/presets';
+import { companyByCode, createProject } from '../../domain/presets';
 import { parseProject } from '../../domain/schema';
 import { now, useProjectStore } from '../../store/projectStore';
 import {
@@ -26,8 +26,14 @@ const env = { newId: () => `p${++seq}`, now: () => new Date('2026-09-24T00:00:00
 
 describe('IndexedDB への保存', () => {
   it('保存・一覧・読み込み・削除', async () => {
-    const a = { ...createProject(K_PRESET, 'A', env), updatedAt: '2026-09-24T01:00:00.000Z' };
-    const b = { ...createProject(K_PRESET, 'B', env), updatedAt: '2026-09-24T02:00:00.000Z' };
+    const a = {
+      ...createProject(companyByCode('K'), 'A', env),
+      updatedAt: '2026-09-24T01:00:00.000Z',
+    };
+    const b = {
+      ...createProject(companyByCode('K'), 'B', env),
+      updatedAt: '2026-09-24T02:00:00.000Z',
+    };
     await saveProject(a);
     await saveProject(b);
     await saveProject({ ...a, name: 'A2' });
@@ -51,7 +57,7 @@ describe('自動保存（500ms デバウンス）', () => {
   it('続けて変更しても、最後の1回だけ保存する', async () => {
     const save = vi.fn(async () => {});
     const saver = createAutosaver(save, 500);
-    const p = createProject(K_PRESET, 'x', env);
+    const p = createProject(companyByCode('K'), 'x', env);
     saver.schedule({ ...p, name: '1' });
     await vi.advanceTimersByTimeAsync(300);
     saver.schedule({ ...p, name: '2' });
@@ -65,7 +71,7 @@ describe('自動保存（500ms デバウンス）', () => {
   it('flush ですぐ保存する', async () => {
     const save = vi.fn(async () => {});
     const saver = createAutosaver(save, 500);
-    saver.schedule(createProject(K_PRESET, 'x', env));
+    saver.schedule(createProject(companyByCode('K'), 'x', env));
     await saver.flush();
     expect(save).toHaveBeenCalledTimes(1);
   });
@@ -73,7 +79,7 @@ describe('自動保存（500ms デバウンス）', () => {
 
 describe('ファイルの書き出し・読み込み', () => {
   it('書き出すと lastExportedAt が付き、未保存の変更はなくなる', async () => {
-    const p = createProject(K_PRESET, '瑠璃線', env);
+    const p = createProject(companyByCode('K'), '瑠璃線', env);
     expect(hasUnexportedChanges(p)).toBe(true);
     const out = prepareExport(p, new Date('2026-09-24T03:00:00.000Z'));
     expect(out.project.lastExportedAt).toBe('2026-09-24T03:00:00.000Z');
@@ -98,7 +104,7 @@ describe('ファイルの書き出し・読み込み', () => {
   });
 
   it('同じ ID があるときは別名（コピー）で開ける', () => {
-    const p = prepareExport(createProject(K_PRESET, '瑠璃線', env), env.now()).project;
+    const p = prepareExport(createProject(companyByCode('K'), '瑠璃線', env), env.now()).project;
     const c = asCopy(p, 'new-id', new Date('2026-09-25T00:00:00.000Z'));
     expect(c).toMatchObject({
       id: 'new-id',

@@ -15,7 +15,7 @@ import {
   type CodeParts,
   type Dest,
 } from '../codes';
-import { createProject, K_PRESET } from '../presets';
+import { companyByCode, createProject } from '../presets';
 
 /** テスト用：'KL04' や 'NSC' を CodeParts にする（団体 K を自団体とみなす） */
 function parts(text: string): CodeParts {
@@ -31,7 +31,7 @@ function dest(text: string): Dest {
 const route = (s: string) => s.split(' → ').map(dest);
 
 describe('駅コード（rules §2.1）', () => {
-  const p = createProject(K_PRESET, 't');
+  const p = createProject(companyByCode('K'), 't');
   const ctx = codeContext(p);
   const L = p.lines.find((l) => l.code === 'L')!;
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { derive } from '../../domain/derive';
 import type { Project } from '../../domain/model';
-import { createProject, EMPTY_PRESET, K_PRESET } from '../../domain/presets';
+import { companyByCode, createProject, customCompany } from '../../domain/presets';
 import { listWorkItems, markDone } from '../../domain/progress';
 import { createSampleProject } from '../../storage/sample';
 import { journey, STAGES } from '../journey';
@@ -34,16 +34,21 @@ describe('journey：路線ができるまでの道のり', () => {
     ]);
   });
 
-  it('K のプリセットで作った直後は「路線」が済み、次は駅の登録', () => {
-    const p = createProject(K_PRESET, '新しい路線');
+  it('Kトライアで作った直後は「路線」が済み、次は駅の登録', () => {
+    const p = createProject(companyByCode('K'), '新しい路線');
     const { j } = run(p);
     expect(j.stages[0]?.done).toBe(true);
     expect(keyOf(p)).toBe('stations');
     expect(j.next.path).toBe('setup/1');
   });
 
-  it('空のプリセットでは「路線」から始める', () => {
-    const p = createProject(EMPTY_PRESET, '新しい路線');
+  it('路線が Wiki にない会社では「路線」から始める', () => {
+    const p = createProject(companyByCode('H'), '新しい路線');
+    expect(keyOf(p)).toBe('line');
+  });
+
+  it('一覧にない会社（名前もコードも空）では「路線」から始める', () => {
+    const p = createProject(customCompany(), '新しい路線');
     expect(keyOf(p)).toBe('line');
   });
 

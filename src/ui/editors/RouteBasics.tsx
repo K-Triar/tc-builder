@@ -9,8 +9,8 @@ import { LineEditor, OrgEditor } from './OrgEditor';
 import styles from './editors.module.css';
 
 /**
- * ウィザード「路線について」：名前と、どの団体の決まりで作るか。
- * 団体・路線・種別のコードはプリセットで入っているので、要約だけを見せて詳しい設定にしまう。
+ * ウィザード「路線について」：名前と、どの鉄道会社の路線か。
+ * 会社・種別のコードは新規作成で入っているので、要約だけを見せて詳しい設定にしまう。
  */
 export function RouteBasics() {
   const project = useProject();
@@ -39,12 +39,12 @@ export function RouteBasics() {
       </Section>
 
       <Section
-        title="どの団体の決まりで作りますか？"
-        lead="駅コードや列車の種類の名前は、団体ごとに決まっています。ふつうは下の内容のままで大丈夫です。"
+        title="どの鉄道会社の路線ですか？"
+        lead="駅コードや形式コードの先頭には、会社のコードが付きます。路線のコードは会社ごとに決まっています。"
       >
         {self?.code ? (
           <dl className={styles.summaryList}>
-            <dt>団体</dt>
+            <dt>会社</dt>
             <dd>
               {self.name || '（名前なし）'} <span className="code-tag">{self.code}</span>
             </dd>
@@ -70,7 +70,7 @@ export function RouteBasics() {
             </dd>
           </dl>
         ) : (
-          <p>自分の団体の名前とコードを、下の詳しい設定で入れてください。</p>
+          <p>自分の会社の名前とコードを、下の詳しい設定で入れてください。</p>
         )}
         {example && (
           <p className="field-hint">
@@ -78,7 +78,7 @@ export function RouteBasics() {
             」のように、団体・路線・駅の番号から自動で付きます。
           </p>
         )}
-        <Disclosure summary="詳しい設定（団体・路線・列車の種類のコード）" open={openDetails}>
+        <Disclosure summary="詳しい設定（会社・路線・列車の種類のコード）" open={openDetails}>
           <OrgEditor />
           <LineEditor />
           <KindEditor />

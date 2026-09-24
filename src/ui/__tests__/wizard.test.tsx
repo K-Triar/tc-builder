@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { AppRoutes } from '../../App';
 import { derive } from '../../domain/derive';
-import { createProject, K_PRESET } from '../../domain/presets';
+import { companyByCode, createProject } from '../../domain/presets';
 import { saveProject } from '../../storage/db';
 import { useProjectStore } from '../../store/projectStore';
 
@@ -21,7 +21,7 @@ async function openAt(path: string) {
 
 describe('質問に答えて小さな架空路線を作る（3駅・2種別）', () => {
   it('駅 → のりば → 系統 → 停車駅 で、看板とコマンドの元が出る', async () => {
-    const p = createProject(K_PRESET, '試験線');
+    const p = createProject(companyByCode('K'), '試験線');
     await saveProject(p);
     useProjectStore.getState().close();
     await openAt(`/p/${p.id}/setup/1`);
@@ -91,7 +91,7 @@ describe('質問に答えて小さな架空路線を作る（3駅・2種別）',
   });
 
   it('自動生成の段で「経路に入れる駅」を上書きできる', async () => {
-    const p = createProject(K_PRESET, '試験線');
+    const p = createProject(companyByCode('K'), '試験線');
     p.stations = [0, 1].map((i) => ({
       id: `s${i}`,
       name: `駅${i}`,

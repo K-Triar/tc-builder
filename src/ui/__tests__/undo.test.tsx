@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import { AppRoutes } from '../../App';
-import { createProject, K_PRESET } from '../../domain/presets';
+import { companyByCode, createProject } from '../../domain/presets';
 import { saveProject } from '../../storage/db';
 import { useProjectStore } from '../../store/projectStore';
 import { NumberField } from '../components/Field';
@@ -55,7 +55,7 @@ describe('数値欄', () => {
 
 describe('消す → 元に戻す', () => {
   it('種別を消すと、お知らせの「元に戻す」で戻る', async () => {
-    const p = createProject(K_PRESET, '戻す試験');
+    const p = createProject(companyByCode('K'), '戻す試験');
     await saveProject(p);
     useProjectStore.getState().close();
     render(

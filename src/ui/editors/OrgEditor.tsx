@@ -1,6 +1,8 @@
+import { useState } from 'react';
+import { COMPANIES } from '../../domain/presets';
 import { useProjectStore } from '../../store/projectStore';
 import { Button } from '../components/Button';
-import { NumberField, Section, TextField } from '../components/Field';
+import { NumberField, Section, SelectField, TextField } from '../components/Field';
 import { RemoveButton } from '../components/RemoveButton';
 import { useProject } from '../hooks/useDerived';
 import { removeWithUndo } from '../toast';
@@ -13,6 +15,11 @@ export function OrgEditor() {
   const update = useProjectStore((s) => s.update);
   const self = project.orgs.find((o) => o.id === project.selfOrgId);
   const others = project.orgs.filter((o) => o.id !== project.selfOrgId);
+  const [adding, setAdding] = useState('');
+  // 一覧の会社のうち、まだ登録していないもの
+  const addable = COMPANIES.filter((c) => !project.orgs.some((o) => o.code === c.code));
+  const addOrg = (name: string, code: string) =>
+    update((p) => void p.orgs.push({ id: newId(), name, code }), { checkpoint: true });
   const usedOrgIds = new Set([
     ...project.stations.map((s) => s.managerOrgId),
     ...project.lines.map((l) => l.orgId),
@@ -46,19 +53,36 @@ export function OrgEditor() {
       <Section
         title="他の団体"
         lead="直通する相手の団体（HRA・翠鉄など）を登録すると、その団体の駅や編成を扱えます。"
-        actions={
-          <Button
-            size="sm"
-            onClick={() =>
-              update((p) => void p.orgs.push({ id: newId(), name: '', code: '' }), {
-                checkpoint: true,
-              })
-            }
-          >
-            ＋ 団体を足す
-          </Button>
-        }
       >
+        <div className={styles.addOrg}>
+          {addable.length > 0 && (
+            <>
+              <SelectField
+                label="一覧から足す"
+                value={adding}
+                options={[
+                  { value: '', label: '選んでください' },
+                  ...addable.map((c) => ({ value: c.code, label: `${c.name}（${c.code}）` })),
+                ]}
+                onChange={setAdding}
+              />
+              <Button
+                size="sm"
+                disabled={!adding}
+                onClick={() => {
+                  const c = COMPANIES.find((x) => x.code === adding);
+                  if (c) addOrg(c.name, c.code);
+                  setAdding('');
+                }}
+              >
+                ＋ 足す
+              </Button>
+            </>
+          )}
+          <Button size="sm" variant="ghost" onClick={() => addOrg('', '')}>
+            ＋ 一覧にない団体を足す
+          </Button>
+        </div>
         {others.length === 0 ? (
           <p className="muted">まだありません。</p>
         ) : (

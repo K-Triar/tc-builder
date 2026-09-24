@@ -24,7 +24,7 @@ export interface ProjectSettings {
   spawnSpeed: number; // 既定 1
   stationLaunchDistance: number; // 既定 5
   stationDwellSeconds: number; // 既定 5
-  usages: Usage[]; // 用途番号（K プリセット：1,2,3,6,7,9）
+  usages: Usage[]; // 用途番号（KT式 共通：1,2,3,6,7,9）
 }
 
 export interface Usage {

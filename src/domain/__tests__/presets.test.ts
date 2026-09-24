@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { SCHEMA_VERSION } from '../model';
-import { createProject, EMPTY_PRESET, K_PRESET } from '../presets';
+import {
+  COMPANIES,
+  companyByCode,
+  createProject,
+  customCompany,
+  KT_KINDS,
+  KT_USAGES,
+} from '../presets';
 import { parseProject, serializeProject } from '../schema';
 
 let seq = 0;
@@ -9,8 +16,8 @@ const env = {
   now: () => new Date('2026-09-24T12:00:00.000Z'),
 };
 
-describe('K プリセット', () => {
-  const p = createProject(K_PRESET, '瑠璃線', env);
+describe('Kトライアを選んだとき', () => {
+  const p = createProject(companyByCode('K'), '瑠璃線', env);
   const self = p.orgs.find((o) => o.id === p.selfOrgId)!;
 
   it('団体 K が自団体', () => {
@@ -63,21 +70,48 @@ describe('K プリセット', () => {
   });
 });
 
-describe('空プリセット', () => {
-  it('名前とコードが空の自団体だけを持つ', () => {
-    const p = createProject(EMPTY_PRESET, '新しい路線', env);
-    expect(p.orgs).toEqual([{ id: p.selfOrgId, name: '', code: '' }]);
+describe('鉄道会社の一覧（Wiki の KT式 団体コード表）', () => {
+  it('10社。省略コードは重なりがなく、半角英数字だけ', () => {
+    expect(COMPANIES.map((c) => c.code)).toEqual([
+      'K',
+      'C',
+      'D',
+      'E',
+      'H',
+      'J',
+      'S',
+      'T',
+      'Y',
+      'SU',
+    ]);
+    expect(COMPANIES.every((c) => /^[A-Za-z0-9]+$/.test(c.code))).toBe(true);
+  });
+
+  it('K 以外の会社を選ぶと、その会社が自団体になり、路線は空、種別と用途番号は KT式 の共通値', () => {
+    const p = createProject(companyByCode('H'), 'ヘルヴェティア線', env);
+    expect(p.orgs).toEqual([{ id: p.selfOrgId, name: 'ヘルヴェティア鉄道局', code: 'H' }]);
     expect(p.lines).toEqual([]);
-    expect(p.kinds).toEqual([]);
-    expect(p.settings.usages).toEqual([]);
+    expect(p.kinds.map((k) => k.typeCode)).toEqual(KT_KINDS.map((k) => k.typeCode));
+    expect(p.settings.usages).toEqual(KT_USAGES);
+  });
+
+  it('一覧にない会社は名前とコードを入れたものが自団体になる', () => {
+    const p = createProject(customCompany('新鉄道', 'N'), '新線', env);
+    expect(p.orgs).toEqual([{ id: p.selfOrgId, name: '新鉄道', code: 'N' }]);
+    expect(p.lines).toEqual([]);
+    expect(p.kinds).toHaveLength(KT_KINDS.length);
+  });
+
+  it('一覧にないコードで探すと例外', () => {
+    expect(() => companyByCode('ZZ')).toThrow();
   });
 });
 
 describe('スキーマの往復', () => {
   it.each([
-    ['K', K_PRESET],
-    ['空', EMPTY_PRESET],
-  ])('%s プリセット：作る → JSON → parse → 同じ', (_, preset) => {
+    ['Kトライア', companyByCode('K')],
+    ['一覧にない会社', customCompany()],
+  ])('%s：作る → JSON → parse → 同じ', (_, preset) => {
     const p = createProject(preset, 'テスト', env);
     const r = parseProject(serializeProject(p));
     expect(r).toEqual({ ok: true, project: p, migratedFrom: undefined });
