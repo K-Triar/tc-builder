@@ -4,9 +4,9 @@
 *.xlsm
 ~$*
 # Claude の実装用ドキュメント
-CLAUDE.md
-CLAUDE.local.md
-docs/
+/CLAUDE.md
+/CLAUDE.local.md
+/docs/
 .claude/
 
 # ---- 依存・ビルド成果物 ----
