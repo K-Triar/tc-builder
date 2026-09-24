@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, Navigate } from 'react-router';
 import { buttonClass } from '../components/buttonClass';
 import { RouteProgress } from '../components/RouteProgress';
 import { ValidationSummary } from '../components/ValidationSummary';
@@ -12,6 +12,13 @@ const WORK_NOTE = {
   signs: '各駅のホームに看板を並べて置く',
   trial: '列車を走らせて、止まる駅・向き・行先を確かめる',
 } as const;
+
+/** プロジェクトを開いたとき：はじめての質問の途中なら、その質問へ。答え終わっていれば「いまここ」 */
+export function ProjectIndex() {
+  const project = useProject();
+  if (project.guide) return <Navigate to={`/p/${project.id}/start/${project.guide.at}`} replace />;
+  return <OverviewPage />;
+}
 
 /** いまここ（docs/redesign.md §8）：現在位置・次にやること・完成までの残り */
 export function OverviewPage() {

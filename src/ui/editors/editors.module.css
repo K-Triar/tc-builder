@@ -332,6 +332,40 @@
   font-weight: 500;
 }
 
+/* 駅コードの札を押すと、その駅だけ詳しい設定が開く */
+.stationToggle {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--touch);
+  padding: 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-input);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.stationToggle:hover,
+.stationToggle[aria-expanded='true'] {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+
+.stationOrg {
+  width: auto;
+  max-width: 12em;
+}
+
+.stationDetails {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sheet);
+  background: var(--surface);
+}
+
 .codeTags {
   display: inline-flex;
   flex-wrap: wrap;

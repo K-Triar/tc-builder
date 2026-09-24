@@ -9,6 +9,7 @@ import {
 } from '../../storage/file';
 import { now, useProjectStore } from '../../store/projectStore';
 import { Button } from '../components/Button';
+import { buttonClass } from '../components/buttonClass';
 import { ToastHost } from '../components/ToastHost';
 import { useDerived, useJourney, useProject } from '../hooks/useDerived';
 import { nextTheme, THEME_LABELS, useTheme } from '../hooks/useTheme';
@@ -70,6 +71,7 @@ export function ProjectLayout() {
     exportAge > EXPORT_REMIND_MS &&
     project.stations.length >= 2;
 
+  const base = `/p/${project.id}`;
   const onExport = async () => {
     const { project: exported, text } = prepareExport(project, now.current());
     const saved = await saveTextFile(text, exportFileName(project));
@@ -156,7 +158,6 @@ export function ProjectLayout() {
     docs: 'docs/routes',
   };
 
-  const base = `/p/${project.id}`;
   return (
     <div className={styles.shell}>
       <header className={`${styles.header} no-print`}>
@@ -233,6 +234,14 @@ export function ProjectLayout() {
           {THEME_LABELS[theme]}
         </Button>
       </header>
+      {project.guide && (
+        <div className={`${styles.unsaved} no-print`}>
+          <p>はじめての質問の途中です。</p>
+          <Link to={`${base}/start/${project.guide.at}`} className={buttonClass('primary', 'sm')}>
+            質問に戻る →
+          </Link>
+        </div>
+      )}
       {showReminder && (
         <div className={`${styles.unsaved} no-print`}>
           <p>

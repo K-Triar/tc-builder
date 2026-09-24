@@ -169,3 +169,21 @@ describe('migrateWith（マイグレーションの枠）', () => {
     expect(() => migrateWith({ schemaVersion: 1 }, {}, 2)).toThrow();
   });
 });
+
+describe('版 1 → 版 2（集中モードの状態 guide）', () => {
+  it('版 1 のファイルは guide なし（答え終わったもの）として読める', () => {
+    const raw = { ...smallProject(), schemaVersion: 1 };
+    const r = parseProject(raw);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.migratedFrom).toBe(1);
+    expect(r.project.schemaVersion).toBe(2);
+    expect(r.project.guide).toBeUndefined();
+  });
+
+  it('集中モードの途中のファイルは guide を持ったまま読める', () => {
+    const p = { ...smallProject(), guide: { at: 'lines', through: 'no' as const } };
+    const r = parseProject(serializeProject(p));
+    expect(r.ok && r.project.guide).toEqual({ at: 'lines', through: 'no' });
+  });
+});

@@ -66,6 +66,9 @@ export const KT_KINDS: readonly { typeCode: string; name: string }[] = [
   { typeCode: 'Te', name: '試運転' },
 ];
 
+/** 新しいプロジェクトで最初から選んでおく種別（redesign2 §6 Q4）。臨時・試運転は「ほかの種別」から足す */
+export const DEFAULT_KIND_CODES: readonly string[] = ['Lo', 'Ra', 'SR', 'EX'];
+
 /** KT式の用途番号と標準最高速度（rules §2.5）。どの会社でも同じ */
 export const KT_USAGES: readonly Usage[] = [
   { digit: '1', label: '路面電車型', defaultMaxSpeed: 0.75 },
@@ -111,10 +114,20 @@ export function createProject(
     settings: { ...DEFAULT_SETTINGS, usages: KT_USAGES.map((u) => ({ ...u })) },
     orgs: [{ id: selfOrgId, name: company.name, code: company.code }],
     lines: company.lines.map((l) => ({ id: env.newId(), orgId: selfOrgId, ...l })),
-    kinds: KT_KINDS.map((k) => ({ id: env.newId(), ...k })),
+    kinds: KT_KINDS.filter((k) => DEFAULT_KIND_CODES.includes(k.typeCode)).map((k) => ({
+      id: env.newId(),
+      ...k,
+    })),
     stations: [],
     services: [],
     overrides: { choice: {}, departure: {}, skipCondition: {} },
     progress: { items: {} },
   };
+}
+
+/**
+ * はじめての質問（集中モード）で作るプロジェクト。名前と鉄道会社はこのあとの質問で入れるので空にしておく。
+ */
+export function createGuidedProject(env: CreateEnv = defaultEnv): Project {
+  return { ...createProject(customCompany(), '', env), guide: { at: 'name' } };
 }

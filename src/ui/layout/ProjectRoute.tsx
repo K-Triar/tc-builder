@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, Outlet, useParams } from 'react-router';
 import { loadProject } from '../../storage/db';
 import { useProjectStore } from '../../store/projectStore';
-import { ProjectLayout } from './ProjectLayout';
 
-/** URL のプロジェクトを読み込んでからレイアウトを出す */
+/** URL のプロジェクトを読み込んでから中身（集中モードか、ふだんのレイアウト）を出す */
 export function ProjectRoute() {
   const { id = '' } = useParams();
   const current = useProjectStore((s) => s.project);
@@ -26,7 +25,7 @@ export function ProjectRoute() {
     };
   }, [id, current?.id, open]);
 
-  if (current?.id === id) return <ProjectLayout />;
+  if (current?.id === id) return <Outlet />;
   return (
     <main className="page-narrow">
       {state === 'loading' ? (

@@ -1,6 +1,6 @@
 // 入力データの型（design §4）。保存するのは Project だけで、出力は毎回 derive で計算する。
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 export interface Project {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -18,6 +18,18 @@ export interface Project {
   services: Service[]; // 系統（登録順 = spawn の並び順の第2キー）
   overrides: Overrides;
   progress: Progress;
+  /** はじめての質問（集中モード）の途中だけある。答え終わったら消す（redesign2 §6 Q2） */
+  guide?: Guide;
+}
+
+/** 集中モードの状態。入力ではなく「どこまで答えたか」なので、元に戻す／やり直すの対象にしない */
+export interface Guide {
+  /** 最後に開いていた質問（`/p/:id/start/` のあと。検索条件つき） */
+  at: string;
+  /** ほかの鉄道会社へ乗り入れるか */
+  through?: 'yes' | 'no' | 'unknown';
+  /** 名前の付いた列車があるか */
+  named?: boolean;
 }
 
 export interface ProjectSettings {

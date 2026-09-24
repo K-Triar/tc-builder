@@ -3,8 +3,10 @@ import { SCHEMA_VERSION } from '../model';
 import {
   COMPANIES,
   companyByCode,
+  createGuidedProject,
   createProject,
   customCompany,
+  DEFAULT_KIND_CODES,
   KT_KINDS,
   KT_USAGES,
 } from '../presets';
@@ -32,8 +34,9 @@ describe('Kトライアを選んだとき', () => {
     expect(p.lines.every((l) => l.orgId === self.id)).toBe(true);
   });
 
-  it('種別コード Lo/Ra/SR/EX/ET/Te（特急は EX）', () => {
-    expect(p.kinds.map((k) => k.typeCode)).toEqual(['Lo', 'Ra', 'SR', 'EX', 'ET', 'Te']);
+  it('種別は Lo/Ra/SR/EX を最初から選んでおく（臨時 ET・試運転 Te は入れない）', () => {
+    expect(p.kinds.map((k) => k.typeCode)).toEqual(['Lo', 'Ra', 'SR', 'EX']);
+    expect(KT_KINDS.map((k) => k.typeCode)).toEqual(['Lo', 'Ra', 'SR', 'EX', 'ET', 'Te']);
   });
 
   it('用途番号と標準最高速度（rules §2.5）', () => {
@@ -91,7 +94,7 @@ describe('鉄道会社の一覧（Wiki の KT式 団体コード表）', () => {
     const p = createProject(companyByCode('H'), 'ヘルヴェティア線', env);
     expect(p.orgs).toEqual([{ id: p.selfOrgId, name: 'ヘルヴェティア鉄道局', code: 'H' }]);
     expect(p.lines).toEqual([]);
-    expect(p.kinds.map((k) => k.typeCode)).toEqual(KT_KINDS.map((k) => k.typeCode));
+    expect(p.kinds.map((k) => k.typeCode)).toEqual(DEFAULT_KIND_CODES);
     expect(p.settings.usages).toEqual(KT_USAGES);
   });
 
@@ -99,11 +102,27 @@ describe('鉄道会社の一覧（Wiki の KT式 団体コード表）', () => {
     const p = createProject(customCompany('新鉄道', 'N'), '新線', env);
     expect(p.orgs).toEqual([{ id: p.selfOrgId, name: '新鉄道', code: 'N' }]);
     expect(p.lines).toEqual([]);
-    expect(p.kinds).toHaveLength(KT_KINDS.length);
+    expect(p.kinds).toHaveLength(DEFAULT_KIND_CODES.length);
   });
 
   it('一覧にないコードで探すと例外', () => {
     expect(() => companyByCode('ZZ')).toThrow();
+  });
+});
+
+describe('はじめての質問（集中モード）で作るとき', () => {
+  it('名前と鉄道会社は空、最初の質問（名前）から始める', () => {
+    const p = createGuidedProject(env);
+    expect(p.name).toBe('');
+    expect(p.orgs).toEqual([{ id: p.selfOrgId, name: '', code: '' }]);
+    expect(p.lines).toEqual([]);
+    expect(p.kinds.map((k) => k.typeCode)).toEqual(DEFAULT_KIND_CODES);
+    expect(p.guide).toEqual({ at: 'name' });
+    expect(parseProject(serializeProject(p))).toEqual({
+      ok: true,
+      project: p,
+      migratedFrom: undefined,
+    });
   });
 });
 

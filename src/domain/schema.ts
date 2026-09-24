@@ -121,6 +121,13 @@ export const projectSchema = z.object({
   services: z.array(serviceSchema),
   overrides: overridesSchema,
   progress: progressSchema,
+  guide: z
+    .object({
+      at: z.string(),
+      through: z.enum(['yes', 'no', 'unknown']).optional(),
+      named: z.boolean().optional(),
+    })
+    .optional(),
 });
 
 // ---- マイグレーション ----
@@ -130,7 +137,8 @@ type RawProject = Record<string, unknown>;
 export type Migrations = Record<number, (raw: RawProject) => RawProject>;
 
 const MIGRATIONS: Migrations = {
-  // 例：2: (raw) => ({ ...raw, schemaVersion: 3, newField: [] }),
+  // 版 2 で集中モードの状態（guide）を足した。古いプロジェクトは答え終わったものとして扱う
+  1: (raw) => ({ ...raw, schemaVersion: 2 }),
 };
 
 /** raw.schemaVersion から target まで順に変換する。変換が足りなければ例外 */
@@ -361,6 +369,10 @@ const FIELD_LABELS: Record<string, string> = {
   items: '項目',
   hash: 'ハッシュ',
   doneAt: '完了日時',
+  guide: 'はじめての質問',
+  at: '開いていた質問',
+  through: '乗り入れ',
+  named: '名前付き列車',
 };
 
 export function formatPath(path: readonly PropertyKey[]): string {

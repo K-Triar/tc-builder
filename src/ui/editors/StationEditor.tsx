@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import type { Platform, Project, Station, StationCode } from '../../domain/model';
 import { useProjectStore } from '../../store/projectStore';
+import { setStationOrg } from '../../store/setupOps';
 import { Button } from '../components/Button';
 import { Disclosure } from '../components/Disclosure';
 import line from '../components/StationLine.module.css';
@@ -46,50 +47,98 @@ function addStationTo(p: Project) {
   });
 }
 
-/** ウィザード「駅を登録する」：駅名だけを路線図の上に並べて入れる。コードや管理する鉄道会社は詳しい設定へ */
+/**
+ * ウィザード「駅を登録する」（redesign2 §2-2）：駅名だけを路線図の上に並べて入れる。
+ * 最後の欄で Enter を押すと駅が増える。駅コードや管理する鉄道会社は、押した駅だけ開いて直す。
+ * 乗り入れる鉄道会社があるときだけ、駅ごとに「どの会社の駅か」を選ぶ欄を出す
+ */
 export function GuidedStations() {
   const project = useProject();
   const update = useProjectStore((s) => s.update);
   const [params] = useSearchParams();
-  const focusStation = params.get('station');
-  const lastInput = useRef<HTMLInputElement>(null);
-  const focusAdded = useRef(false);
-
-  // 駅を足したら、その駅の名前の欄へ
-  useEffect(() => {
-    if (!focusAdded.current) return;
-    focusAdded.current = false;
-    lastInput.current?.focus();
-  }, [project.stations.length]);
+  const [openId, setOpenId] = useState<string | null>(params.get('station'));
+  const [draft, setDraft] = useState('');
+  const draftInput = useRef<HTMLInputElement>(null);
+  const list = useRef<HTMLOListElement>(null);
+  const first = project.stations.length === 0;
 
   const add = () => {
-    focusAdded.current = true;
-    update(addStationTo, { checkpoint: true });
+    const name = draft.trim();
+    if (!name) return;
+    update(
+      (p) => {
+        addStationTo(p);
+        must(p.stations.at(-1)).name = name;
+      },
+      { checkpoint: true },
+    );
+    setDraft('');
+    draftInput.current?.focus();
+  };
+
+  /** 駅名の欄で Enter：次の駅の欄へ（最後なら新しい駅の欄へ） */
+  const onRowEnter = (index: number) => {
+    const inputs = list.current?.querySelectorAll<HTMLInputElement>('input[data-station-name]');
+    const next = inputs?.[index + 1];
+    if (next) next.focus();
+    else draftInput.current?.focus();
   };
 
   return (
     <>
-      {project.stations.length === 0 ? (
-        <p className="muted">まだ駅がありません。路線の端の駅から足していきましょう。</p>
-      ) : (
-        <ol className={line.line} aria-label="登録した駅">
-          {project.stations.map((s, i) => (
-            <GuidedStationRow
-              key={s.id}
-              station={s}
-              index={i}
-              highlight={focusStation === s.id}
-              inputRef={i === project.stations.length - 1 ? lastInput : undefined}
-            />
-          ))}
-        </ol>
-      )}
-      <div className={styles.addStation}>
-        <Button variant={project.stations.length < 2 ? 'primary' : 'secondary'} onClick={add}>
-          ＋ {project.stations.length === 0 ? '最初の駅を足す' : '次の駅を足す'}
-        </Button>
-      </div>
+      <ol className={line.line} aria-label="登録した駅" ref={list}>
+        {project.stations.map((s, i) => (
+          <GuidedStationRow
+            key={s.id}
+            station={s}
+            index={i}
+            open={openId === s.id}
+            onToggle={() => setOpenId((v) => (v === s.id ? null : s.id))}
+            onEnter={() => onRowEnter(i)}
+          />
+        ))}
+        <li className={line.stop}>
+          <span className={line.dot} aria-hidden="true" />
+          <div className={`${line.body} ${styles.guidedStation}`}>
+            <div className={styles.guidedHead}>
+              <label htmlFor="station-new" className="visually-hidden">
+                {first ? '最初の駅の名前' : '次の駅の名前'}
+              </label>
+              <input
+                id="station-new"
+                ref={draftInput}
+                type="text"
+                value={draft}
+                placeholder={first ? '路線の端の駅の名前（例：アカシア島）' : '次の駅の名前'}
+                autoComplete="off"
+                aria-describedby="station-new-hint"
+                className={styles.stationNameInput}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter' || e.nativeEvent.isComposing) return;
+                  e.preventDefault();
+                  add();
+                }}
+              />
+              <Button
+                size="sm"
+                variant={first ? 'primary' : 'secondary'}
+                disabled={!draft.trim()}
+                onClick={add}
+              >
+                ＋ 足す
+              </Button>
+            </div>
+            <span id="station-new-hint" className="field-hint">
+              Enter で足して、続けて次の駅を入れられます。
+            </span>
+          </div>
+        </li>
+      </ol>
       <PasteStations guided />
+      {project.stations.length > 0 && (
+        <p className="field-hint">駅を押すと、駅コードや鉄道会社を直せます。</p>
+      )}
     </>
   );
 }
@@ -97,13 +146,15 @@ export function GuidedStations() {
 function GuidedStationRow({
   station: s,
   index,
-  highlight,
-  inputRef,
+  open,
+  onToggle,
+  onEnter,
 }: {
   station: Station;
   index: number;
-  highlight: boolean;
-  inputRef?: RefObject<HTMLInputElement | null>;
+  open: boolean;
+  onToggle: () => void;
+  onEnter: () => void;
 }) {
   const project = useProject();
   const update = useProjectStore((st) => st.update);
@@ -113,17 +164,17 @@ function GuidedStationRow({
   const mut = (fn: (st: Station, p: Project) => void) =>
     update((p) => fn(must(p.stations.find((x) => x.id === s.id)), p));
   const nameId = `station-name-${s.id}`;
+  const detailsId = `station-details-${s.id}`;
+  const codes = stationCodesText(project, s).split('・').filter(Boolean);
+  const manager = project.orgs.find((o) => o.id === s.managerOrgId);
+  const label = s.name || `${index + 1}番目の駅`;
 
   useEffect(() => {
-    if (highlight) ref.current?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
-  }, [highlight]);
+    if (open) ref.current?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
+  }, [open]);
 
   return (
-    <li
-      ref={ref}
-      id={`station-${s.id}`}
-      className={`${line.stop} ${highlight ? styles.highlight : ''}`}
-    >
+    <li ref={ref} id={`station-${s.id}`} className={`${line.stop} ${open ? styles.highlight : ''}`}>
       <span className={`${line.dot} ${s.name ? line.doneDot : ''}`} aria-hidden="true" />
       <div className={`${line.body} ${styles.guidedStation}`}>
         <div className={styles.guidedHead}>
@@ -132,69 +183,103 @@ function GuidedStationRow({
           </label>
           <input
             id={nameId}
-            ref={inputRef}
+            data-station-name
             type="text"
             value={s.name}
             placeholder="駅の名前（例：瑠璃中央）"
             autoComplete="off"
             className={styles.stationNameInput}
             onChange={(e) => mut((st) => void (st.name = e.target.value))}
+            onKeyDown={(e) => {
+              if (e.key !== 'Enter' || e.nativeEvent.isComposing) return;
+              e.preventDefault();
+              onEnter();
+            }}
           />
-          <span className={styles.codeTags} title="駅コード（自動）">
-            {stationCodesText(project, s)
-              .split('・')
-              .filter(Boolean)
-              .map((c) => (
+          {project.orgs.length > 1 && (
+            <select
+              aria-label={`${label}はどの鉄道会社の駅か`}
+              className={styles.stationOrg}
+              value={s.managerOrgId}
+              onChange={(e) =>
+                update((p) => setStationOrg(p, s.id, e.target.value), { checkpoint: true })
+              }
+            >
+              {project.orgs.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.name || o.code || '（名前なし）'}
+                </option>
+              ))}
+            </select>
+          )}
+          <button
+            type="button"
+            className={styles.stationToggle}
+            aria-expanded={open}
+            aria-controls={detailsId}
+            aria-label={`${label}の駅コード・鉄道会社を直す`}
+            onClick={onToggle}
+          >
+            {codes.length > 0 ? (
+              codes.map((c) => (
                 <span key={c} className="code-tag">
                   {c}
                 </span>
-              ))}
-            {!self && <span className={styles.badge}>他の鉄道会社</span>}
-          </span>
+              ))
+            ) : (
+              <span className="code-tag">駅コード？</span>
+            )}
+            {!self && project.orgs.length <= 1 && (
+              <span className={styles.badge}>{manager?.name || '他の鉄道会社'}の駅</span>
+            )}
+            <span aria-hidden="true">{open ? '▴' : '▾'}</span>
+          </button>
         </div>
-        <Disclosure summary="詳しい設定（駅コード・管理する鉄道会社・並べ替え）" open={highlight}>
-          <StationBasic station={s} mut={mut} hideName />
-          <div className="row">
-            <Button
-              size="sm"
-              aria-label={`${s.name}を上へ`}
-              disabled={index === 0}
-              onClick={() =>
-                update(
-                  (p) => void p.stations.splice(index - 1, 0, ...p.stations.splice(index, 1)),
-                  { checkpoint: true },
-                )
-              }
-            >
-              上へ
-            </Button>
-            <Button
-              size="sm"
-              aria-label={`${s.name}を下へ`}
-              disabled={index === project.stations.length - 1}
-              onClick={() =>
-                update(
-                  (p) => void p.stations.splice(index + 1, 0, ...p.stations.splice(index, 1)),
-                  { checkpoint: true },
-                )
-              }
-            >
-              下へ
-            </Button>
-            <RemoveButton
-              describe={`${s.name || '駅'}を消す`}
-              blocked={used && '系統で使用中'}
-              onRemove={() =>
-                removeWithUndo(
-                  `駅「${s.name || '駅名なし'}」を消しました`,
-                  (p) => void (p.stations = p.stations.filter((x) => x.id !== s.id)),
-                )
-              }
-            >
-              この駅を消す
-            </RemoveButton>
+        {open && (
+          <div id={detailsId} className={styles.stationDetails}>
+            <StationBasic station={s} mut={mut} hideName />
+            <div className="row">
+              <Button
+                size="sm"
+                aria-label={`${s.name}を上へ`}
+                disabled={index === 0}
+                onClick={() =>
+                  update(
+                    (p) => void p.stations.splice(index - 1, 0, ...p.stations.splice(index, 1)),
+                    { checkpoint: true },
+                  )
+                }
+              >
+                上へ
+              </Button>
+              <Button
+                size="sm"
+                aria-label={`${s.name}を下へ`}
+                disabled={index === project.stations.length - 1}
+                onClick={() =>
+                  update(
+                    (p) => void p.stations.splice(index + 1, 0, ...p.stations.splice(index, 1)),
+                    { checkpoint: true },
+                  )
+                }
+              >
+                下へ
+              </Button>
+              <RemoveButton
+                describe={`${s.name || '駅'}を消す`}
+                blocked={used && '列車の走り方で使用中'}
+                onRemove={() =>
+                  removeWithUndo(
+                    `駅「${s.name || '駅名なし'}」を消しました`,
+                    (p) => void (p.stations = p.stations.filter((x) => x.id !== s.id)),
+                  )
+                }
+              >
+                この駅を消す
+              </RemoveButton>
+            </div>
           </div>
-        </Disclosure>
+        )}
       </div>
     </li>
   );
@@ -377,12 +462,7 @@ function StationBasic({
             value: o.id,
             label: o.name || o.code || '（名前なし）',
           }))}
-          onChange={(v) =>
-            mut((st, p) => {
-              st.managerOrgId = v;
-              if (v === p.selfOrgId) st.signsBySelf = true;
-            })
-          }
+          onChange={(v) => update((p) => setStationOrg(p, s.id, v), { checkpoint: true })}
         />
       </div>
       {!self && (

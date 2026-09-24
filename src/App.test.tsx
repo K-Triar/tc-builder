@@ -21,46 +21,22 @@ describe('ホーム', () => {
   it('見出しと、はじめるボタン', async () => {
     renderAt('/');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('KT式 TC ビルダー');
-    expect(screen.getByRole('button', { name: '＋ 新しい路線をつくる' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '＋ 新しい路線網をつくる' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '完成例（瑠璃線系統）を見る' })).toBeInTheDocument();
   });
 
-  it('新しい路線は鉄道会社を選んで作り、ウィザードへ進む', async () => {
+  it('新しい路線網は、はじめての質問（集中モード）の最初の質問から始まる', async () => {
     renderAt('/');
-    fireEvent.click(screen.getByRole('button', { name: '＋ 新しい路線をつくる' }));
-    const dialog = screen.getByRole('dialog', { name: '新しい路線をつくる' });
-    fireEvent.change(within(dialog).getByLabelText('路線の名前'), {
-      target: { value: '試験線' },
-    });
-    const company = within(dialog).getByLabelText('どの鉄道会社の路線ですか？');
-    // 初めから選ばれている鉄道会社はない。選ばずに作ろうとすると止める
-    expect(company).toHaveValue('');
-    fireEvent.click(within(dialog).getByRole('button', { name: 'つくって始める' }));
-    expect(within(dialog).getByRole('alert')).toHaveTextContent('鉄道会社を選んでください');
-    expect(useProjectStore.getState().project).toBeNull();
-
-    fireEvent.change(company, { target: { value: 'H' } });
-    fireEvent.click(within(dialog).getByRole('button', { name: 'つくって始める' }));
-    expect(await screen.findByText('試験線')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '＋ 新しい路線網をつくる' }));
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'この路線網に名前を付けてください' }),
+    ).toBeInTheDocument();
     const p = useProjectStore.getState().project!;
-    expect(p.name).toBe('試験線');
-    expect(p.orgs).toEqual([{ id: p.selfOrgId, name: 'ヘルヴェティア鉄道局', code: 'H' }]);
-    expect(p.lines).toEqual([]);
-  });
-
-  it('一覧にない鉄道会社は名前とコードを入れて作る', async () => {
-    renderAt('/');
-    fireEvent.click(screen.getByRole('button', { name: '＋ 新しい路線をつくる' }));
-    const dialog = screen.getByRole('dialog', { name: '新しい路線をつくる' });
-    fireEvent.change(within(dialog).getByLabelText('どの鉄道会社の路線ですか？'), {
-      target: { value: 'other' },
-    });
-    fireEvent.change(within(dialog).getByLabelText('鉄道会社名'), { target: { value: '新鉄道' } });
-    fireEvent.change(within(dialog).getByLabelText('鉄道会社コード'), { target: { value: 'N' } });
-    fireEvent.click(within(dialog).getByRole('button', { name: 'つくって始める' }));
-    expect(await screen.findByText('新しい路線')).toBeInTheDocument();
-    const p = useProjectStore.getState().project!;
-    expect(p.orgs).toEqual([{ id: p.selfOrgId, name: '新鉄道', code: 'N' }]);
+    expect(p.guide).toEqual({ at: 'name' });
+    expect(p.orgs).toEqual([{ id: p.selfOrgId, name: '', code: '' }]);
+    // サイドバーや書き出しボタンは出さない
+    expect(screen.queryByRole('navigation', { name: '画面' })).toBeNull();
+    expect(screen.queryByRole('button', { name: /書き出す/ })).toBeNull();
   });
 
   it('保存済みのプロジェクトが一覧に出る', async () => {

@@ -3,7 +3,7 @@
 
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import type { Project, ServiceEntry } from '../domain/model';
+import type { Guide, Project, ServiceEntry } from '../domain/model';
 import * as ops from './projectOps';
 
 /** 履歴に残す数 */
@@ -24,6 +24,11 @@ export interface ProjectStore {
   close(): void;
   /** 入力を変える。updatedAt を今の時刻にする */
   update(recipe: (draft: Project) => void, options?: UpdateOptions): void;
+  /**
+   * 集中モードの状態を変える（履歴に残さず、更新日時も進めない）。
+   * undefined を返すと集中モードを終える
+   */
+  setGuide(recipe: (guide: Guide) => Guide | undefined): void;
   /** 1つ前に戻す。戻せたら true */
   undo(): boolean;
   /** 戻したものをやり直す。できたら true */
@@ -64,7 +69,10 @@ export const useProjectStore = create<ProjectStore>()(
       lastWasCheckpoint = checkpoint;
     };
 
-    /** 履歴から取り出した版を今の版にする。書き出し日時は今のものを残す（戻すと未保存に見えなくなるため） */
+    /**
+     * 履歴から取り出した版を今の版にする。書き出し日時は今のものを残す（戻すと未保存に見えなくなるため）。
+     * 集中モードの状態も今のものを残す（終えた集中モードが元に戻すで復活しないように）
+     */
     const restore = (from: 'past' | 'future') => {
       const { project, past, future } = get();
       const source = from === 'past' ? past : future;
@@ -76,6 +84,8 @@ export const useProjectStore = create<ProjectStore>()(
         ...(project.lastExportedAt ? { lastExportedAt: project.lastExportedAt } : {}),
       };
       if (!project.lastExportedAt) delete next.lastExportedAt;
+      if (project.guide) next.guide = project.guide;
+      else delete next.guide;
       set((state) => {
         if (from === 'past') {
           state.past.pop();
@@ -102,6 +112,14 @@ export const useProjectStore = create<ProjectStore>()(
       },
       close: () => set({ project: null, past: [], future: [] }),
       update,
+      setGuide: (recipe) =>
+        set((state) => {
+          const p = state.project;
+          if (!p?.guide) return;
+          const next = recipe({ ...p.guide });
+          if (next) p.guide = next;
+          else delete p.guide;
+        }),
       undo: () => restore('past'),
       redo: () => restore('future'),
       insertEntry: (serviceId, index, entry) =>

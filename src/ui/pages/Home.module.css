@@ -228,18 +228,6 @@
   font-size: var(--fs-sm);
 }
 
-.otherCompany {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: var(--space-3);
-}
-
-@media (max-width: 480px) {
-  .otherCompany {
-    grid-template-columns: 1fr;
-  }
-}
-
 .errors {
   padding-left: 1.2em;
   font-size: var(--fs-sm);

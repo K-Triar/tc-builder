@@ -72,6 +72,22 @@ describe('元に戻す／やり直す', () => {
     expect(store().past).toHaveLength(HISTORY_LIMIT);
   });
 
+  it('集中モードの状態は履歴に残さず、終えた集中モードは元に戻しても復活しない', () => {
+    store().open({ ...createProject(companyByCode('K'), 'a'), guide: { at: 'name' } });
+    const updatedAt = store().project!.updatedAt;
+    tick(1000);
+    store().setGuide((g) => ({ ...g, at: 'company' }));
+    expect(store().project!.guide).toEqual({ at: 'company' });
+    expect(store().past).toHaveLength(0);
+    expect(store().project!.updatedAt).toBe(updatedAt);
+
+    store().update((p) => void (p.name = 'b'), { checkpoint: true });
+    store().setGuide(() => undefined);
+    store().undo();
+    expect(name()).toBe('a');
+    expect(store().project!.guide).toBeUndefined();
+  });
+
   it('開き直すと履歴は消える', () => {
     store().update((p) => void (p.name = 'b'), { checkpoint: true });
     store().open(createProject(companyByCode('K'), 'z'));

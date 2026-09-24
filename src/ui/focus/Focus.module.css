@@ -1,0 +1,407 @@
+/* 集中モード（redesign2 §2）：紙の上に質問カードを1枚だけ置く。スマホでも同じ1列 */
+
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: var(--space-6) var(--space-4);
+}
+
+.card {
+  width: 100%;
+  max-width: 640px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--text);
+  border-radius: var(--radius-sheet);
+  display: flex;
+  flex-direction: column;
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-2);
+}
+
+.where {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.count {
+  margin-left: var(--space-2);
+  font-family: var(--mono);
+  color: var(--text);
+}
+
+.bar {
+  height: 4px;
+  background: var(--surface-3);
+}
+
+.bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width var(--ease);
+}
+
+.body {
+  padding: var(--space-5) var(--space-5) var(--space-4);
+}
+
+.question {
+  font-size: var(--fs-xl);
+  margin-bottom: var(--space-3);
+}
+
+.subQuestion {
+  font-size: var(--fs-lg);
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.lead {
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.moves {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+/* 選択肢（ラジオ・チェック）：行全体を押せるように大きくする */
+.choices {
+  list-style: none;
+  margin: 0 0 var(--space-4);
+  padding: 0;
+}
+
+.choices > li + li {
+  margin-top: var(--space-1);
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--touch);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.choice:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+
+.choice:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.choice:has(input:disabled) {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.choice > input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.choiceText {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.choiceNote {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* 選んだあとに出る入力（一覧にない鉄道会社など） */
+.follow {
+  margin: var(--space-2) 0 var(--space-4) var(--space-5);
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--accent);
+}
+
+.inline2 {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+.inline3 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: var(--space-2) var(--space-3);
+  align-items: end;
+}
+
+.inline3 > :global(.field) {
+  margin-bottom: 0;
+}
+
+.addedRows {
+  list-style: none;
+  margin: 0 0 var(--space-3);
+  padding: 0;
+}
+
+.addedRows > li {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.example {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.note {
+  padding: var(--space-3);
+  background: var(--surface-2);
+  border-radius: var(--radius-input);
+  font-size: var(--fs-sm);
+}
+
+/* 「路線網」の図 */
+.network {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: start;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  padding: var(--space-3);
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius-sheet);
+  font-size: var(--fs-sm);
+}
+
+.pill {
+  padding: 2px var(--space-2);
+  border: 2px solid var(--rail);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  white-space: nowrap;
+}
+
+.link {
+  color: var(--rail);
+  font-weight: 700;
+}
+
+.networkCaption {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+}
+
+/* こたえの確認 */
+.answers {
+  margin: 0 0 var(--space-4);
+}
+
+.answers > div {
+  display: grid;
+  grid-template-columns: 8em minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.answers dt {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.answers dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* 列車の走り方の一覧と、通る駅の並び */
+.services {
+  list-style: none;
+  margin: 0 0 var(--space-4);
+  padding: 0;
+}
+
+.services > li {
+  padding: var(--space-3);
+  border-left: 3px solid var(--accent);
+  background: var(--surface-2);
+  border-radius: var(--radius-input);
+}
+
+.services > li + li {
+  margin-top: var(--space-2);
+}
+
+.serviceHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+  align-items: baseline;
+}
+
+.miniLine {
+  display: flex;
+  align-items: center;
+  margin: var(--space-2) 0;
+  overflow: hidden;
+}
+
+.miniLine > span {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--rail);
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.miniLine > span + span {
+  margin-left: 10px;
+  position: relative;
+}
+
+.miniLine > span + span::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 2px;
+  width: 12px;
+  height: 2px;
+  background: var(--rail);
+}
+
+.miniLine > .pass {
+  width: 6px;
+  height: 6px;
+}
+
+.stops {
+  list-style: none;
+  margin: 0 0 var(--space-3);
+  padding: 0;
+}
+
+.stops > li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch);
+  border-bottom: 1px solid var(--border);
+}
+
+.stopName {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.stopRole {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.stopDot {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--rail);
+  border-radius: 50%;
+}
+
+/* のりばを選ぶボタン */
+.platformButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.platformButtons :global(button[aria-pressed='true']) {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+.twoButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 0;
+  }
+
+  .card {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .body {
+    padding: var(--space-4) var(--space-4) var(--space-3);
+    flex: 1 1 auto;
+  }
+
+  .moves {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .inline2,
+  .inline3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .answers > div {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .answers dt {
+    grid-column: 1 / -1;
+  }
+
+  .follow {
+    margin-left: var(--space-2);
+  }
+}

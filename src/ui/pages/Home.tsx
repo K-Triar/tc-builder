@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import type { Project } from '../../domain/model';
-import { COMPANIES, createProject, customCompany, type Company } from '../../domain/presets';
+import { createGuidedProject } from '../../domain/presets';
 import {
   deleteProject,
   listProjects,
@@ -34,7 +34,6 @@ export function Home() {
   const navigate = useNavigate();
   const open = useProjectStore((s) => s.open);
   const [projects, setProjects] = useState<ProjectMeta[] | null>(null);
-  const [creating, setCreating] = useState(false);
   const [deleting, setDeleting] = useState<ProjectMeta | null>(null);
   const [importErrors, setImportErrors] = useState<string[] | null>(null);
   const [conflict, setConflict] = useState<Project | null>(null);
@@ -108,7 +107,7 @@ export function Home() {
 
       <section className={styles.start} aria-labelledby="start-title">
         <h2 id="start-title" className={styles.startTitle}>
-          路線をつくる
+          路線網をつくる
         </h2>
         <p className={styles.lead}>
           Minecraft の鉄道について順番に答えるだけで、TrainCarts
@@ -138,8 +137,12 @@ export function Home() {
           </li>
         </ol>
         <div className={styles.actions}>
-          <Button variant="primary" size="lg" onClick={() => setCreating(true)}>
-            ＋ 新しい路線をつくる
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => void openAndGo(createGuidedProject(), 'start/name')}
+          >
+            ＋ 新しい路線網をつくる
           </Button>
           <Button variant="ghost" onClick={onSample}>
             完成例（瑠璃線系統）を見る
@@ -232,15 +235,6 @@ export function Home() {
         </a>
         <span className="muted">データはこのブラウザの中だけに保存され、外部へ送られません。</span>
       </footer>
-
-      <NewProjectDialog
-        open={creating}
-        onCancel={() => setCreating(false)}
-        onCreate={(company, name) => {
-          setCreating(false);
-          void openAndGo(createProject(company, name), 'setup/0');
-        }}
-      />
 
       <ConfirmDialog
         open={deleting !== null}
@@ -347,136 +341,5 @@ export function Home() {
         </p>
       </Dialog>
     </div>
-  );
-}
-
-/** 一覧にない鉄道会社を選んだときの値 */
-const OTHER = 'other';
-
-function NewProjectDialog({
-  open,
-  onCancel,
-  onCreate,
-}: {
-  open: boolean;
-  onCancel: () => void;
-  onCreate: (company: Company, name: string) => void;
-}) {
-  const [name, setName] = useState('');
-  // 決め打ちの初期値は置かず、自分の鉄道会社を選んでもらう
-  const [choice, setChoice] = useState('');
-  const [otherName, setOtherName] = useState('');
-  const [otherCode, setOtherCode] = useState('');
-  const [missing, setMissing] = useState(false);
-  const listed = COMPANIES.find((c) => c.code === choice);
-
-  const create = () => {
-    const company = choice === OTHER ? customCompany(otherName.trim(), otherCode.trim()) : listed;
-    if (!company) {
-      setMissing(true);
-      return;
-    }
-    onCreate(company, name.trim() || '新しい路線');
-  };
-  const onEnter = (e: KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.nativeEvent.isComposing) create();
-  };
-
-  return (
-    <Dialog
-      open={open}
-      title="新しい路線をつくる"
-      onClose={onCancel}
-      actions={
-        <>
-          <Button onClick={onCancel}>やめる</Button>
-          <Button variant="primary" onClick={create}>
-            つくって始める
-          </Button>
-        </>
-      }
-    >
-      <div className="field">
-        <label htmlFor="new-name">路線の名前</label>
-        <input
-          id="new-name"
-          data-autofocus
-          value={name}
-          placeholder="例：瑠璃線系統"
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={onEnter}
-        />
-      </div>
-      <div className="field">
-        <label htmlFor="new-company">どの鉄道会社の路線ですか？</label>
-        <select
-          id="new-company"
-          value={choice}
-          aria-invalid={missing && !choice ? true : undefined}
-          aria-describedby={
-            missing && !choice ? 'new-company-error new-company-hint' : 'new-company-hint'
-          }
-          onChange={(e) => {
-            setChoice(e.target.value);
-            setMissing(false);
-          }}
-        >
-          <option value="" disabled>
-            選んでください
-          </option>
-          {COMPANIES.map((c) => (
-            <option key={c.code} value={c.code}>
-              {c.name}（{c.code}）
-            </option>
-          ))}
-          <option value={OTHER}>一覧にない鉄道会社</option>
-        </select>
-        {missing && !choice && (
-          <div id="new-company-error" className="field-error" role="alert">
-            鉄道会社を選んでください。
-          </div>
-        )}
-        <div id="new-company-hint" className="field-hint">
-          {listed && listed.lines.length > 0
-            ? `鉄道会社コード ${listed.code} と、路線（${listed.lines.map((l) => l.name).join('・')}）、列車の種類が入った状態から始めます。`
-            : listed
-              ? `鉄道会社コード ${listed.code} と列車の種類が入った状態から始めます。路線はこのあと入れます。`
-              : choice === OTHER
-                ? '鉄道会社名とコードを下に入れます。列車の種類は入った状態から始めます。'
-                : 'サーバー Wiki「TrainCartsで使うコード」に載っている鉄道会社です。鉄道会社コードが駅コードや形式コードの先頭に付きます。'}
-        </div>
-      </div>
-      {choice === OTHER && (
-        <div className={styles.otherCompany}>
-          <div className="field">
-            <label htmlFor="new-org-name">鉄道会社名</label>
-            <input
-              id="new-org-name"
-              value={otherName}
-              placeholder="例：〇〇鉄道"
-              onChange={(e) => setOtherName(e.target.value)}
-              onKeyDown={onEnter}
-            />
-          </div>
-          <div className="field">
-            <label htmlFor="new-org-code">鉄道会社コード</label>
-            <input
-              id="new-org-code"
-              className="mono"
-              value={otherCode}
-              placeholder="例：N"
-              aria-describedby="new-org-code-hint"
-              autoComplete="off"
-              spellCheck={false}
-              onChange={(e) => setOtherCode(e.target.value)}
-              onKeyDown={onEnter}
-            />
-            <div id="new-org-code-hint" className="field-hint">
-              半角の英字・数字だけ。あとからでも入れられます。
-            </div>
-          </div>
-        </div>
-      )}
-    </Dialog>
   );
 }

@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { defaultServiceKind, reverseService, suggestPlatform } from '../suggest';
+import {
+  autoServiceName,
+  defaultServiceKind,
+  formationForDirection,
+  platformQuestionIndexes,
+  reverseForGuide,
+  reverseService,
+  suggestEntries,
+  suggestPlatform,
+} from '../suggest';
 import { companyByCode, createProject } from '../presets';
 import { ruriDown } from './builder';
 
@@ -84,5 +93,59 @@ describe('系統に種別を載せるときの初期値', () => {
       formation: 'K201',
       maxSpeed: 1.5,
     });
+  });
+});
+
+describe('列車の走り方を小さな質問で作る（redesign2 §2-4）', () => {
+  const p = ruriDown().build();
+  const names = (entries: { stationId: string }[]) =>
+    entries.map((e) => p.stations.find((s) => s.id === e.stationId)!.name);
+
+  it('始発と終点を選ぶと、登録順でその間の駅が並ぶ（逆向きも）', () => {
+    expect(names(suggestEntries(p, 'st-KL01', 'st-KL04'))).toEqual([
+      'アカシア島',
+      'オット',
+      '瑠前TT',
+      '瑠璃中央',
+    ]);
+    expect(names(suggestEntries(p, 'st-KL03', 'st-KL01'))).toEqual([
+      '瑠前TT',
+      'オット',
+      'アカシア島',
+    ]);
+    expect(suggestEntries(p, 'st-KL01', 'st-KL01')).toEqual([]);
+  });
+
+  it('のりばが1つなら自動、2つ以上ならほかの走り方から提案する', () => {
+    const entries = suggestEntries(p, 'st-KL02', 'st-KL04');
+    expect(entries.map((e) => e.platform)).toEqual([1, 1, 2]);
+    const service = { ...p.services[0]!, entries };
+    // オット（1・2番）・瑠前TT（1・2番）・瑠璃中央（1〜5番）はどれも2つ以上なので聞く
+    expect(platformQuestionIndexes(p, service)).toEqual([0, 1, 2]);
+  });
+
+  it('自動の名前は「始発 → 終点 種別・種別」', () => {
+    const v = p.services[0]!;
+    const first = p.stations.find((s) => s.id === v.entries[0]!.stationId)!.name;
+    const last = p.stations.find((s) => s.id === v.entries.at(-1)!.stationId)!.name;
+    expect(autoServiceName(p, v)).toBe(`${first} → ${last} 普通・快速`);
+  });
+
+  it('向きを変えると形式番号の一の位を合わせる', () => {
+    expect(formationForDirection('K300', 'up')).toBe('K301');
+    expect(formationForDirection('K301', 'up')).toBe('K301');
+    expect(formationForDirection('K301', 'down')).toBe('K300');
+    expect(formationForDirection('', 'down')).toBe('');
+  });
+
+  it('反対向きは、のりばが1つの駅だけ自動で決め、名前も自動', () => {
+    const v = p.services[0]!;
+    const r = reverseForGuide(p, v, 'rev');
+    expect(r.direction).toBe('up');
+    r.entries.forEach((e) => {
+      const st = p.stations.find((s) => s.id === e.stationId)!;
+      expect(e.platform).toBe(st.platforms.length === 1 ? st.platforms[0]!.number : null);
+    });
+    expect(r.name).toBe(autoServiceName(p, r));
   });
 });
