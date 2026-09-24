@@ -89,7 +89,7 @@ export function GuidedStations() {
           ＋ {project.stations.length === 0 ? '最初の駅を足す' : '次の駅を足す'}
         </Button>
       </div>
-      <PasteStations />
+      <PasteStations guided />
     </>
   );
 }
@@ -699,12 +699,12 @@ function PlatformList({
   );
 }
 
-/** 「駅名 コード コード…」を1行1駅で貼り付けて、まとめて足す */
-function PasteStations() {
+/** 「駅名 コード コード…」を1行1駅で貼り付けて、まとめて足す。駅名だけなら駅コードは自動で付ける */
+function PasteStations({ guided }: { guided?: boolean }) {
   const project = useProject();
   const update = useProjectStore((s) => s.update);
   const [text, setText] = useState('');
-  const [open, setOpen] = useState(project.stations.length === 0);
+  const [open, setOpen] = useState(!guided && project.stations.length === 0);
   const [added, setAdded] = useState<number | null>(null);
   const selfCode = project.orgs.find((o) => o.id === project.selfOrgId)?.code ?? '';
 
@@ -727,10 +727,12 @@ function PasteStations() {
     update(
       (p) => {
         for (const [name = '', ...codes] of rows) {
-          const entries = (codes.length > 0 ? codes : ['']).map((c) => ({
-            id: newId(),
-            code: parseCode(p, c),
-          }));
+          if (codes.length === 0) {
+            addStationTo(p);
+            must(p.stations.at(-1)).name = name;
+            continue;
+          }
+          const entries = codes.map((c) => ({ id: newId(), code: parseCode(p, c) }));
           p.stations.push({
             id: newId(),
             name,
@@ -759,13 +761,13 @@ function PasteStations() {
   return (
     <Section
       title="駅の一覧を貼り付ける"
-      lead="1行に1駅、「駅名 駅コード」の形で。乗換駅は駅コードを空白で続けます。"
+      lead="1行に1駅ずつ、駅名を並べます。駅コードは自動で付きます（決まっているときは「駅名 KL01」のように空白のあとに書けます）。"
     >
       <textarea
         aria-label="駅の一覧"
         rows={5}
         value={text}
-        placeholder={'アカシア島 KL01\n瑠璃中央 KL04 KU01\nイアリーオ国際空港 IIA'}
+        placeholder={'アカシア島\n瑠璃中央 KL04 KU01\nイアリーオ国際空港 IIA'}
         onChange={(e) => {
           setText(e.target.value);
           setAdded(null);

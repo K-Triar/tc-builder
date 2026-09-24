@@ -432,9 +432,14 @@
     gap: var(--space-3);
   }
 
+  .splitSide :global(.disclosure) {
+    border-top: none;
+    padding-top: 0;
+  }
+
   .splitSide {
     position: static;
-    max-height: 40vh;
+    max-height: 60vh;
     padding: var(--space-2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sheet);

@@ -249,6 +249,11 @@
   cursor: pointer;
 }
 
+.presetOption :global(.field-hint) {
+  display: block;
+  font-weight: 400;
+}
+
 .presetOption input {
   width: 20px;
   height: 20px;

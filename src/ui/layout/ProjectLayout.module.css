@@ -320,6 +320,15 @@
     padding: var(--space-4) var(--space-3) var(--space-6);
   }
 
+  .unsaved {
+    flex-wrap: nowrap;
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .unsaved p {
+    flex: 1 1 auto;
+  }
+
   .nav {
     position: fixed;
     left: 0;

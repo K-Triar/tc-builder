@@ -3,7 +3,7 @@ import { buttonClass } from '../components/buttonClass';
 import { RouteProgress } from '../components/RouteProgress';
 import { ValidationSummary } from '../components/ValidationSummary';
 import { useDerived, useJourney, useProject } from '../hooks/useDerived';
-import { SETUP_STAGE_COUNT } from '../journey';
+import { SETUP_STAGE_COUNT, splitIssues } from '../journey';
 import styles from './OverviewPage.module.css';
 
 /** 作業の段の説明（何を・どこで） */
@@ -36,7 +36,11 @@ export function OverviewPage() {
         </Link>
       </section>
 
-      <ValidationSummary projectId={project.id} issues={derived.issues} hideOk />
+      <ValidationSummary
+        projectId={project.id}
+        issues={splitIssues(derived.issues, j.current).now}
+        hideOk
+      />
 
       <section className={styles.sheet} aria-labelledby="remain-title">
         <h2 id="remain-title" className={styles.sheetTitle}>

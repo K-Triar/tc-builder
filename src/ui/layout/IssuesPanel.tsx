@@ -6,6 +6,8 @@ import styles from './IssuesPanel.module.css';
 export interface IssuesPanelProps {
   projectId: string;
   issues: readonly Issue[];
+  /** まだ答えていない段の問題（直すところとしては数えない） */
+  later?: readonly Issue[];
   onNavigate?: () => void;
 }
 
@@ -18,7 +20,7 @@ const GROUP_TITLE = {
 } as const;
 
 /** 検証の一覧（R9）。何が問題か・どう直すか・直しに行くリンク */
-export function IssuesPanel({ projectId, issues, onNavigate }: IssuesPanelProps) {
+export function IssuesPanel({ projectId, issues, later = [], onNavigate }: IssuesPanelProps) {
   const counts = issueCounts(issues);
   return (
     <section className={styles.panel} aria-labelledby="issues-title">
@@ -72,6 +74,33 @@ export function IssuesPanel({ projectId, issues, onNavigate }: IssuesPanelProps)
           </div>
         );
       })}
+      {later.length > 0 && (
+        <details className={styles.group}>
+          <summary className={styles.groupTitle}>これから入力するところ（{later.length}）</summary>
+          <p className={styles.hint}>
+            まだ答えていない質問の分です。順に答えていけば、なくなります。
+          </p>
+          <ul className={styles.list}>
+            {later.map((issue, i) => (
+              <li key={`${issue.code}-${i}`} className={`${styles.item} ${styles.later}`}>
+                <span className={styles.mark} aria-hidden="true">
+                  ○
+                </span>
+                <div className={styles.text}>
+                  <span className={styles.message}>{issue.message}</span>
+                  <Link
+                    to={issueLink(projectId, issue.target)}
+                    className={styles.link}
+                    onClick={onNavigate}
+                  >
+                    入力しに行く<span aria-hidden="true"> →</span>
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
     </section>
   );
 }

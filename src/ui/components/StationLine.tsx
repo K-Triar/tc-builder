@@ -1,4 +1,6 @@
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import styles from './StationLine.module.css';
 
 export interface StationLinkItem {
@@ -11,6 +13,9 @@ export interface StationLinkItem {
   selected?: boolean;
 }
 
+/** これより狭いと、駅の一覧を「駅を選ぶ」の中にしまう（中身を先に見せるため） */
+const NARROW = '(max-width: 900px)';
+
 /** 縦の路線図で駅を選ぶ（のりばの設定・看板を置く画面） */
 export function StationLinks({
   items,
@@ -19,7 +24,17 @@ export function StationLinks({
   items: readonly StationLinkItem[];
   label: string;
 }) {
-  return (
+  const narrow = useMediaQuery(NARROW);
+  const selectedRef = useRef<HTMLAnchorElement>(null);
+  const index = items.findIndex((i) => i.selected);
+  const selected = items[index];
+
+  // 選んでいる駅が一覧の下のほうでも見えるように
+  useEffect(() => {
+    selectedRef.current?.scrollIntoView?.({ block: 'nearest' });
+  }, [selected?.key]);
+
+  const list = (
     <nav aria-label={label}>
       <ol className={styles.line}>
         {items.map((it) => (
@@ -30,6 +45,7 @@ export function StationLinks({
             />
             <div className={styles.body}>
               <Link
+                ref={it.selected ? selectedRef : undefined}
                 to={it.to}
                 replace
                 className={`${styles.link} ${it.selected ? styles.selected : ''}`}
@@ -47,5 +63,19 @@ export function StationLinks({
         ))}
       </ol>
     </nav>
+  );
+  if (!narrow) return list;
+  return (
+    <details className="disclosure">
+      <summary>
+        駅を選ぶ
+        {selected && (
+          <span className={styles.pickerNow}>
+            いま：{selected.label}（{index + 1} / {items.length}）
+          </span>
+        )}
+      </summary>
+      {list}
+    </details>
   );
 }

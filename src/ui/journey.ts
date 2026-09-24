@@ -59,6 +59,23 @@ export const STAGE_OF_TARGET: Record<IssueTarget['kind'], StageKey> = {
   route: 'generate',
 };
 
+/**
+ * 問題を「今までの段で直すもの」と「まだ入力していない段のもの」に分ける。
+ * 駅を登録している途中に、まだ答えていないのりばの向きを「直すところ」として赤く見せないため。
+ */
+export function splitIssues<T extends { target: IssueTarget }>(
+  issues: readonly T[],
+  current: number,
+): { now: T[]; later: T[] } {
+  const now: T[] = [];
+  const later: T[] = [];
+  for (const issue of issues) {
+    if (stageIndex(STAGE_OF_TARGET[issue.target.kind]) <= current) now.push(issue);
+    else later.push(issue);
+  }
+  return { now, later };
+}
+
 export interface Count {
   done: number;
   total: number;

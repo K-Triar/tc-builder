@@ -1,10 +1,12 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CopyButton } from '../components/CopyButton';
 import { ConfirmDialog } from '../components/Dialog';
 import { Help } from '../components/Help';
 import { Matrix } from '../components/Matrix';
-import { Stepper } from '../components/Stepper';
+import { MemoryRouter } from 'react-router';
+import { RouteProgress } from '../components/RouteProgress';
+import { STAGES, type Stage } from '../journey';
 
 afterEach(() => vi.useRealTimers());
 
@@ -66,13 +68,28 @@ describe('Matrix', () => {
   });
 });
 
-describe('Stepper', () => {
-  it('今のステップに aria-current', () => {
-    const onSelect = vi.fn();
-    render(<Stepper steps={['団体', '路線', '種別']} current={1} onSelect={onSelect} />);
-    expect(screen.getByRole('button', { current: 'step' })).toHaveTextContent('路線');
-    fireEvent.click(screen.getByRole('button', { name: /団体/ }));
-    expect(onSelect).toHaveBeenCalledWith(0);
+describe('RouteProgress', () => {
+  it('路線図の駅：済み・次にやる・今いる画面を読み上げでも分かるようにする', () => {
+    const stages: Stage[] = STAGES.map((s, i) => ({
+      ...s,
+      done: i < 2,
+      issues: { error: i === 3 ? 1 : 0, warning: 0, info: 0 },
+    }));
+    render(
+      <MemoryRouter>
+        <RouteProgress projectId="p" stages={stages} current={2} here={1} />
+      </MemoryRouter>,
+    );
+    const nav = screen.getByRole('navigation', { name: '路線ができるまで' });
+    expect(within(nav).getAllByRole('link')).toHaveLength(9);
+    expect(within(nav).getByRole('link', { current: 'step' })).toHaveTextContent('駅（済み）');
+    expect(within(nav).getByRole('link', { name: /のりば（次にやる）/ })).toHaveAttribute(
+      'href',
+      '/p/p/setup/2',
+    );
+    expect(
+      within(nav).getByRole('link', { name: /列車（まだ、直すところ 1 件）/ }),
+    ).toBeInTheDocument();
   });
 });
 

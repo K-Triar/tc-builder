@@ -84,3 +84,12 @@ summary.groupTitle {
   font-size: var(--fs-sm);
   font-weight: 700;
 }
+
+.later .mark {
+  color: var(--text-muted);
+}
+
+.later .message {
+  font-weight: 400;
+  color: var(--text-muted);
+}

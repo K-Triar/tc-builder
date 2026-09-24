@@ -22,6 +22,10 @@ test('サンプル → 作業 → コピー → チェック → リロードで
     .getByRole('link', { name: /設置する/ })
     .click();
   await page.getByRole('link', { name: /② 看板を置く/ }).click();
+  await expect(page.getByRole('heading', { level: 1, name: '看板を置く' })).toBeVisible();
+  // スマホ幅では駅の一覧は「駅を選ぶ」の中にしまってある
+  const picker = page.locator('summary', { hasText: '駅を選ぶ' });
+  if (await picker.isVisible()) await picker.click();
   await page
     .getByRole('navigation', { name: '看板を置く駅' })
     .getByRole('link', { name: /^オット/ })
@@ -123,5 +127,33 @@ test('ダークモードでも文字のコントラストが足りる', async ({
     expect(
       result.violations.map((v) => `${path || 'ホーム'}: ${v.nodes[0]?.target.join(' ')}`),
     ).toEqual([]);
+  }
+});
+
+test('どの画面も横にはみ出さない（スマホ幅でも横スクロールしない）', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto('./');
+  await page.getByRole('button', { name: '完成例（瑠璃線系統）を見る' }).click();
+  await expect(page).toHaveURL(/#\/p\/[^/]+\/$/);
+  const id = page.url().match(/#\/p\/([^/]+)/)![1];
+  for (const path of [
+    '',
+    `#/p/${id}/`,
+    `#/p/${id}/setup/0`,
+    `#/p/${id}/setup/1`,
+    `#/p/${id}/setup/2?station=st-KL04`,
+    `#/p/${id}/setup/3`,
+    `#/p/${id}/setup/4`,
+    `#/p/${id}/work/commands`,
+    `#/p/${id}/work/signs?station=st-KL04`,
+    `#/p/${id}/work/trial`,
+    `#/p/${id}/edit/services`,
+  ]) {
+    await page.goto(`./${path}`);
+    await page.waitForTimeout(300);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, `${path || 'ホーム'} が横にはみ出している`).toBeLessThanOrEqual(1);
   }
 });

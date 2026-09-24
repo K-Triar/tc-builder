@@ -27,13 +27,18 @@ describe('質問に答えて小さな架空路線を作る（3駅・2種別）',
     await openAt(`/p/${p.id}/setup/1`);
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('駅を登録する');
 
-    // 駅：一覧を貼り付けてまとめて足す
+    // 駅：一覧を貼り付けてまとめて足す（駅名だけなら駅コードは自動）
+    fireEvent.click(screen.getByRole('button', { name: '＋ 駅の一覧を貼り付けてまとめて足す' }));
     fireEvent.change(screen.getByLabelText('駅の一覧'), {
-      target: { value: 'A駅 KL01\nB駅 KL02\nC駅 KL03' },
+      target: { value: 'A駅\nB駅 KL02\nC駅' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'まとめて足す' }));
     expect(state().stations.map((s) => s.name)).toEqual(['A駅', 'B駅', 'C駅']);
-    expect(state().stations[1]!.codes[0]!.code).toMatchObject({ kind: 'numbered', number: 2 });
+    expect(state().stations.map((s) => s.codes[0]!.code)).toMatchObject([
+      { kind: 'numbered', number: 1 },
+      { kind: 'numbered', number: 2 },
+      { kind: 'numbered', number: 3 },
+    ]);
 
     // 駅名は路線図の上の欄で直せる
     fireEvent.change(screen.getByLabelText('2番目の駅の名前'), { target: { value: 'B駅' } });

@@ -32,12 +32,14 @@
 }
 
 @media (max-width: 640px) {
+  /* スマホでは見出しと本文を同じ行にして短くする */
   .taskList {
-    grid-template-columns: minmax(0, 1fr);
-    padding: var(--space-3);
+    gap: var(--space-1) var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--fs-sm);
   }
 
-  .taskList dd + dt {
-    margin-top: var(--space-2);
+  .taskList dt {
+    font-size: var(--fs-xs);
   }
 }

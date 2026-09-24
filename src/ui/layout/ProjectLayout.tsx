@@ -13,7 +13,7 @@ import { ToastHost } from '../components/ToastHost';
 import { useDerived, useJourney, useProject } from '../hooks/useDerived';
 import { nextTheme, THEME_LABELS, useTheme } from '../hooks/useTheme';
 import { issueCounts } from '../issues';
-import { SETUP_STAGE_COUNT, STAGES } from '../journey';
+import { SETUP_STAGE_COUNT, splitIssues, STAGES } from '../journey';
 import { redoWithToast, undoWithToast } from '../toast';
 import { IssuesPanel } from './IssuesPanel';
 import styles from './ProjectLayout.module.css';
@@ -57,12 +57,18 @@ export function ProjectLayout() {
   const canUndo = useProjectStore((s) => s.past.length > 0);
   const canRedo = useProjectStore((s) => s.future.length > 0);
   const badgeRef = useRef<HTMLButtonElement>(null);
-  const counts = issueCounts(derived.issues);
+  const split = splitIssues(derived.issues, j.current);
+  const counts = issueCounts(split.now);
   const unexported = hasUnexportedChanges(project);
   const exportAge = project.lastExportedAt
     ? now.current().getTime() - Date.parse(project.lastExportedAt)
     : Number.POSITIVE_INFINITY;
-  const showReminder = unexported && dismissedFor !== project.id && exportAge > EXPORT_REMIND_MS;
+  // 作り始めたばかり（駅が2つ未満）のうちは出さない。最初の画面で脅かさないため
+  const showReminder =
+    unexported &&
+    dismissedFor !== project.id &&
+    exportAge > EXPORT_REMIND_MS &&
+    project.stations.length >= 2;
 
   const onExport = async () => {
     const { project: exported, text } = prepareExport(project, now.current());
@@ -231,15 +237,17 @@ export function ProjectLayout() {
         <div className={`${styles.unsaved} no-print`}>
           <p>
             {project.lastExportedAt
-              ? '最後にファイルに書き出してから1日以上たっています。'
-              : 'このプロジェクトはまだファイルに書き出していません。'}
-            ブラウザのデータが消えたときに備えて、書き出しておくと安心です。
+              ? '最後の書き出しから1日以上たっています。'
+              : 'まだファイルに書き出していません。'}
+            <span className={styles.wideOnly}>
+              ブラウザのデータが消えたときに備えて、書き出しておくと安心です。
+            </span>
           </p>
           <Button size="sm" onClick={() => void onExport()}>
             いま書き出す
           </Button>
           <Button size="sm" variant="ghost" onClick={() => setDismissedFor(project.id)}>
-            今は閉じる
+            閉じる
           </Button>
         </div>
       )}
@@ -296,7 +304,8 @@ export function ProjectLayout() {
         </div>
         <IssuesPanel
           projectId={project.id}
-          issues={derived.issues}
+          issues={split.now}
+          later={split.later}
           onNavigate={() => setSheetOpen(false)}
         />
       </aside>

@@ -110,3 +110,10 @@
   color: var(--warning);
   font-weight: 700;
 }
+
+/* 狭い画面の「駅を選ぶ」：いま開いている駅 */
+.pickerNow {
+  margin-left: var(--space-2);
+  color: var(--text);
+  font-weight: 700;
+}
