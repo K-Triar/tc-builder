@@ -358,7 +358,7 @@
   color: var(--text-muted);
 }
 
-/* 路線について：団体の設定の要約 */
+/* 路線について：鉄道会社の設定の要約 */
 .summaryList {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
@@ -457,7 +457,7 @@
   margin-bottom: 0;
 }
 
-/* 他の団体を一覧から足す */
+/* 他の鉄道会社を一覧から足す */
 .addOrg {
   display: flex;
   flex-wrap: wrap;

@@ -130,7 +130,7 @@ describe('parseProject', () => {
     p.services[0]!.kinds[0]!.kindId = 'nope';
     p.stations[0]!.platforms[0]!.codeId = 'nope';
     expect(expectErrors(p)).toEqual([
-      '自団体：団体の一覧にない ID「nope」です',
+      '自分の鉄道会社：鉄道会社の一覧にない ID「nope」です',
       '駅 1 番目 › のりば 1 番目 › 行先コードに使う駅コード：この駅の駅コードにない ID「nope」です',
       '系統 1 番目 › 経由リスト 2 番目 › 駅：駅の一覧にない ID「nope」です',
       '系統 1 番目 › 種別 1 番目 › 種別：種別の一覧にない ID「nope」です',

@@ -52,7 +52,7 @@ describe('選択駅の自動推定（rules §3.2）', () => {
 
   it('のりば未定の駅は選ばない', () => {
     const c = choicesOf(p, 1).find((x) => x.station === 'クォーツ湖')!;
-    expect(c).toMatchObject({ chosen: false, reason: 'のりば未定（他団体区間）' });
+    expect(c).toMatchObject({ chosen: false, reason: 'のりば未定（他の鉄道会社の区間）' });
   });
 
   it('経路の反対方向の系統は別に数える（前の駅が違う）', () => {

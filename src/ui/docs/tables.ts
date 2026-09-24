@@ -43,7 +43,7 @@ export function formationsTable(d: Derived): Table {
     ],
     rows: d.formations.map((f) => [
       f.code,
-      f.foreign ? '（他団体）' : f.formation,
+      f.foreign ? '（他の鉄道会社）' : f.formation,
       f.routeCode,
       f.tag,
       formatSpeed(f.maxSpeed),

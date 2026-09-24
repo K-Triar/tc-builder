@@ -13,7 +13,7 @@ export type SignKind =
 export interface Sign {
   kind: SignKind;
   lines: [string, string, string, string];
-  /** 手入力が必要（SKIP_MANUAL、他団体の編成名が未入力の spawn） */
+  /** 手入力が必要（SKIP_MANUAL、他の鉄道会社の編成名が未入力の spawn） */
   manual?: boolean;
 }
 
@@ -23,9 +23,9 @@ export const PATTERN_LABELS: Record<Pattern, string> = {
   A: 'A：全列車が止まるのりば',
   B: 'B：通過列車があるのりば',
   D: 'D：終点（降車専用）',
-  T: 'T：直通の終点（相手団体の線へそのまま走る）',
+  T: 'T：直通の終点（相手の鉄道会社の線へそのまま走る）',
   G: 'G：折り返し（行き止まり）',
-  foreign: '他団体の設定に従うのりば',
+  foreign: '他の鉄道会社の設定に従うのりば',
   passOnly: '通過専用の線路',
 };
 
@@ -67,7 +67,7 @@ export interface SwitcherInstruction {
 export interface StationCard {
   stationId: string;
   name: string;
-  /** 相手団体が看板を置く駅 */
+  /** 相手の鉄道会社が看板を置く駅 */
   foreign: boolean;
   platformCards: PlatformCard[];
   cleanups: CleanupInstruction[];
@@ -164,7 +164,7 @@ export function buildSigns(
       notes: bySelf
         ? []
         : [
-            'この駅の看板は相手団体の設定に従います。行先コードとのりばの向きをすり合わせてください。',
+            'この駅の看板は相手の鉄道会社の設定に従います。行先コードとのりばの向きをすり合わせてください。',
           ],
     });
   }
@@ -205,7 +205,7 @@ function platformCard(
   };
 
   if (pattern === 'foreign') {
-    notes.push(`相手団体の設定に従います（行先コード ${destCode} をすり合わせてください）。`);
+    notes.push(`相手の鉄道会社の設定に従います（行先コード ${destCode} をすり合わせてください）。`);
     return finish({ ...base, signs: [], diagram: [], skipManual: false, notes });
   }
 
@@ -237,7 +237,7 @@ function platformCard(
     case 'T':
       signs = [station, destination];
       notes.push(
-        `直通先（${s.throughNotes.join('、')}）へそのまま走るので destroy を置きません。直通先の看板は相手団体の設定に従います。`,
+        `直通先（${s.throughNotes.join('、')}）へそのまま走るので destroy を置きません。直通先の看板は相手の鉄道会社の設定に従います。`,
       );
       break;
     case 'D':
@@ -295,7 +295,7 @@ function platformCard(
     if (spawns.length >= 5)
       notes.push(`spawn 看板が ${spawns.length} 枚並びます。レールの長さに注意してください。`);
     if (spawns.some((x) => x.manual)) {
-      notes.push('他団体の編成名が未入力の spawn があります（要確認）。');
+      notes.push('他の鉄道会社の編成名が未入力の spawn があります（要確認）。');
     }
   }
   notes.push('設置したら試運転で向きと動きを確かめてください。');

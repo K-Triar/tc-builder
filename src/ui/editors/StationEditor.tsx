@@ -46,7 +46,7 @@ function addStationTo(p: Project) {
   });
 }
 
-/** ウィザード「駅を登録する」：駅名だけを路線図の上に並べて入れる。コードや管理団体は詳しい設定へ */
+/** ウィザード「駅を登録する」：駅名だけを路線図の上に並べて入れる。コードや管理する鉄道会社は詳しい設定へ */
 export function GuidedStations() {
   const project = useProject();
   const update = useProjectStore((s) => s.update);
@@ -149,10 +149,10 @@ function GuidedStationRow({
                   {c}
                 </span>
               ))}
-            {!self && <span className={styles.badge}>他団体</span>}
+            {!self && <span className={styles.badge}>他の鉄道会社</span>}
           </span>
         </div>
-        <Disclosure summary="詳しい設定（駅コード・管理団体・並べ替え）" open={highlight}>
+        <Disclosure summary="詳しい設定（駅コード・管理する鉄道会社・並べ替え）" open={highlight}>
           <StationBasic station={s} mut={mut} hideName />
           <div className="row">
             <Button
@@ -232,7 +232,7 @@ export function StationEditor({ part = 'all' }: { part?: StationPart }) {
         lead={
           part === 'platforms'
             ? 'のりばごとに、番号・行先に使う駅コード・列車の進む向き・行き止まりかを入れます。通過線ものりばとして入れます。'
-            : '駅名・管理団体・駅コードを入れます。乗換駅は路線ごとの駅コードを足します。'
+            : '駅名・管理する鉄道会社・駅コードを入れます。乗換駅は路線ごとの駅コードを足します。'
         }
         actions={
           part !== 'platforms' && (
@@ -294,7 +294,7 @@ function StationCard({
         <strong>
           {index + 1}. {s.name || '（駅名なし）'}
           <span className="muted mono"> {stationCodesText(project, s)}</span>
-          {!self && <span className={styles.badge}>他団体</span>}
+          {!self && <span className={styles.badge}>他の鉄道会社</span>}
         </strong>
         {part !== 'platforms' && (
           <div className="row">
@@ -370,7 +370,7 @@ function StationBasic({
           />
         )}
         <SelectField
-          label="管理団体"
+          label="管理する鉄道会社"
           help="manager"
           value={s.managerOrgId}
           options={project.orgs.map((o) => ({
@@ -390,7 +390,7 @@ function StationBasic({
           label="この駅の看板は自分で置く"
           help="manager"
           checked={s.signsBySelf}
-          hint="外すと、看板は相手団体の設定に従う（すり合わせだけ）になります"
+          hint="外すと、看板は相手の鉄道会社の設定に従う（すり合わせだけ）になります"
           onChange={(v) => mut((st) => void (st.signsBySelf = v))}
         />
       )}
@@ -623,7 +623,7 @@ function PlatformList({
       {!guided && <h3 className={styles.subhead}>のりば</h3>}
       {!needsSigns && (
         <p className="muted">
-          看板は相手団体の設定に従います。行先コードに使うので、番号と駅コードだけ入れてください。
+          看板は相手の鉄道会社の設定に従います。行先コードに使うので、番号と駅コードだけ入れてください。
         </p>
       )}
       {s.platforms.map((pf) => (

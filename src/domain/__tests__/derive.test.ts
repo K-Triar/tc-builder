@@ -52,7 +52,7 @@ describe('進捗（R10）', () => {
     expect(items.some((i) => i.id === 'command:formation:K300_KL4L13_Lo')).toBe(true);
     expect(items.some((i) => i.id === workIds.trialService('sv1'))).toBe(true);
     expect(items.some((i) => i.id === workIds.trialSwitchers)).toBe(true);
-    // 他団体の駅は作業項目にしない
+    // 他の鉄道会社の駅は作業項目にしない
     expect(items.some((i) => i.id.includes('st-NSC'))).toBe(false);
     expect(new Set(items.map((i) => i.id)).size).toBe(items.length);
   });

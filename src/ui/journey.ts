@@ -173,7 +173,7 @@ export function journey(
     trial: countOf(project, trialItems),
   };
   const commandsDone = generateDone && complete(counts.commands);
-  // 看板を置くのりばがない（すべて他団体）なら、看板の段は済みとみなす
+  // 看板を置くのりばがない（すべて他の鉄道会社）なら、看板の段は済みとみなす
   const signsDone = generateDone && (installItems.length === 0 || complete(counts.signs));
   const trialDone = generateDone && complete(counts.trial);
 
@@ -221,7 +221,7 @@ export function journey(
         return {
           stage,
           title: '路線の名前と、使う設定を決める',
-          detail: 'どの団体の路線か、どんな種類の列車が走るかを確かめます。',
+          detail: 'どの鉄道会社の路線か、どんな種類の列車が走るかを確かめます。',
           path: 'setup/0',
           cta: '始める',
         };
@@ -229,7 +229,7 @@ export function journey(
         return {
           stage,
           title: unnamed ? '名前のない駅に名前を付ける' : '列車が通る駅を登録する',
-          detail: '通過するだけの駅や、直通先の他団体の駅も入れます。',
+          detail: '通過するだけの駅や、直通先の他の鉄道会社の駅も入れます。',
           path: 'setup/1',
           cta: '駅を登録する',
         };

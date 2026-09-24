@@ -145,7 +145,7 @@ function DepartureReview() {
     <Section
       title="各駅発"
       help="departure"
-      lead="停車するすべての駅から出す設定になっています。出さない駅はチェックを外します。他団体の車両が出る駅では形式コードや編成名を入れます。"
+      lead="停車するすべての駅から出す設定になっています。出さない駅はチェックを外します。他の鉄道会社の車両が出る駅では形式コードや編成名を入れます。"
     >
       {services.map((s) => (
         <div key={s.id} className="stack">
@@ -204,7 +204,7 @@ function DepartureReview() {
                           <td>
                             {foreign ? (
                               <TextField
-                                label={`${label}の他団体の編成名`}
+                                label={`${label}の他の鉄道会社の編成名`}
                                 help="foreignName"
                                 mono
                                 value={o?.foreignName ?? ''}

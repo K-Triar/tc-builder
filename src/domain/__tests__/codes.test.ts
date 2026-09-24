@@ -17,7 +17,7 @@ import {
 } from '../codes';
 import { companyByCode, createProject } from '../presets';
 
-/** テスト用：'KL04' や 'NSC' を CodeParts にする（団体 K を自団体とみなす） */
+/** テスト用：'KL04' や 'NSC' を CodeParts にする（鉄道会社 K を自分の鉄道会社とみなす） */
 function parts(text: string): CodeParts {
   const m = /^([A-Z])([A-Z])(\d{2})$/.exec(text);
   if (m)
@@ -35,7 +35,7 @@ describe('駅コード（rules §2.1）', () => {
   const ctx = codeContext(p);
   const L = p.lines.find((l) => l.code === 'L')!;
 
-  it('番号つきは 団体 + 路線 + 2桁', () => {
+  it('番号つきは 鉄道会社 + 路線 + 2桁', () => {
     const c = resolveStationCode(
       { kind: 'numbered', orgId: p.selfOrgId, lineId: L.id, number: 4 },
       ctx,
@@ -73,14 +73,14 @@ describe('short / shortEnd（rules §2.3）', () => {
     expect(short(parts('NSC'))).toBe('NSC');
   });
 
-  it('shortEnd は自団体なら団体コードも除く', () => {
+  it('shortEnd は自分の鉄道会社なら鉄道会社コードも除く', () => {
     expect(shortEnd(parts('KL13'))).toBe('L13');
     expect(shortEnd(parts('KU06'))).toBe('U6');
     expect(shortEnd(parts('NSC'))).toBe('NSC');
     expect(shortEnd(parts('IIA'))).toBe('IIA');
   });
 
-  it('他団体の番号つき駅は団体コードを残す', () => {
+  it('他の鉄道会社の番号つき駅は鉄道会社コードを残す', () => {
     expect(shortEnd(parts('HA05'))).toBe('HA5');
   });
 });

@@ -9,7 +9,7 @@ import { removeWithUndo } from '../toast';
 import { must, newId } from './common';
 import styles from './editors.module.css';
 
-/** ウィザード 1：団体（自団体と他団体） */
+/** ウィザード 1：鉄道会社（自分の鉄道会社と他の鉄道会社） */
 export function OrgEditor() {
   const project = useProject();
   const update = useProjectStore((s) => s.update);
@@ -27,10 +27,10 @@ export function OrgEditor() {
 
   return (
     <>
-      <Section title="自分の団体" help="orgCode">
+      <Section title="自分の鉄道会社" help="orgCode">
         <div className={styles.grid2}>
           <TextField
-            label="団体名"
+            label="鉄道会社名"
             value={self?.name ?? ''}
             placeholder="例：Kトライア"
             onChange={(v) =>
@@ -38,7 +38,7 @@ export function OrgEditor() {
             }
           />
           <TextField
-            label="団体コード"
+            label="鉄道会社コード"
             mono
             value={self?.code ?? ''}
             placeholder="例：K"
@@ -51,8 +51,8 @@ export function OrgEditor() {
       </Section>
 
       <Section
-        title="他の団体"
-        lead="直通する相手の団体（HRA・翠鉄など）を登録すると、その団体の駅や編成を扱えます。"
+        title="他の鉄道会社"
+        lead="直通する相手の鉄道会社（HRA・翠鉄など）を登録すると、その鉄道会社の駅や編成を扱えます。"
       >
         <div className={styles.addOrg}>
           {addable.length > 0 && (
@@ -80,7 +80,7 @@ export function OrgEditor() {
             </>
           )}
           <Button size="sm" variant="ghost" onClick={() => addOrg('', '')}>
-            ＋ 一覧にない団体を足す
+            ＋ 一覧にない鉄道会社を足す
           </Button>
         </div>
         {others.length === 0 ? (
@@ -90,14 +90,14 @@ export function OrgEditor() {
             {others.map((o) => (
               <li key={o.id} className={styles.rowItem}>
                 <TextField
-                  label="団体名"
+                  label="鉄道会社名"
                   value={o.name}
                   onChange={(v) =>
                     update((p) => void (must(p.orgs.find((x) => x.id === o.id)).name = v))
                   }
                 />
                 <TextField
-                  label="団体コード"
+                  label="鉄道会社コード"
                   mono
                   value={o.code}
                   hint="分からなければ空でかまいません"
@@ -106,11 +106,11 @@ export function OrgEditor() {
                   }
                 />
                 <RemoveButton
-                  describe={`${o.name || '団体'}を消す`}
-                  blocked={usedOrgIds.has(o.id) && 'この団体の駅・路線あり'}
+                  describe={`${o.name || '鉄道会社'}を消す`}
+                  blocked={usedOrgIds.has(o.id) && 'この鉄道会社の駅・路線あり'}
                   onRemove={() =>
                     removeWithUndo(
-                      `団体「${o.name || o.code || '名前なし'}」を消しました`,
+                      `鉄道会社「${o.name || o.code || '名前なし'}」を消しました`,
                       (p) => void (p.orgs = p.orgs.filter((x) => x.id !== o.id)),
                     )
                   }
@@ -137,7 +137,7 @@ export function LineEditor() {
     <Section
       title="路線"
       help="lineCode"
-      lead="自分の団体の路線と、その路線コード（英字1文字）を入れます。"
+      lead="自分の鉄道会社の路線と、その路線コード（英字1文字）を入れます。"
       actions={
         <Button
           size="sm"
@@ -189,7 +189,7 @@ export function LineEditor() {
   );
 }
 
-/** 看板の数値と用途番号（編集画面の「団体・路線」タブに出す） */
+/** 看板の数値と用途番号（編集画面の「鉄道会社・路線」タブに出す） */
 export function SettingsEditor() {
   const project = useProject();
   const update = useProjectStore((s) => s.update);

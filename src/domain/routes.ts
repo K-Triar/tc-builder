@@ -16,9 +16,9 @@ export interface DepartureRow {
   route: string[];
   routeCode: string;
   tag: string;
-  /** 編成コード。他団体の編成で名前が未入力なら undefined（要確認） */
+  /** 編成コード。他の鉄道会社の編成で名前が未入力なら undefined（要確認） */
   formationCode: string | undefined;
-  /** 他団体の編成（名前を手入力する。コマンドは作らない） */
+  /** 他の鉄道会社の編成（名前を手入力する。コマンドは作らない） */
   foreign: boolean;
   /** 各駅発の上書きがある */
   overridden: boolean;

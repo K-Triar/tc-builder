@@ -8,7 +8,7 @@ let seq = 0;
 const env = { newId: () => `id${++seq}`, now: () => new Date('2026-09-24T00:00:00.000Z') };
 
 export interface StationOpts {
-  /** 管理団体のコード（既定は自団体 K） */
+  /** 管理する鉄道会社のコード（既定は自分の鉄道会社 K） */
   org?: string;
   signsBySelf?: boolean;
 }

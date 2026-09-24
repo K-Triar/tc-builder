@@ -2,7 +2,7 @@
 
 import type { Kind, Project, StationCode } from './model';
 
-/** 団体・路線の ID を解決した駅コード */
+/** 鉄道会社・路線の ID を解決した駅コード */
 export type CodeParts =
   | { kind: 'numbered'; org: string; line: string; number: number; self: boolean }
   | { kind: 'free'; value: string };
@@ -55,7 +55,7 @@ export function short(c: CodeParts): string {
   return `${c.org}${c.line}${c.number}`;
 }
 
-/** 経路コードの終点側（自団体の KL13 → L13） */
+/** 経路コードの終点側（自分の鉄道会社の KL13 → L13） */
 export function shortEnd(c: CodeParts): string {
   if (c.kind === 'numbered' && c.self) return `${c.line}${c.number}`;
   return short(c);
@@ -80,7 +80,7 @@ export function kindTag(kind: Pick<Kind, 'typeCode' | 'trainNameCode'>): string 
   return kind.trainNameCode ? `${kind.typeCode}-${kind.trainNameCode}` : kind.typeCode;
 }
 
-/** 形式コード（団体 + 用途番号1桁 + 形式番号2桁）を分解する。形が合わなければ undefined */
+/** 形式コード（鉄道会社 + 用途番号1桁 + 形式番号2桁）を分解する。形が合わなければ undefined */
 export function parseFormCode(
   form: string,
 ): { org: string; usage: string; number: string } | undefined {

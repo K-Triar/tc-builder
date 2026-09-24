@@ -2,7 +2,7 @@
 
 import { SCHEMA_VERSION, type Project, type Usage } from './model';
 
-/** 新しいプロジェクトの自団体になる鉄道会社 */
+/** 新しいプロジェクトで自分の鉄道会社になる会社 */
 export interface Company {
   name: string;
   /** 省略コード（K、C、SU など）。駅コード・形式コードの先頭に付く */
@@ -12,7 +12,7 @@ export interface Company {
 }
 
 export interface ListedCompany extends Company {
-  /** 団体コード（KT、CR など）。表示用 */
+  /** Wiki の表の長いコード（KT、CR など）。表示用 */
   fullCode: string;
 }
 
@@ -41,17 +41,17 @@ export const COMPANIES: readonly ListedCompany[] = [
   { name: 'セナポンタウン交通局', fullCode: 'STA', code: 'S', lines: [] },
   { name: 'メトロトクテルダム', fullCode: 'MET', code: 'T', lines: [] },
   { name: '山田ふってぃ鉄道', fullCode: 'YFR', code: 'Y', lines: [] },
-  { name: '翠鉄（翠玉急行鉄道）', fullCode: 'SU', code: 'SU', lines: [] },
+  { name: '翠鉄（翠玉急行電気鉄道）', fullCode: 'SU', code: 'SU', lines: [] },
 ];
 
 /** 一覧から省略コードで探す */
 export function companyByCode(code: string): ListedCompany {
   const c = COMPANIES.find((x) => x.code === code);
-  if (!c) throw new Error(`一覧にない会社コード: ${code}`);
+  if (!c) throw new Error(`一覧にない鉄道会社コード: ${code}`);
   return c;
 }
 
-/** 一覧にない会社（名前とコードは自分で入れる） */
+/** 一覧にない鉄道会社（名前とコードは自分で入れる） */
 export function customCompany(name = '', code = ''): Company {
   return { name, code, lines: [] };
 }
@@ -93,7 +93,7 @@ const defaultEnv: CreateEnv = {
   now: () => new Date(),
 };
 
-/** 選んだ鉄道会社を自団体にして、KT式の種別・用途番号が入ったプロジェクトを作る */
+/** 選んだ鉄道会社を自分の鉄道会社にして、KT式の種別・用途番号が入ったプロジェクトを作る */
 export function createProject(
   company: Company,
   name: string,

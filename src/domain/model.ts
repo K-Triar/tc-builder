@@ -65,8 +65,8 @@ export interface StationCodeEntry {
 export interface Station {
   id: string;
   name: string;
-  managerOrgId: string; // 管理団体
-  signsBySelf: boolean; // 他団体駅で自分が看板を置くか（自団体駅は常に true）
+  managerOrgId: string; // 管理する鉄道会社
+  signsBySelf: boolean; // 他の鉄道会社の駅で自分が看板を置くか（自分の鉄道会社の駅は常に true）
   codes: StationCodeEntry[];
   platforms: Platform[];
 }
@@ -100,7 +100,7 @@ export interface Service {
 
 export interface ServiceEntry {
   stationId: string;
-  platform: number | null; // null = のりば未定（他団体区間）
+  platform: number | null; // null = のりば未定（他の鉄道会社の区間）
 }
 
 export interface ServiceKind {
@@ -127,7 +127,7 @@ export interface Overrides {
 export interface DepartureOverride {
   enabled?: boolean; // false で外す、true で足す
   formation?: string; // 形式コードの上書き
-  foreignName?: string; // 他団体の編成名をまるごと手入力
+  foreignName?: string; // 他の鉄道会社の編成名をまるごと手入力
 }
 
 export interface SkipConditionOverride {

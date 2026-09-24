@@ -60,7 +60,7 @@ export function SignsView() {
     return {
       key: c.stationId,
       label: c.name || '（名前なし）',
-      sub: c.foreign ? '相手の団体' : `${done} / ${own.length}`,
+      sub: c.foreign ? '相手の鉄道会社' : `${done} / ${own.length}`,
       state: own.length > 0 && done === own.length ? 'done' : 'todo',
       to: `${base}?station=${encodeURIComponent(c.stationId)}`,
       selected: c.stationId === selected?.stationId,
@@ -110,7 +110,7 @@ function StationCardView({ card }: { card: StationCard }) {
               </span>
             ))}
         </span>
-        {card.foreign && <span className={styles.pill}>相手団体の設定に従う</span>}
+        {card.foreign && <span className={styles.pill}>相手の鉄道会社の設定に従う</span>}
       </h2>
       {card.notes.map((n) => (
         <p key={n} className="muted">

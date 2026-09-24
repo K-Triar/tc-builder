@@ -88,7 +88,7 @@ describe('経路と編成（rules §3.3〜3.5）', () => {
 });
 
 describe('各駅発の上書き', () => {
-  it('外す・形式を変える・他団体の編成名を入れる', () => {
+  it('外す・形式を変える・他の鉄道会社の編成名を入れる', () => {
     const b = ruriDown();
     const p = b.build();
     p.overrides.departure[departureKey('sv1', 'kind-Lo', 2)] = { enabled: false };
@@ -106,7 +106,7 @@ describe('各駅発の上書き', () => {
     const [ku06] = departuresAt(r, b.stationId('KU06'), 'sv3');
     expect(ku06).toMatchObject({ formationCode: 'H2006_X', overridden: true, foreign: true });
     expect(r.formations.find((f) => f.code === 'H2006_X')).toMatchObject({ foreign: true });
-    // 経路は他団体の編成でも一覧に残る
+    // 経路は他の鉄道会社の編成でも一覧に残る
     expect(r.routes.find((x) => x.code === 'KL4NSC')!.usedBy).toContain('H2006_X');
   });
 
@@ -117,7 +117,7 @@ describe('各駅発の上書き', () => {
     expect(r.departures.some((d) => d.kindId === 'kind-Ra' && d.entryIndex === 2)).toBe(false);
   });
 
-  it('他団体が看板を置く駅の編成は、名前が未入力なら要確認（コードなし）', () => {
+  it('他の鉄道会社が看板を置く駅の編成は、名前が未入力なら要確認（コードなし）', () => {
     const b = new ProjectBuilder();
     b.station('西水中央', ['NSC'], { 1: 'right' }, { org: 'H' })
       .station('南瑠順', ['KB02'], { 1: 'right' })

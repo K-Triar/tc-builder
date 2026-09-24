@@ -47,7 +47,7 @@ describe('journey：路線ができるまでの道のり', () => {
     expect(keyOf(p)).toBe('line');
   });
 
-  it('一覧にない会社（名前もコードも空）では「路線」から始める', () => {
+  it('一覧にない鉄道会社（名前もコードも空）では「路線」から始める', () => {
     const p = createProject(customCompany(), '新しい路線');
     expect(keyOf(p)).toBe('line');
   });

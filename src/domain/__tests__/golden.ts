@@ -118,7 +118,7 @@ export function goldenDiffs(project: Project, d: Derived, expected: Expected): G
     }
     const label = `${st.name} ${e.platform}番 ${e.formationCode}`;
     if (e.formationCode.startsWith('[') || e.formationCode.startsWith('(')) {
-      // [HRA設定]_KB2NSC_Ra のように他団体が決める部分がある
+      // [HRA設定]_KB2NSC_Ra のように他の鉄道会社が決める部分がある
       const suffix = e.formationCode.replace(/^\[[^\]]*\]/, '');
       const hit = [...ourDeps].find(
         (k) =>

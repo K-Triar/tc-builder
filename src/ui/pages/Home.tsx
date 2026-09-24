@@ -350,7 +350,7 @@ export function Home() {
   );
 }
 
-/** 一覧にない会社を選んだときの値 */
+/** 一覧にない鉄道会社を選んだときの値 */
 const OTHER = 'other';
 
 function NewProjectDialog({
@@ -363,7 +363,7 @@ function NewProjectDialog({
   onCreate: (company: Company, name: string) => void;
 }) {
   const [name, setName] = useState('');
-  // 決め打ちの初期値は置かず、自分の会社を選んでもらう
+  // 決め打ちの初期値は置かず、自分の鉄道会社を選んでもらう
   const [choice, setChoice] = useState('');
   const [otherName, setOtherName] = useState('');
   const [otherCode, setOtherCode] = useState('');
@@ -429,7 +429,7 @@ function NewProjectDialog({
               {c.name}（{c.code}）
             </option>
           ))}
-          <option value={OTHER}>一覧にない会社</option>
+          <option value={OTHER}>一覧にない鉄道会社</option>
         </select>
         {missing && !choice && (
           <div id="new-company-error" className="field-error" role="alert">
@@ -438,18 +438,18 @@ function NewProjectDialog({
         )}
         <div id="new-company-hint" className="field-hint">
           {listed && listed.lines.length > 0
-            ? `会社のコード ${listed.code} と、路線（${listed.lines.map((l) => l.name).join('・')}）、列車の種類が入った状態から始めます。`
+            ? `鉄道会社コード ${listed.code} と、路線（${listed.lines.map((l) => l.name).join('・')}）、列車の種類が入った状態から始めます。`
             : listed
-              ? `会社のコード ${listed.code} と列車の種類が入った状態から始めます。路線はこのあと入れます。`
+              ? `鉄道会社コード ${listed.code} と列車の種類が入った状態から始めます。路線はこのあと入れます。`
               : choice === OTHER
-                ? '会社の名前とコードを下に入れます。列車の種類は入った状態から始めます。'
-                : 'サーバー Wiki の KT式 団体コード表にある会社です。会社のコードが駅コードや形式コードの先頭に付きます。'}
+                ? '鉄道会社名とコードを下に入れます。列車の種類は入った状態から始めます。'
+                : 'サーバー Wiki「TrainCartsで使うコード」に載っている鉄道会社です。鉄道会社コードが駅コードや形式コードの先頭に付きます。'}
         </div>
       </div>
       {choice === OTHER && (
         <div className={styles.otherCompany}>
           <div className="field">
-            <label htmlFor="new-org-name">会社の名前</label>
+            <label htmlFor="new-org-name">鉄道会社名</label>
             <input
               id="new-org-name"
               value={otherName}
@@ -459,7 +459,7 @@ function NewProjectDialog({
             />
           </div>
           <div className="field">
-            <label htmlFor="new-org-code">会社のコード</label>
+            <label htmlFor="new-org-code">鉄道会社コード</label>
             <input
               id="new-org-code"
               className="mono"

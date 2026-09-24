@@ -188,7 +188,7 @@ describe('のりばのパターンと看板（rules §4.2〜4.3）', () => {
     ]);
   });
 
-  it('他団体の駅はカードだけで看板を作らない', () => {
+  it('他の鉄道会社の駅はカードだけで看板を作らない', () => {
     const c = card(ruriDown(), 'NSC', 2);
     expect(c.pattern).toBe('foreign');
     expect(c.signs).toEqual([]);
@@ -342,7 +342,7 @@ describe('駅ごとの C と switcher（rules §4.5）', () => {
     expect(st('KL13').switcher).toBeUndefined();
   });
 
-  it('他団体の駅は看板の指示を出さない', () => {
+  it('他の鉄道会社の駅は看板の指示を出さない', () => {
     expect(st('NSC')).toMatchObject({ foreign: true, cleanups: [] });
     expect(st('NSC').switcher).toBeUndefined();
   });

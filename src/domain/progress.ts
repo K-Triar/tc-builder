@@ -93,7 +93,7 @@ export const GENERAL_CHECKS = [
   },
   { id: 'trial:spawn-buttons', label: 'spawn 看板にボタンを付け、列車の出る向きを確かめた' },
   { id: 'trial:cleanup', label: '駅の出口側に C（空車削除）を置いた' },
-  { id: 'trial:foreign', label: '直通先の団体と、行先コード・編成名・タグをすり合わせた' },
+  { id: 'trial:foreign', label: '直通先の鉄道会社と、行先コード・編成名・タグをすり合わせた' },
 ] as const;
 
 /** 完了時のハッシュと今の内容が違えば「要更新」 */

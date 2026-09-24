@@ -10,7 +10,7 @@ import styles from './editors.module.css';
 
 /**
  * ウィザード「路線について」：名前と、どの鉄道会社の路線か。
- * 会社・種別のコードは新規作成で入っているので、要約だけを見せて詳しい設定にしまう。
+ * 鉄道会社・種別のコードは新規作成で入っているので、要約だけを見せて詳しい設定にしまう。
  */
 export function RouteBasics() {
   const project = useProject();
@@ -40,11 +40,11 @@ export function RouteBasics() {
 
       <Section
         title="どの鉄道会社の路線ですか？"
-        lead="駅コードや形式コードの先頭には、会社のコードが付きます。路線のコードは会社ごとに決まっています。"
+        lead="駅コードや形式コードの先頭には、鉄道会社コードが付きます。路線のコードは鉄道会社ごとに決まっています。"
       >
         {self?.code ? (
           <dl className={styles.summaryList}>
-            <dt>会社</dt>
+            <dt>鉄道会社</dt>
             <dd>
               {self.name || '（名前なし）'} <span className="code-tag">{self.code}</span>
             </dd>
@@ -70,15 +70,15 @@ export function RouteBasics() {
             </dd>
           </dl>
         ) : (
-          <p>自分の会社の名前とコードを、下の詳しい設定で入れてください。</p>
+          <p>自分の鉄道会社名とコードを、下の詳しい設定で入れてください。</p>
         )}
         {example && (
           <p className="field-hint">
             駅コードは「<span className="code-tag">{example}</span>
-            」のように、団体・路線・駅の番号から自動で付きます。
+            」のように、鉄道会社・路線・駅の番号から自動で付きます。
           </p>
         )}
-        <Disclosure summary="詳しい設定（会社・路線・列車の種類のコード）" open={openDetails}>
+        <Disclosure summary="詳しい設定（鉄道会社・路線・列車の種類のコード）" open={openDetails}>
           <OrgEditor />
           <LineEditor />
           <KindEditor />

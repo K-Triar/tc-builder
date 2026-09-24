@@ -125,7 +125,7 @@ describe('細かい規則', () => {
     expect(summaryOf(b, 'KL02', 1)).toMatchObject({ spawns: [], hasDeparture: true });
   });
 
-  it('他団体の編成名が未入力の spawn は、コードなしで残る', () => {
+  it('他の鉄道会社の編成名が未入力の spawn は、コードなしで残る', () => {
     const b = new ProjectBuilder();
     b.station('西水中央', ['NSC'], { 1: 'right' }, { org: 'H' })
       .station('南瑠順', ['KB02'], { 1: 'right' })

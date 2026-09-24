@@ -240,7 +240,7 @@ function EntryList({ service }: { service: Service }) {
                 hideLabel={i > 0}
                 value={e.platform === null ? '' : String(e.platform)}
                 options={[
-                  { value: '', label: '未定（他団体区間）' },
+                  { value: '', label: '未定（他の鉄道会社の区間）' },
                   ...(st?.platforms ?? []).map((pf) => ({
                     value: String(pf.number),
                     label: `${pf.number}番${pf.label ? `（${pf.label}）` : ''}`,

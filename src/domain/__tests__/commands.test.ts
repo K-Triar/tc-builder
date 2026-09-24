@@ -91,7 +91,7 @@ describe('コマンド（rules §5）', () => {
     expect(pl.groups[0]!.blocks[0]!.note).toContain('好きな両数');
   });
 
-  it('他団体の編成（手入力）はコマンドを作らない。経路は作る', () => {
+  it('他の鉄道会社の編成（手入力）はコマンドを作らない。経路は作る', () => {
     const b = ruriDown();
     b.project.overrides.departure[departureKey('sv3', 'kind-SR-LSR', 0)] = {
       foreignName: 'H2006_X',

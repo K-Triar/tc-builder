@@ -9,7 +9,7 @@ import { TabNav } from './TabNav';
 import styles from './EditPage.module.css';
 
 const TABS = [
-  { key: 'org', label: '団体・路線・数値' },
+  { key: 'org', label: '鉄道会社・路線・数値' },
   { key: 'kinds', label: '列車の種類' },
   { key: 'stations', label: '駅とのりば' },
   { key: 'services', label: '系統' },
@@ -43,7 +43,7 @@ export function EditPage() {
       {tab === 'review' && <ReviewEditor />}
       {!TABS.some((t) => t.key === tab) && (
         <p>
-          <NavLink to={`/p/${project.id}/edit/org`}>団体・路線へ</NavLink>
+          <NavLink to={`/p/${project.id}/edit/org`}>鉄道会社・路線へ</NavLink>
         </p>
       )}
     </div>

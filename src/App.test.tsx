@@ -33,7 +33,7 @@ describe('ホーム', () => {
       target: { value: '試験線' },
     });
     const company = within(dialog).getByLabelText('どの鉄道会社の路線ですか？');
-    // 初めから選ばれている会社はない。選ばずに作ろうとすると止める
+    // 初めから選ばれている鉄道会社はない。選ばずに作ろうとすると止める
     expect(company).toHaveValue('');
     fireEvent.click(within(dialog).getByRole('button', { name: 'つくって始める' }));
     expect(within(dialog).getByRole('alert')).toHaveTextContent('鉄道会社を選んでください');
@@ -48,15 +48,15 @@ describe('ホーム', () => {
     expect(p.lines).toEqual([]);
   });
 
-  it('一覧にない会社は名前とコードを入れて作る', async () => {
+  it('一覧にない鉄道会社は名前とコードを入れて作る', async () => {
     renderAt('/');
     fireEvent.click(screen.getByRole('button', { name: '＋ 新しい路線をつくる' }));
     const dialog = screen.getByRole('dialog', { name: '新しい路線をつくる' });
     fireEvent.change(within(dialog).getByLabelText('どの鉄道会社の路線ですか？'), {
       target: { value: 'other' },
     });
-    fireEvent.change(within(dialog).getByLabelText('会社の名前'), { target: { value: '新鉄道' } });
-    fireEvent.change(within(dialog).getByLabelText('会社のコード'), { target: { value: 'N' } });
+    fireEvent.change(within(dialog).getByLabelText('鉄道会社名'), { target: { value: '新鉄道' } });
+    fireEvent.change(within(dialog).getByLabelText('鉄道会社コード'), { target: { value: 'N' } });
     fireEvent.click(within(dialog).getByRole('button', { name: 'つくって始める' }));
     expect(await screen.findByText('新しい路線')).toBeInTheDocument();
     const p = useProjectStore.getState().project!;

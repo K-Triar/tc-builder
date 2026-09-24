@@ -103,7 +103,7 @@ describe('検証（rules §6）', () => {
     ]);
   });
 
-  it('PLATFORM_DIR_MISSING：他団体が看板を置く駅は対象外', () => {
+  it('PLATFORM_DIR_MISSING：他の鉄道会社が看板を置く駅は対象外', () => {
     const b = ruriDown();
     delete b.project.stations.find((s) => s.id === 'st-NSC')!.platforms[0]!.dir;
     expect(find(validate(b.build()), 'PLATFORM_DIR_MISSING')).toEqual([]);
@@ -149,7 +149,7 @@ describe('検証（rules §6）', () => {
     ]);
   });
 
-  it('FOREIGN_FORMATION_MISSING：他団体の編成名が未入力', () => {
+  it('FOREIGN_FORMATION_MISSING：他の鉄道会社の編成名が未入力', () => {
     const b = new ProjectBuilder();
     b.station('西水中央', ['NSC'], { 1: 'right' }, { org: 'H' })
       .station('南瑠順', ['KB02'], { 1: 'right' })
@@ -183,7 +183,7 @@ describe('検証（rules §6）', () => {
     const [issue] = find(validate(b.build()), 'FORM_PARITY');
     expect(issue).toMatchObject({ severity: 'warning' });
     expect(issue!.message).toContain('K300');
-    // 他団体の形式コードは見ない
+    // 他の鉄道会社の形式コードは見ない
     const h = line3([{ tag: 'Lo', formation: 'H3005' }]);
     expect(find(validate(h.build()), 'FORM_PARITY')).toEqual([]);
   });

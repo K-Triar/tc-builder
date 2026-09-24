@@ -6,7 +6,7 @@ import { platformKey, type Project } from './model';
 import { computeRoutes, type RoutesResult } from './routes';
 
 export interface SpawnItem {
-  /** 編成コード。他団体の編成で名前が未入力なら undefined */
+  /** 編成コード。他の鉄道会社の編成で名前が未入力なら undefined */
   formationCode: string | undefined;
   foreign: boolean;
   serviceId: string;

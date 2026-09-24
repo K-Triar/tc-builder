@@ -20,14 +20,14 @@ describe('Kトライアを選んだとき', () => {
   const p = createProject(companyByCode('K'), '瑠璃線', env);
   const self = p.orgs.find((o) => o.id === p.selfOrgId)!;
 
-  it('団体 K が自団体', () => {
+  it('鉄道会社 K が自分の鉄道会社', () => {
     expect(self).toMatchObject({ name: 'Kトライア', code: 'K' });
     expect(p.schemaVersion).toBe(SCHEMA_VERSION);
     expect(p.name).toBe('瑠璃線');
     expect(p.createdAt).toBe('2026-09-24T12:00:00.000Z');
   });
 
-  it('路線コード L/B/Q/U/Y が自団体に属する', () => {
+  it('路線コード L/B/Q/U/Y が自分の鉄道会社に属する', () => {
     expect(p.lines.map((l) => l.code)).toEqual(['L', 'B', 'Q', 'U', 'Y']);
     expect(p.lines.every((l) => l.orgId === self.id)).toBe(true);
   });
@@ -87,7 +87,7 @@ describe('鉄道会社の一覧（Wiki の KT式 団体コード表）', () => {
     expect(COMPANIES.every((c) => /^[A-Za-z0-9]+$/.test(c.code))).toBe(true);
   });
 
-  it('K 以外の会社を選ぶと、その会社が自団体になり、路線は空、種別と用途番号は KT式 の共通値', () => {
+  it('K 以外の会社を選ぶと、その会社が自分の鉄道会社になり、路線は空、種別と用途番号は KT式 の共通値', () => {
     const p = createProject(companyByCode('H'), 'ヘルヴェティア線', env);
     expect(p.orgs).toEqual([{ id: p.selfOrgId, name: 'ヘルヴェティア鉄道局', code: 'H' }]);
     expect(p.lines).toEqual([]);
@@ -95,7 +95,7 @@ describe('鉄道会社の一覧（Wiki の KT式 団体コード表）', () => {
     expect(p.settings.usages).toEqual(KT_USAGES);
   });
 
-  it('一覧にない会社は名前とコードを入れたものが自団体になる', () => {
+  it('一覧にない鉄道会社は名前とコードを入れたものが自分の鉄道会社になる', () => {
     const p = createProject(customCompany('新鉄道', 'N'), '新線', env);
     expect(p.orgs).toEqual([{ id: p.selfOrgId, name: '新鉄道', code: 'N' }]);
     expect(p.lines).toEqual([]);
@@ -110,7 +110,7 @@ describe('鉄道会社の一覧（Wiki の KT式 団体コード表）', () => {
 describe('スキーマの往復', () => {
   it.each([
     ['Kトライア', companyByCode('K')],
-    ['一覧にない会社', customCompany()],
+    ['一覧にない鉄道会社', customCompany()],
   ])('%s：作る → JSON → parse → 同じ', (_, preset) => {
     const p = createProject(preset, 'テスト', env);
     const r = parseProject(serializeProject(p));

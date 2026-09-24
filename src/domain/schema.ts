@@ -226,20 +226,20 @@ function checkReferences(p: Project): string[] {
   checkUnique(p.stations, ['stations'], add);
   checkUnique(p.services, ['services'], add);
 
-  if (!orgIds.has(p.selfOrgId)) add(['selfOrgId'], missing('団体の一覧', p.selfOrgId));
+  if (!orgIds.has(p.selfOrgId)) add(['selfOrgId'], missing('鉄道会社の一覧', p.selfOrgId));
   p.lines.forEach((l, i) => {
-    if (!orgIds.has(l.orgId)) add(['lines', i, 'orgId'], missing('団体の一覧', l.orgId));
+    if (!orgIds.has(l.orgId)) add(['lines', i, 'orgId'], missing('鉄道会社の一覧', l.orgId));
   });
 
   p.stations.forEach((s, si) => {
     if (!orgIds.has(s.managerOrgId)) {
-      add(['stations', si, 'managerOrgId'], missing('団体の一覧', s.managerOrgId));
+      add(['stations', si, 'managerOrgId'], missing('鉄道会社の一覧', s.managerOrgId));
     }
     checkUnique(s.codes, ['stations', si, 'codes'], add);
     s.codes.forEach(({ code }, ci) => {
       if (code.kind !== 'numbered') return;
       if (!orgIds.has(code.orgId)) {
-        add(['stations', si, 'codes', ci, 'code', 'orgId'], missing('団体の一覧', code.orgId));
+        add(['stations', si, 'codes', ci, 'code', 'orgId'], missing('鉄道会社の一覧', code.orgId));
       }
       if (!lineIds.has(code.lineId)) {
         add(['stations', si, 'codes', ci, 'code', 'lineId'], missing('路線の一覧', code.lineId));
@@ -298,7 +298,7 @@ function checkUnique(
 
 /** 配列の要素につける名前（「駅 2 番目」） */
 const COLLECTION_LABELS: Record<string, string> = {
-  orgs: '団体',
+  orgs: '鉄道会社',
   lines: '路線',
   kinds: '種別',
   stations: '駅',
@@ -317,7 +317,7 @@ const FIELD_LABELS: Record<string, string> = {
   createdAt: '作成日時',
   updatedAt: '更新日時',
   lastExportedAt: '書き出し日時',
-  selfOrgId: '自団体',
+  selfOrgId: '自分の鉄道会社',
   settings: '設定',
   spawnSpeed: 'spawn の初速',
   stationLaunchDistance: 'station の加速距離',
@@ -326,11 +326,11 @@ const FIELD_LABELS: Record<string, string> = {
   label: '表示名',
   defaultMaxSpeed: '標準最高速度',
   code: 'コード',
-  orgId: '団体',
+  orgId: '鉄道会社',
   lineId: '路線',
   typeCode: '種別コード',
   trainNameCode: '列車名コード',
-  managerOrgId: '管理団体',
+  managerOrgId: '管理する鉄道会社',
   signsBySelf: '看板を自分で置くか',
   kind: '種類',
   value: '値',
@@ -354,7 +354,7 @@ const FIELD_LABELS: Record<string, string> = {
   departure: '各駅発の上書き',
   skipCondition: 'skip 条件の手入力',
   enabled: '有効',
-  foreignName: '他団体の編成名',
+  foreignName: '他の鉄道会社の編成名',
   line3: '3行目',
   line4: '4行目',
   progress: '進捗',

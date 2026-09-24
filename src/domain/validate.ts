@@ -77,7 +77,7 @@ const FIELD_LABELS: Partial<Record<keyof FormationDef, string>> = {
 /** コードに使える文字：空白以外の半角英数記号 */
 /** TC に出るコード：半角の英字と数字だけ（rules §2.0） */
 const TC_CODE_RE = /^[A-Za-z0-9]+$/;
-/** 表示専用の駅コード・他団体の編成名：空白と全角文字以外の半角文字 */
+/** 表示専用の駅コード・他の鉄道会社の編成名：空白と全角文字以外の半角文字 */
 const LOOSE_CODE_RE = /^[\x21-\x7e]+$/;
 
 export function validate(
@@ -118,9 +118,9 @@ export function validate(
     }
   };
   for (const o of project.orgs) {
-    // 他団体の団体コードは、番号つきの駅コードに使わない限り空でもよい
+    // 他の鉄道会社の鉄道会社コードは、番号つきの駅コードに使わない限り空でもよい
     if (o.code === '' && o.id !== project.selfOrgId) continue;
-    checkCode(o.code, `団体「${o.name}」の団体コード`, { kind: 'org', orgId: o.id });
+    checkCode(o.code, `鉄道会社「${o.name}」の鉄道会社コード`, { kind: 'org', orgId: o.id });
   }
   for (const l of project.lines)
     checkCode(l.code, `路線「${l.name}」の路線コード`, { kind: 'line', lineId: l.id });
@@ -152,7 +152,7 @@ export function validate(
     const [serviceId = '', kindId = '', index = '0'] = key.split('#');
     const target = { kind: 'departure', serviceId, kindId, entryIndex: Number(index) } as const;
     if (o.formation !== undefined) checkCode(o.formation, '各駅発の形式コード', target);
-    if (o.foreignName) checkCode(o.foreignName, '他団体の編成名', target, true);
+    if (o.foreignName) checkCode(o.foreignName, '他の鉄道会社の編成名', target, true);
   }
 
   // ---- 行先コードの重複 ----
@@ -244,7 +244,7 @@ export function validate(
     if (d.foreign && d.formationCode === undefined) {
       add(
         'FOREIGN_FORMATION_MISSING',
-        `${platformName(d.stationId, d.platform)} から出る${kindName(d.kindId)}は他団体の編成です。編成名を入れてください（要確認）。`,
+        `${platformName(d.stationId, d.platform)} から出る${kindName(d.kindId)}は他の鉄道会社の編成です。編成名を入れてください（要確認）。`,
         { kind: 'departure', serviceId: d.serviceId, kindId: d.kindId, entryIndex: d.entryIndex },
       );
     }
@@ -291,7 +291,7 @@ export function validate(
     if (sc.foreign && usedStations.has(sc.stationId)) {
       add(
         'FOREIGN_STATION',
-        `${sc.name} は相手団体の管理です。行先コードとのりばをすり合わせてください。`,
+        `${sc.name} は相手の鉄道会社の管理です。行先コードとのりばをすり合わせてください。`,
         {
           kind: 'station',
           stationId: sc.stationId,

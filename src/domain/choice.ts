@@ -50,7 +50,7 @@ function autoChoice(
   neighbours: () => { prevName: string; used: number[] },
 ): { chosen: boolean; reason: string } {
   if (i === last) return { chosen: true, reason: '終点' };
-  if (platform === null) return { chosen: false, reason: 'のりば未定（他団体区間）' };
+  if (platform === null) return { chosen: false, reason: 'のりば未定（他の鉄道会社の区間）' };
   if (i === 0) return { chosen: false, reason: '始発駅（経路に入らない）' };
   const { prevName, used } = neighbours();
   const list = used.map((n) => `${n}番`).join('・');

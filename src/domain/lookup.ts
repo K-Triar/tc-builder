@@ -12,7 +12,7 @@ export interface Lookup {
   dest(stationId: string, platform: number): Dest | undefined;
   /** 行先コードの文字列。見つからなければ「<駅名>?-<番号>」 */
   destText(stationId: string, platform: number): string;
-  /** 自団体が看板を置く駅か（rules §4.1） */
+  /** 自分の鉄道会社が看板を置く駅か（rules §4.1） */
   signsBySelf(stationId: string): boolean;
 }
 
